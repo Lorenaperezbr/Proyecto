@@ -1,5 +1,5 @@
 ---
-title: 'Estudio de circulaciÃ³n vehicular en Montevideo: febrero-marzo 2021'
+title: 'Estudio de circulaciÃÂ³n vehicular en Montevideo: febrero-marzo 2021'
 author: ''
 date: ''
 output:
@@ -11,9 +11,6 @@ header-includes: \usepackage{float} \floatplacement{figure}{H}
 ```{r setup, echo=FALSE, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 
-set.seed(49185687)
-
-
 #Librerias utilizadas
 library(dplyr)
 library(date)
@@ -23,25 +20,48 @@ library(tidyverse)
 library(kableExtra)
 library(rgdal)
 library(maptools)
+```
 
-#Cargo datos
-data_feb <- read.csv("autoscope_02_2021_velocidad.csv", header = TRUE,sep=";")
-#data <- read.csv("https://catalogodatos.gub.uy/dataset/95a35fa3-9629-41a6-976a-5fb8c900fdec/resource/6df7fc9c-8331-4d93-928c-cd69b48940a2/download/autoscope_03_2021.csv",header = TRUE,sep=";")
+```{r data_source, echo=FALSE, include=FALSE}
 
-data_mar <- read.csv("autoscope_03_2021_velocidad.csv", header = TRUE,sep=";")
-conteo_feb<- read.csv("autoscope_02_2021_volumen.csv", header = TRUE,sep=";")
-conteo_mar <- read.csv("autoscope_03_2021.csv", header = TRUE,sep=";")
-zonas<-readOGR("ine_ccz_mvd.shp")
+#Carga de los data sets
 
+conteo_feb <- read.csv("https://catalogodatos.gub.uy/dataset/95a35fa3-9629-41a6-976a-5fb8c900fdec/resource/b985762d-c1c1-4dd0-bc57-6c3ab53e8ff8/download/autoscope_02_2021_volumen.csv", header = TRUE,sep=";")
+
+conteo_mar <- read.csv("https://catalogodatos.gub.uy/dataset/95a35fa3-9629-41a6-976a-5fb8c900fdec/resource/6df7fc9c-8331-4d93-928c-cd69b48940a2/download/autoscope_03_2021.csv",header = TRUE,sep=";")
+
+velocidad_feb <- read.csv("https://catalogodatos.gub.uy/dataset/64189920-546e-4266-a8ee-476524313661/resource/01ba56d8-2dab-4d8b-8391-d03159314144/download/autoscope_02_2021_velocidad.csv",header = TRUE,sep=";")
+
+velocidad_mar <- read.csv("https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo/resource/da56b7db-dcef-41e0-8f16-a00406ae7c1c?view_id=abf43575-848a-40a7-94a3-dd9c378ff988",header = TRUE,sep=";")
+
+municipios <-readOGR("ine_ccz_mvd.shp")
+```
+
+```{r data_set, echo=FALSE, include=FALSE}
 #Consolidamos las  bases
+
+base_conteo<-rbind(conteo_feb,conteo_mar)
+
+base_velocidad<-rbind(velocidad_feb, velocidad_mar)
+
+
+```
+
+
+```{r manejo_fechas, echo=FALSE, include=FALSE}
+#Preparamos los datos
+base_velocidad$fecha<-ymd(base_velocidad$fecha)  
+
 conteo_feb$fecha<-format(as.Date(conteo_feb$fecha),'%Y-%m-%d')
 conteo_mar$fecha<-format(as.Date(conteo_mar$fecha),'%Y-%m-%d')
-base_conteo<-rbind(conteo_feb,conteo_mar)
-base_velocidad<-rbind(data_feb,data_mar)
-base_velocidad$fecha<-ymd(base_velocidad$fecha)  
+
 #ymd(base_conteo$fecha)
 base_velocidad$hora<-hms(base_velocidad$hora)
 base_conteo$hora<-hms(base_conteo$hora) 
+
+```
+
+
 #MUESTRA VELOCIDAD
 muestra<-sample(1:nrow(base_velocidad),100)
 velocidad_muestra<-base_velocidad[muestra,]
@@ -49,12 +69,16 @@ velocidad_muestra<-base_velocidad[muestra,]
 #MUESTRA CONTEO
 conteo_muestra<-base_conteo[muestra,]
 
+```{r data_cleaning, echo=FALSE, include=FALSE}
 # Datos faltantes
 apply(is.na(base_velocidad), 2, which)
 apply(is.na(base_conteo), 2, which) #No se observan datos faltantes
 
+```
+
+```{r categorizacion, echo=FALSE, include=FALSE}
 #Categorizamos las horas en ma?ana (8-12), tarde (12-5), media tarde (5-20), noche (20-00), madrugada (00-8)
-velocidad_muestra$cat_hora<-ifelse(velocidad_muestra$hora>="8H 00M 0S" & velocidad_muestra$hora < "12H 00M 0S", "Mañana",
+velocidad_muestra$cat_hora<-ifelse(velocidad_muestra$hora>="8H 00M 0S" & velocidad_muestra$hora < "12H 00M 0S", "MaÃ±ana",
                                 
                                 ifelse(
                                   velocidad_muestra$hora >= "12H 00M 0S" &
@@ -77,7 +101,7 @@ conteo_muestra$cat_hora <-
   ifelse(
     conteo_muestra$hora >= "8H 00M 0S" &
       conteo_muestra$hora < "12H 00M 0S",
-    "MaÃ±ana",
+    "MaÃÂ±ana",
     ifelse(
       conteo_muestra$hora >= "12H 00M 0S" &
         conteo_muestra$hora < "17H 00M 0S",
@@ -100,21 +124,21 @@ velocidad_muestra$fecha2<-  ifelse((velocidad_muestra$fecha>="2021-02-01" & velo
 
 conteo_muestra$fecha2<-  ifelse((conteo_muestra$fecha>="2021-02-01" & conteo_muestra$fecha<="2021-02-10")|(conteo_muestra$fecha>="2021-03-01" & conteo_muestra$fecha<="2021-03-10"),"Principio de mes",ifelse((conteo_muestra$fecha>="2021-02-11" & conteo_muestra$fecha<="2021-02-20")|(conteo_muestra$fecha>="2021-03-11" & conteo_muestra$fecha<="2021-03-20"),"Mitad de mes","Fin de mes"))
       
-conteo_muestra$dia<-factor(wday(conteo_muestra$fecha),labels=c("1"="Domingo","2"="Lunes","3"="Martes","4"="Miércoles","5"="Jueves","6"="Viernes","7"="Sábado"))
-velocidad_muestra$dia<-factor(wday(velocidad_muestra$fecha),labels=c("1"="Domingo","2"="Lunes","3"="Martes","4"="Miércoles","5"="Jueves","6"="Viernes","7"="Sábado"))
+conteo_muestra$dia<-factor(wday(conteo_muestra$fecha),labels=c("1"="Domingo","2"="Lunes","3"="Martes","4"="MiÃ©rcoles","5"="Jueves","6"="Viernes","7"="SÃ¡bado"))
+velocidad_muestra$dia<-factor(wday(velocidad_muestra$fecha),labels=c("1"="Domingo","2"="Lunes","3"="Martes","4"="MiÃ©rcoles","5"="Jueves","6"="Viernes","7"="SÃ¡bado"))
 
 ```
 
 \begin{center}
 \begin{LARGE}
-	Nuevas TecnologÃ­as para el anÃ¡lisis de datos
+	Nuevas TecnologÃÂ­as para el anÃÂ¡lisis de datos
 	\vspace{1cm}
 	
 	""
 \vspace{1cm}
 
 	Autores:
-	Federico Golffeld - MartÃ­n Olivera - Lorena PÃ©rez - Angela Vieyto
+	Federico Golffeld - MartÃÂ­n Olivera - Lorena PÃÂ©rez - Angela Vieyto
 	
 	\vspace{1cm}
 	
@@ -130,15 +154,15 @@ velocidad_muestra$dia<-factor(wday(velocidad_muestra$fecha),labels=c("1"="Doming
 \newpage
 
 
-# InroducciÃ³n
+# InroducciÃÂ³n
 
-En general se ha observado una tendencia creciente en la circulaciÃ³n vehicular en las ciudades, Esto se asocia directamente a un mayor volumen de vehÃ­culos, lo que genera mayores tiempo de circulaciÃ³n, enlentecimiento de la movilidad urbana y mayores posibilidades de cometer faltas o accedentes de trÃ¡nsito, cuando las ciudades no logran adaptarse a dicha coyuntura. Por otro lado, y vinculado a lo anterior, un mayor volumen de vehÃ­culos conlleva a un enlentecimiento en los tiempos de movilidad, que genera un comporamiento espontÃ¡neo de los conductores en usar como regulaci?n de este fen?meno, la velocidad de circulaciÃ³n. Por parte de las autoridades de las ciudades se ha hecho continuos esfuerzos por combatir esta problem?tica con estrictas regulaciones a la velocidad y control vehicular. 
+En general se ha observado una tendencia creciente en la circulaciÃÂ³n vehicular en las ciudades, Esto se asocia directamente a un mayor volumen de vehÃÂ­culos, lo que genera mayores tiempo de circulaciÃÂ³n, enlentecimiento de la movilidad urbana y mayores posibilidades de cometer faltas o accedentes de trÃÂ¡nsito, cuando las ciudades no logran adaptarse a dicha coyuntura. Por otro lado, y vinculado a lo anterior, un mayor volumen de vehÃÂ­culos conlleva a un enlentecimiento en los tiempos de movilidad, que genera un comporamiento espontÃÂ¡neo de los conductores en usar como regulaci?n de este fen?meno, la velocidad de circulaciÃÂ³n. Por parte de las autoridades de las ciudades se ha hecho continuos esfuerzos por combatir esta problem?tica con estrictas regulaciones a la velocidad y control vehicular. 
 
-En particular, en la capital del paÃ­s, la Intendencia de Montevideo (IM) a partir de su Departamento de Movilidad en conjunto con el Ministerio de Transporte y Obras PÃºblicas (MTOP) son quienes se encargan de este tipo de regulaciones, no solo a nivel de calles sino de cartelerÃ­a y seÃ±alizaciones, muchas veces a partir de la incorporaciÃ³n de un sistema de monitoreo digital con video en ciertos puntos de la ciudad. El Centro de Gesti?n de Movilidad (CGM) de la IM es quien se encarga de esta tarea, monitoreando y tomando registro de lo acontecido a partir de las cÃ¡maras de video-vigilancia. 
+En particular, en la capital del paÃÂ­s, la Intendencia de Montevideo (IM) a partir de su Departamento de Movilidad en conjunto con el Ministerio de Transporte y Obras PÃÂºblicas (MTOP) son quienes se encargan de este tipo de regulaciones, no solo a nivel de calles sino de cartelerÃÂ­a y seÃÂ±alizaciones, muchas veces a partir de la incorporaciÃÂ³n de un sistema de monitoreo digital con video en ciertos puntos de la ciudad. El Centro de Gesti?n de Movilidad (CGM) de la IM es quien se encarga de esta tarea, monitoreando y tomando registro de lo acontecido a partir de las cÃÂ¡maras de video-vigilancia. 
 
-Por esto, el objetivo general de este trabajo se basa en un estudio de las velocidades de los vehÃ­culos que circulan en Montevideo en conjunto con la cantidad de vehÃ­culos que se logran capturar a partir del CGM. En particular surge el interÃ©s de estudiar geogrÃ¡ficamente los volÃºmenes de circulaciÃ³n y su asociaciÃ³n con las velocidades registradas. Por otro lado, estudiar aquellos puntos con mayores registros de velocidad y aquellos con menores registros a fin de capturar la potencial necesidad de regulaciÃ³n en ciertos puntos de la capital. AdemÃ¡s, puede ser de interÃ©s el estudio dÃ­a a dÃ­a de los volÃºmenes y las velocidades registradas a fin de observar algun patrÃ³n entre febrero y marzo, en tÃ©rmios de dÃ­as de la semana y horarios donde la circulaciÃ³n es mÃ¡xima o que logra minimizar las velocidades de circulaciÃ³n. Estos elementos en su conjunto pueden contribuir a la detecciÃ³n de potenciales aplicaciones de polÃ­ticas departamentales que desemboquen en una ciudad "amigable" en tÃ©rminos de la circulaciÃ³n urbana.
+Por esto, el objetivo general de este trabajo se basa en un estudio de las velocidades de los vehÃÂ­culos que circulan en Montevideo en conjunto con la cantidad de vehÃÂ­culos que se logran capturar a partir del CGM. En particular surge el interÃÂ©s de estudiar geogrÃÂ¡ficamente los volÃÂºmenes de circulaciÃÂ³n y su asociaciÃÂ³n con las velocidades registradas. Por otro lado, estudiar aquellos puntos con mayores registros de velocidad y aquellos con menores registros a fin de capturar la potencial necesidad de regulaciÃÂ³n en ciertos puntos de la capital. AdemÃÂ¡s, puede ser de interÃÂ©s el estudio dÃÂ­a a dÃÂ­a de los volÃÂºmenes y las velocidades registradas a fin de observar algun patrÃÂ³n entre febrero y marzo, en tÃÂ©rmios de dÃÂ­as de la semana y horarios donde la circulaciÃÂ³n es mÃÂ¡xima o que logra minimizar las velocidades de circulaciÃÂ³n. Estos elementos en su conjunto pueden contribuir a la detecciÃÂ³n de potenciales aplicaciones de polÃÂ­ticas departamentales que desemboquen en una ciudad "amigable" en tÃÂ©rminos de la circulaciÃÂ³n urbana.
 
-En lo que sigue de este trabajo se propone realizar una descripciÃ³n de los datos a utilizar en tÃ©rminos de su fuente de obtenciÃ³n, tipos de datos, cantidad de observaciones, variables, entre otras. MÃ¡s adelante en futuro desarrollo de este trabajo se profundizarÃ¡ en anÃ¡lisis exploratorios que permitan discernir en funciÃ³n de los objetivos planteados. 
+En lo que sigue de este trabajo se propone realizar una descripciÃÂ³n de los datos a utilizar en tÃÂ©rminos de su fuente de obtenciÃÂ³n, tipos de datos, cantidad de observaciones, variables, entre otras. MÃÂ¡s adelante en futuro desarrollo de este trabajo se profundizarÃÂ¡ en anÃÂ¡lisis exploratorios que permitan discernir en funciÃÂ³n de los objetivos planteados. 
 
 
 \newpage
@@ -147,9 +171,9 @@ En lo que sigue de este trabajo se propone realizar una descripciÃ³n de los da
 
 # Datos
 
-Para realizar este estudio se consideran datos brindados por el Centro de GestiÃ³n de Movilidad (CGM) del Departamento de Movilidad de la Intendencia de Montevideo (IM). Se cuentan con datos con frecuencia mensual referentes a la velocidad de circulaciÃ³n y el volumen de circulaciÃ³n de vehÃ­culos en la ciudad de Montevideo donde se detallan los registros de las cÃ¡maras de CGM con dÃ­a y horario de lo acontecido. Para este ejercicio se consideran datos para los meses de Febero y Marzo de 2021 - "El sistema genera un registro cada 5 minutos, las medidas que se explican a continuaciÃ³n corresponden a la suma de todos los vehÃ­culos de los 5 minutos anteriores a la fecha y hora del registro. TambiÃ©n se publican datos particulares del sensor que permiten conocer su ubicaciÃ³n y entender el sentido de circulaciÃ³n que se estÃ¡ midiendo". Cabe destacar la particularidad de que en los meses de verano la movilidad suele ser inferior a otros meses del aÃ±o y considerando un contexto de pandemia, estos datos pueden estar afectados a la coyuntura.
+Para realizar este estudio se consideran datos brindados por el Centro de GestiÃÂ³n de Movilidad (CGM) del Departamento de Movilidad de la Intendencia de Montevideo (IM). Se cuentan con datos con frecuencia mensual referentes a la velocidad de circulaciÃÂ³n y el volumen de circulaciÃÂ³n de vehÃÂ­culos en la ciudad de Montevideo donde se detallan los registros de las cÃÂ¡maras de CGM con dÃÂ­a y horario de lo acontecido. Para este ejercicio se consideran datos para los meses de Febero y Marzo de 2021 - "El sistema genera un registro cada 5 minutos, las medidas que se explican a continuaciÃÂ³n corresponden a la suma de todos los vehÃÂ­culos de los 5 minutos anteriores a la fecha y hora del registro. TambiÃÂ©n se publican datos particulares del sensor que permiten conocer su ubicaciÃÂ³n y entender el sentido de circulaciÃÂ³n que se estÃÂ¡ midiendo". Cabe destacar la particularidad de que en los meses de verano la movilidad suele ser inferior a otros meses del aÃÂ±o y considerando un contexto de pandemia, estos datos pueden estar afectados a la coyuntura.
 
-Por tanto, se cuenta con 7623354 observaciones correspondiente a Febrero y Marzo de 2021 para cada una de las bases de datos utilizadas: la velocidad de circulaci+on vehicular y el volumen de circulaciÃ³n. En cuanto al set de variables consideradas, los datos vinculados a la velocidad de circulaciÃ³n cuenta con 10 variables mientras que los datos de conteo vehÃ­cular cuenta con 11 observaciones. Sin embago, considerando que hay variables idÃ©nticas en ambas fuentes de datos, en total se cuenta con 12 variables. La siguiente tabla muestra el set de variables consideradas en este estudio con su debida descripciÃ³n. 
+Por tanto, se cuenta con 7623354 observaciones correspondiente a Febrero y Marzo de 2021 para cada una de las bases de datos utilizadas: la velocidad de circulaci+on vehicular y el volumen de circulaciÃÂ³n. En cuanto al set de variables consideradas, los datos vinculados a la velocidad de circulaciÃÂ³n cuenta con 10 variables mientras que los datos de conteo vehÃÂ­cular cuenta con 11 observaciones. Sin embago, considerando que hay variables idÃÂ©nticas en ambas fuentes de datos, en total se cuenta con 12 variables. La siguiente tabla muestra el set de variables consideradas en este estudio con su debida descripciÃÂ³n. 
 
 
 
@@ -160,27 +184,27 @@ descripcion=c("id de la c?mara que est? monitoerando un determinado carril",
               "n?mero del carril que se est? monitoreando",
               "D?a en que se toma la muestra",
               "Hora en que se toma la muestra",
-              "Nombre de la v?a en la que se mide el trÃ¡nsito",
+              "Nombre de la v?a en la que se mide el trÃÂ¡nsito",
               "Nombre de la v?a que forma el cruce desde donde vienen los veh?culos",
-              "Nombre de la v?a que forma el cruce donde estÃ¡ el medidor",
-              "latitud de donde estÃ¡ el medidor",
-              "longitud de donde estÃ¡ el medidor",
+              "Nombre de la v?a que forma el cruce donde estÃÂ¡ el medidor",
+              "latitud de donde estÃÂ¡ el medidor",
+              "longitud de donde estÃÂ¡ el medidor",
               "Promedio de  las velocidades de los autos que circularon por el carril durante los ?ltimos 5 minutos",
               "Cantidad de veh?culos detectados en el carril en los ?ltimos 5 minutos",
               "Cantidad de veh?culos detectados en el carril en la ?ltima hora")
 
 tabla_variables=data.frame(cbind(variables,descripcion))
 
-colnames(tabla_variables)=c("Variables","DescripciÃ³n")
+colnames(tabla_variables)=c("Variables","DescripciÃÂ³n")
 
 tabla_variables %>% kable(booktabs=T,caption = "Tabla resumen de las variables del set de Datos") %>% kable_styling(latex_options = c("striped","hold_position"))
 
 ```
 
-Respecto a las variables anteriores, la longitud y la latitud son variables de tipo "float", mientras que las vÃ­as son textos, y las restantes variables son numÃ©ricas en el conjunto de los nÃºmero enteros (salvo las vinculadas a dÃ­as y horarios que tienen un formato propio a las variables, estas fueron cohercionadas a formato Date para su correcto tratamiento). Dada la gran cantidad de observaciones con las que contamos, decidimos categorizar las variables fecha y hora, en ambas bases, de la siguiente forma: 
+Respecto a las variables anteriores, la longitud y la latitud son variables de tipo "float", mientras que las vÃÂ­as son textos, y las restantes variables son numÃÂ©ricas en el conjunto de los nÃÂºmero enteros (salvo las vinculadas a dÃÂ­as y horarios que tienen un formato propio a las variables, estas fueron cohercionadas a formato Date para su correcto tratamiento). Dada la gran cantidad de observaciones con las que contamos, decidimos categorizar las variables fecha y hora, en ambas bases, de la siguiente forma: 
 
 ```{r echo=FALSE}
-variables2=c("Principio de mes","Mitad de mes", "Fin de mes","MaÃ±ana","Medio dÃ­a","Media tarde","Noche","Madrugada" )
+variables2=c("Principio de mes","Mitad de mes", "Fin de mes","MaÃÂ±ana","Medio dÃÂ­a","Media tarde","Noche","Madrugada" )
 
 descripcion2=c("Del 1 al 10 de cada mes",
               "Del 11 al 20 de cada mes",
@@ -194,26 +218,26 @@ descripcion2=c("Del 1 al 10 de cada mes",
 
 tabla_variables2=data.frame(cbind(variables2,descripcion2))
 
-colnames(tabla_variables2)=c("CategorizaciÃ³n","DescripciÃ³n")
+colnames(tabla_variables2)=c("CategorizaciÃÂ³n","DescripciÃÂ³n")
 
 tabla_variables2 %>% kable(booktabs=T,caption = "Tabla resumen de las categor?as creadas para Fecha y Hora") %>% kable_styling(latex_options = c("striped","hold_position"))
 
 ```
 
-A partir de una tabla de frecuencias se obtiene que el el 32% de los vehÃ­culos capturados  por las cÃ¡maras (variables volumen y velocidad) ocurren a principio de mes, el 33% sobre mediados de mes y un 35% sobre fin de mes. A simple vista, y sin realizar un anÃ¡lisis mÃ¡s profundo, no pareciera haber grandes diferencias, en tÃ©rminos generales, en el volumen de vehÃ­culos en el correr del mes.
+A partir de una tabla de frecuencias se obtiene que el el 32% de los vehÃÂ­culos capturados  por las cÃÂ¡maras (variables volumen y velocidad) ocurren a principio de mes, el 33% sobre mediados de mes y un 35% sobre fin de mes. A simple vista, y sin realizar un anÃÂ¡lisis mÃÂ¡s profundo, no pareciera haber grandes diferencias, en tÃÂ©rminos generales, en el volumen de vehÃÂ­culos en el correr del mes.
 
-En cuanto al volumen de vehÃ­culos capturado por la cÃ¡mara en los Ãºltimos 5 minutos, se observa un promedio total de 17 vehÃ­culos, mientras si discriminamos por mes, se obtiene un promedio de 16 y 17, para Febrero y Marzo, respectivamente. Por otro lado, se observa una velocidad promedio de 30.9 km/h si tomamos en cuenta la totalidad de las observaciones, mientras que asciende levemente a 31.0 km/h para el mes de Febrero y se ubica en 30.8 km/h para el mes de Marzo. Los resultados siguen esta misma lÃ­nea si consideramos la categorizaciÃ³n anteriormente mencionada para la fecha de los registros; 30.8km/h para los primeros 10 d?as del mes, 31.0 km/h para mitad de mes y fin de mes.  
+En cuanto al volumen de vehÃÂ­culos capturado por la cÃÂ¡mara en los ÃÂºltimos 5 minutos, se observa un promedio total de 17 vehÃÂ­culos, mientras si discriminamos por mes, se obtiene un promedio de 16 y 17, para Febrero y Marzo, respectivamente. Por otro lado, se observa una velocidad promedio de 30.9 km/h si tomamos en cuenta la totalidad de las observaciones, mientras que asciende levemente a 31.0 km/h para el mes de Febrero y se ubica en 30.8 km/h para el mes de Marzo. Los resultados siguen esta misma lÃÂ­nea si consideramos la categorizaciÃÂ³n anteriormente mencionada para la fecha de los registros; 30.8km/h para los primeros 10 d?as del mes, 31.0 km/h para mitad de mes y fin de mes.  
 
-Por Ãºltimo, observamos los desvÃ­os de las variables Volumen y Velocidad promedio, y luego la correlaciÃ³n entre ambas. La primera de las mencionadas tiene una desviaciÃ³n estÃ¡ndar de  18.6, mientras que la segunda una de 17.0. Mirando el coeficiente de correlaciÃ³n, se observa que Ã©ste es de 0.02, indicando una correlaciÃ³n baja, lo que podrÃ­a llegar a ser contraintuitivo. 
+Por ÃÂºltimo, observamos los desvÃÂ­os de las variables Volumen y Velocidad promedio, y luego la correlaciÃÂ³n entre ambas. La primera de las mencionadas tiene una desviaciÃÂ³n estÃÂ¡ndar de  18.6, mientras que la segunda una de 17.0. Mirando el coeficiente de correlaciÃÂ³n, se observa que ÃÂ©ste es de 0.02, indicando una correlaciÃÂ³n baja, lo que podrÃÂ­a llegar a ser contraintuitivo. 
 
 ## Referencias
 
-[1] Cat?logo de Datos Abiertos. Conteo de VehÃ­culos del Centro de GestiÃ³n de Movilidad. Febrero 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-conteo-de-vehiculos-del-centro-de-gestion-de-la-movilidad/resource/b985762d-c1c1-4dd0-bc57-6c3ab53e8ff8
+[1] Cat?logo de Datos Abiertos. Conteo de VehÃÂ­culos del Centro de GestiÃÂ³n de Movilidad. Febrero 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-conteo-de-vehiculos-del-centro-de-gestion-de-la-movilidad/resource/b985762d-c1c1-4dd0-bc57-6c3ab53e8ff8
 
 
-[2] CatÃ¡logo de Datos Abiertos. Conteo de VehÃ­culos del Centro de GestiÃ³n de Movilidad. Marzo 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-conteo-de-vehiculos-del-centro-de-gestion-de-la-movilidad/resource/6df7fc9c-8331-4d93-928c-cd69b48940a2
+[2] CatÃÂ¡logo de Datos Abiertos. Conteo de VehÃÂ­culos del Centro de GestiÃÂ³n de Movilidad. Marzo 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-conteo-de-vehiculos-del-centro-de-gestion-de-la-movilidad/resource/6df7fc9c-8331-4d93-928c-cd69b48940a2
 
-[3] CatÃ¡logo de Datos Abiertos. Velocidad promedio vehicular en las principales avenidas de montevideo. Febrero 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo/resource/01ba56d8-2dab-4d8b-8391-d03159314144
+[3] CatÃÂ¡logo de Datos Abiertos. Velocidad promedio vehicular en las principales avenidas de montevideo. Febrero 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo/resource/01ba56d8-2dab-4d8b-8391-d03159314144
 
 [4] Cat?logo de Datos Abiertos. Velocidad promedio vehicular en las principales avenidas de montevideo. Marzo 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo/resource/da56b7db-dcef-41e0-8f16-a00406ae7c1c?view_id=abf43575-848a-40a7-94a3-dd9c378ff988
 
