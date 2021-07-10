@@ -77,7 +77,7 @@ apply(is.na(base_conteo), 2, which) #No se observan datos faltantes
 ```
 
 ```{r categorizacion, echo=FALSE, include=FALSE}
-#Categorizamos las horas en ma?ana (8-12), tarde (12-5), media tarde (5-20), noche (20-00), madrugada (00-8)
+#Categorizamos las horas en ma?ana (8-12), tarde (12-5), media tarde (5-20), noche (20-00), madrugada (00-8) 
 velocidad_muestra$cat_hora<-ifelse(velocidad_muestra$hora>="8H 00M 0S" & velocidad_muestra$hora < "12H 00M 0S", "MaÃ±ana",
                                 
                                 ifelse(
