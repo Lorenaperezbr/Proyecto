@@ -59,7 +59,7 @@ municipios_2$lat <- (municipios_2$lat*-1)/100000
 
 base <- left_join(febrero_marzo, municipios_2, by = c('longitud'= "long", 'latitud'='lat'))
 
-#Luego de esto sacaria todas las columnas que no vamos a usar
+#Luego de esto sacaria todas las columnas que no vamos a usarr
           
 ```
 
