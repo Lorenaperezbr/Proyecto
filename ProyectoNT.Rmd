@@ -1,5 +1,5 @@
 ---
-title: 'Estudio de circulaci?n vehicular en Montevideo: febrero-marzo 2021'
+title: 'Estudio de circulación vehicular en Montevideo: febrero-marzo 2021'
 author: ''
 date: ''
 output:
@@ -32,170 +32,103 @@ conteo_mar <- read.csv("https://catalogodatos.gub.uy/dataset/95a35fa3-9629-41a6-
 
 velocidad_feb <- read.csv("https://catalogodatos.gub.uy/dataset/64189920-546e-4266-a8ee-476524313661/resource/01ba56d8-2dab-4d8b-8391-d03159314144/download/autoscope_02_2021_velocidad.csv", header = TRUE, sep = ";")
 
-#velocidad_mar <- read.csv("https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo/resource/da56b7db-dcef-41e0-8f16-a00406ae7c1c?view_id=abf43575-848a-40a7-94a3-dd9c378ff988", header = TRUE, sep = ";")
-
-velocidad_mar <- read.csv("autoscope_03_2021_velocidad.csv", header = TRUE, sep = ";")
+velocidad_mar <- read.csv("https://catalogodatos.gub.uy/dataset/64189920-546e-4266-a8ee-476524313661/resource/da56b7db-dcef-41e0-8f16-a00406ae7c1c/download/autoscope_03_2021_velocidad.csv", header = TRUE, sep = ";")
 
 municipios <- readOGR("ine_ccz_mvd.shp")
+municipios_2 <- fortify(municipios)
 ```
 
 ```{r data_set, echo = FALSE, include = FALSE}
-# Consolidamos las  bases
-conteo_mar<-conteo_mar[-907535,]
-base_conteo <- rbind(conteo_feb, conteo_mar)
-base_velocidad <- rbind(velocidad_feb, velocidad_mar)
+
+
+febrero <- inner_join(conteo_feb, velocidad_feb, by = c('ï..cod_detector'='ï..cod_detector', 'id_carril'='id_carril', 'fecha'='fecha', 'hora'='hora', 'latitud'='latitud', 'longitud'='longitud')) 
+
+marzo <- inner_join(conteo_mar, velocidad_mar, by = c('ï..cod_detector'='ï..cod_detector', 'id_carril'='id_carril', 'fecha'='fecha', 'hora'='hora', 'latitud'='latitud', 'longitud'='longitud')) 
+
+
+
+febrero_marzo <- rbind(febrero, marzo)
+
+
+rm(list=c("conteo_feb","velocidad_feb", "conteo_mar", "velocidad_mar", "febrero", "marzo"))
+
+
+municipios_2$long <- (municipios_2$long*-1)/10000
+municipios_2$lat <- (municipios_2$lat*-1)/100000
+
+
+base <- left_join(febrero_marzo, municipios_2, by = c('longitud'= "long", 'latitud'='lat'))
+
+#Luego de esto sacaria todas las columnas que no vamos a usar
+          
 ```
+
 
 
 ```{r manejo_fechas, echo = FALSE, include = FALSE}
 # Preparamos los datos
-base_velocidad$fecha <- ymd(base_velocidad$fecha)  
+base$fecha <- ymd(base$fecha)  
 
-conteo_feb$fecha <- format(as.Date(conteo_feb$fecha), '%Y-%m-%d')
-conteo_mar$fecha <- format(as.Date(conteo_mar$fecha), '%Y-%m-%d')
+base$fecha <- format(as.Date(base$fecha), '%Y-%m-%d')
 
-# ymd(base_conteo$fecha)
-base_velocidad$hora <- hms(base_velocidad$hora)
-base_conteo$hora <- hms(base_conteo$hora) 
+base$hora <- hms(base$hora)
+
 
 ```
 
 ```{r muestras, echo = FALSE, include = FALSE}
 # MUESTRA VELOCIDAD
-muestra <- sample(1:nrow(base_velocidad),1000)
-velocidad_muestra <- base_velocidad[muestra,]
+muestra <- sample_n(base, 1000)
 
-# MUESTRA CONTEO
-muestra2 <- sample(1:nrow(base_conteo),1000)
-conteo_muestra <- base_conteo[muestra2,]
 ```
 
 ```{r data_cleaning, echo = FALSE, include = FALSE}
 # Verificamos que no haya datos faltantes
-apply(is.na(base_velocidad), 2, which)
-apply(is.na(base_conteo), 2, which) # No se observan datos faltantes
+str(base)
+apply(is.na(base), 2, which) # No se observan datos faltantes
 ```
 
 ```{r categorizacion, echo = FALSE, include = FALSE}
 # Categorizamos las horas en ma?ana (8-12), tarde (12-17), media tarde (17-20), noche (20-00) y madrugada (00-8)
 
-velocidad_muestra$cat_hora <-
-  ifelse(
-    velocidad_muestra$hora >= "8H 00M 0S" &
-      velocidad_muestra$hora < "12H 00M 0S",
-    "Ma?ana",
-    ifelse(
-      velocidad_muestra$hora >= "12H 00M 0S" &
-        velocidad_muestra$hora < "17H 00M 0S",
-      "Medio dia",
-      ifelse(
-        velocidad_muestra$hora >= "17H 00M 0S" &
-          velocidad_muestra$hora < "20H 00M 0S",
-        "Media tarde",
-        ifelse(
-          velocidad_muestra$hora >= "20H 00M 0S" &
-            velocidad_muestra$hora < "23H 59M 59S",
-          "Noche",
-          "Madrugada"
-        )
-      )
-    )
-  )
+muestra$cat_hora <- ifelse(muestra$hora >= "8H 00M 0S" & muestra$hora < "12H 00M 0S",
+                           "Mañana",
+                           ifelse(muestra$hora >= "12H 00M 0S" & muestra$hora < "17H 00M 0S",
+                                  "Medio dia",
+                                  ifelse(muestra$hora >= "17H 00M 0S" & muestra$hora < "20H 00M 0S",
+                                         "Media tarde",
+                                         ifelse(muestra$hora >= "20H 00M 0S" & muestra$hora < "23H 59M 59S",
+                                                "Noche",
+                                                "Madrugada"
+                                                )
+                                         )
+                                  )
+                           )
 
-conteo_muestra$cat_hora <-
-  ifelse(
-    conteo_muestra$hora >= "8H 00M 0S" &
-      conteo_muestra$hora < "12H 00M 0S",
-    "Ma?ana",
-    ifelse(
-      conteo_muestra$hora >= "12H 00M 0S" &
-        conteo_muestra$hora < "17H 00M 0S",
-      "Medio dia",
-      ifelse(
-        conteo_muestra$hora >= "17H 00M 0S" &
-          conteo_muestra$hora < "20H 00M 0S",
-        "Media tarde",
-        ifelse(
-          conteo_muestra$hora >= "20H 00M 0S" &
-            conteo_muestra$hora < "23H 59M 59S",
-          "Noche",
-          "Madrugada"
-        )
-      )
-    )
-  )
 
-velocidad_muestra$fecha2 <-
-  ifelse((
-    velocidad_muestra$fecha >= "2021-02-01" &
-      velocidad_muestra$fecha <= "2021-02-10"
-  ) |
-    (
-      velocidad_muestra$fecha >= "2021-03-01" &
-        velocidad_muestra$fecha <= "2021-03-10"
-    ),
+muestra$cat_fecha <- ifelse(
+  (muestra$fecha >= "2021-02-01" & muestra$fecha <= "2021-02-10") | (muestra$fecha >= "2021-03-01" & muestra$fecha <= "2021-03-10"),
   "Principio de mes",
-  ifelse((
-    velocidad_muestra$fecha >= "2021-02-11" &
-      velocidad_muestra$fecha <= "2021-02-20"
-  ) |
-    (
-      velocidad_muestra$fecha >= "2021-03-11" &
-        velocidad_muestra$fecha <= "2021-03-20"
-    ),
-  "Mitad de mes",
-  "Fin de mes"
-  )
+  ifelse((muestra$fecha >= "2021-02-11" & muestra$fecha <= "2021-02-20") | (muestra$fecha >= "2021-03-11" &  muestra$fecha <= "2021-03-20"),
+         "Mitad de mes",
+         "Fin de mes"
+         )
   )
 
-conteo_muestra$fecha2 <-
-  ifelse((
-    conteo_muestra$fecha >= "2021-02-01" &
-      conteo_muestra$fecha <= "2021-02-10"
-  ) |
-    (
-      conteo_muestra$fecha >= "2021-03-01" &
-        conteo_muestra$fecha <= "2021-03-10"
-    ),
-  "Principio de mes",
-  ifelse((
-    conteo_muestra$fecha >= "2021-02-11" &
-      conteo_muestra$fecha <= "2021-02-20"
-  ) |
-    (
-      conteo_muestra$fecha >= "2021-03-11" &
-        conteo_muestra$fecha <= "2021-03-20"
-    ),
-  "Mitad de mes",
-  "Fin de mes"
-  )
-  )
+
       
-conteo_muestra$dia <-
+muestra$dia_semana <-
   factor(
     wday(conteo_muestra$fecha),
     labels = c("1" = "Domingo",
                "2" = "Lunes",
                "3" = "Martes",
-               "4" = "Mi?rcoles",
+               "4" = "Miercoles",
                "5" = "Jueves",
                "6" = "Viernes",
-               "7" = "S?bado"
+               "7" = "Sabado"
+               )
     )
-  )
-
-velocidad_muestra$dia <-
-  factor(
-    wday(velocidad_muestra$fecha),
-    labels = c("1" = "Domingo",
-               "2" = "Lunes",
-               "3" = "Martes",
-               "4" = "Mi?rcoles",
-               "5" = "Jueves",
-               "6" = "Viernes",
-               "7" = "S?bado"
-    )
-  )
 
 ```
 
@@ -208,7 +141,7 @@ velocidad_muestra$dia <-
 \vspace{1cm}
 
 	Autores:
-	Federico Golffeld - Mart?n Olivera - Lorena P?rez - ?ngela Vieyto
+	Federico Golffeld - Martín Olivera - Lorena Pérez - Ángela Vieyto
 	
 	\vspace{1cm}
 	
