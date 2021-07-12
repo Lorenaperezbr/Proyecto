@@ -34,6 +34,15 @@ velocidad_feb <- read.csv("https://catalogodatos.gub.uy/dataset/64189920-546e-42
 
 velocidad_mar <- read.csv("https://catalogodatos.gub.uy/dataset/64189920-546e-4266-a8ee-476524313661/resource/da56b7db-dcef-41e0-8f16-a00406ae7c1c/download/autoscope_03_2021_velocidad.csv", header = TRUE, sep = ";")
 
+#Dejo provisorio lo de abajo porque me funciona mejor que cargar la data desde la web.
+#conteo_feb <- read.csv("C:/Users/olive/OneDrive/Escritorio/Proyecto_NT_Golffeld_Olivera_Perez_Vieyto/autoscope_02_2021_volumen.csv", header = TRUE, sep = ";")
+
+#conteo_mar <- read.csv("C:/Users/olive/OneDrive/Escritorio/Proyecto_NT_Golffeld_Olivera_Perez_Vieyto/autoscope_03_2021.csv", header = TRUE, sep = ";")
+
+#velocidad_feb <- read.csv("C:/Users/olive/OneDrive/Escritorio/Proyecto_NT_Golffeld_Olivera_Perez_Vieyto/autoscope_02_2021_velocidad.csv", header = TRUE, sep = ";")
+
+#velocidad_mar <- read.csv("C:/Users/olive/OneDrive/Escritorio/Proyecto_NT_Golffeld_Olivera_Perez_Vieyto/autoscope_03_2021_velocidad.csv", header = TRUE, sep = ";")
+
 municipios <- readOGR("ine_ccz_mvd.shp")
 municipios_2 <- fortify(municipios)
 ```
@@ -119,7 +128,7 @@ muestra$cat_fecha <- ifelse(
       
 muestra$dia_semana <-
   factor(
-    wday(conteo_muestra$fecha),
+    wday(muestra$fecha),
     labels = c("1" = "Domingo",
                "2" = "Lunes",
                "3" = "Martes",
@@ -302,7 +311,13 @@ df_municipios %>%
 ```
 
 ```{r boxplot}
-# Boxplots por municipios
+# Boxplots por municipios --- lo dejo escrito en comentario porque queda unificar los municipios de cada obs a la base original y a la muestra
+
+#p1<-muestra %>% ggplot(aes(x=municipios, y=velocidad_promedio)) +  geom_boxplot(aes(fill = municipios)) + 
+#  labs(x="Municipios", y="Velocidad Promedio")
+#p2<-muestra %>% ggplot(aes(x=municipios, y=volume)) +  geom_boxplot(aes(fill = municipios)) + 
+#  labs(x="Municipios", y="Conteo de Vehículos")
+#grid.arrange(p1, p2, nrow=1, ncol=2)
 
 ```
 
@@ -336,7 +351,13 @@ velocidad_muestra %>%
 
 # minimo y maximo - velocidad
 
+```{r}
 
+#muestra %>% 
+#  group_by(municipio) %>% 
+#   summarise(velocidad_minima= min(velocidad_promedio), velocidad_maxima = max(velocidad_promedio), volumen_minimo= min(volume), #volumen_maximo=max(volume))
+
+```
 
 
 
