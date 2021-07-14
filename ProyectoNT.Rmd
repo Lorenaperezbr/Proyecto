@@ -26,84 +26,32 @@ library(data.table)
 ```
 
 ```{r data_source, echo = FALSE, include = FALSE}
-# Carga de los data sets
-conteo_feb <- readRDS("data/raw/conteo_feb.rds")
-conteo_mar <- readRDS("data/raw/conteo_mar.rds")
+# # Carga de los data sets
 
-velocidad_feb <- readRDS("data/raw/velocidad_feb.rds")
-velocidad_mar <- readRDS("data/raw/velocidad_mar.rds")
+# Carga de join.
+base <- readRDS("data/processed/febrero_marzo_join.rds")
 
-municipios <- readOGR("ine_ccz_mvd.shp")
-# http://dgrn.mgap.gub.uy/Metadatos/ine_ccz_mvd_metadatos.pdf
-municipios_2 <- fortify(municipios)
+# Ver el comentario en preprocessing. Carga de municipios.
+municipios <- st_read("data/geo/mdeo_barrios/")
+st_crs(x = municipios) <-  5382
+municipios <- st_transform(municipios, "+init=epsg:4326")
+
+# municipios <- readOGR("ine_ccz_mvd.shp")
+# municipios_2 <- fortify(municipios)
 ```
 
 
 
 ```{r data_set, echo = FALSE, include = FALSE}
-febrero <- conteo_feb[velocidad_feb, 
-                      on = c('cod_detector', 'id_carril', 'fecha', 'hora', 'latitud', 'longitud'), nomatch = 0]
-marzo <- conteo_mar[velocidad_mar, 
-                    on = c('cod_detector', 'id_carril', 'fecha', 'hora', 'latitud', 'longitud'), nomatch = 0]
-# Fede: Les cambie la forma de hacer join para que sea más rápido.
-# En realidad, podrían hacer todo de una.
-
-# febrero <- inner_join(conteo_feb, velocidad_feb, by = c('cod_detector'='cod_detector', 'id_carril'='id_carril', 'fecha'='fecha', 'hora'='hora', 'latitud'='latitud', 'longitud'='longitud')) 
-# marzo <- inner_join(conteo_mar, velocidad_mar, by = c('cod_detector'='cod_detector', 'id_carril'='id_carril', 'fecha'='fecha', 'hora'='hora', 'latitud'='latitud', 'longitud'='longitud')) 
-
-febrero_marzo <- rbind(febrero, marzo)
-rm(list=c("conteo_feb","velocidad_feb", "conteo_mar", "velocidad_mar", "febrero", "marzo"))
-
-# ??????????????????
-# municipios_2$long <- (municipios_2$long*-1)/10000
-# municipios_2$lat <- (municipios_2$lat*-1)/100000
-
-# Fede: Revisen el sistema de coordenadas creo que esta bien, pero revisen.
-municipios_sf <- st_read("ine_ccz_mvd.shp")
-st_crs(x = municipios_sf) <-  5382 #4326
-municipios_sf <- st_transform(municipios_sf, "+init=epsg:4326")
-febrero_marzo_sf <- st_as_sf(febrero_marzo[sample(1:.N, 0.01*.N), ], coords = c("longitud", "latitud")) # muestra para probar más rápido. Me parece que les va a explotar con todos los datos.
-# febrero_marzo_sf <- st_as_sf(febrero_marzo, coords = c("longitud", "latitud")) # Todito
-# Asignar el mismo sistema (asumiendo que los datos de feb-mar están en ese, chequear por las dudas.)
-st_crs(febrero_marzo_sf) <- st_crs(municipios_sf)
-
-# Graficamos
+# Grafica test
 ggplot() + 
-  geom_sf(data = municipios_sf) + 
-  geom_sf(data = febrero_marzo_sf) +
+  geom_sf(data = municipios) + 
+  geom_sf(data = base) +
   theme_minimal()
 
-# Join
-base <- 
-  st_join(febrero_marzo_sf, municipios_sf) %>% # Por defecto st_intersects, se puede poner left...
-  filter(!is.na(velocidad_promedio)) # Sacar posibles missing
-
-# base2 <-
-#   st_join(municipios_sf, febrero_marzo_sf) %>%
-#   filter(!is.na(velocidad_promedio))
-
-# ggplot() +
-#   geom_sf(data = municipios_sf) + 
-#   geom_sf(data = base2, aes(fill = velocidad_promedio))
-
-
-# Graficamos de nuevo (es lo mismo, tiene sentido que no queden observaciones afuera si los censores están en mdeo)
-ggplot() + 
-  geom_sf(data = municipios_sf) + 
-  geom_sf(data = base) + 
-  theme_minimal()
-
-ggplot() + 
-  geom_sf(data = municipios_sf) + 
-  geom_sf(data = base, aes(fill=velocidad_promedio)) 
-
-# La clase sf tiene el metodo plot.
-# plot(base2["velocidad_promedio"])
 # Más ejemplos: https://cengel.github.io/R-spatial/mapping.html
 # https://ggplot2-book.org/maps.html
 # https://geocompr.robinlovelace.net/
-
-# Fin fede.
 
 # QUEREMOS HACER UN JOIN DE LOS PUNTOS DE NUESTRA BASE "FEBRERO_MARZO" A LOS MUNICIPIOS DEFINIDOS EN EL SHAPEFILE "MUNICIPIOS". LOS MATCHEARÍAMOS POR LONGITUD Y LATITUD.
 # base <- left_join(febrero_marzo, municipios_2, by = c('longitud'= "long", 'latitud'='lat'))
