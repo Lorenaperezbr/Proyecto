@@ -47,6 +47,8 @@ municipios <- readOGR("ine_ccz_mvd.shp")
 municipios_2 <- fortify(municipios)
 ```
 
+
+
 ```{r data_set, echo = FALSE, include = FALSE}
 
 
@@ -98,7 +100,7 @@ apply(is.na(base), 2, which) # No se observan datos faltantes
 ```
 
 ```{r categorizacion, echo = FALSE, include = FALSE}
-# Categorizamos las horas en ma?ana (8-12), tarde (12-17), media tarde (17-20), noche (20-00) y madrugada (00-8)
+# Categorizamos las horas en mañana (8-12), tarde (12-17), media tarde (17-20), noche (20-00) y madrugada (00-8)
 
 muestra$cat_hora <- ifelse(muestra$hora >= "8H 00M 0S" & muestra$hora < "12H 00M 0S",
                            "Mañana",
@@ -143,7 +145,7 @@ muestra$dia_semana <-
 
 \begin{center}
 \begin{LARGE}
-	Nuevas Tecnolog?as para el an?lisis de datos
+	Nuevas Tecnologías para el análisis de datos
 	\vspace{1cm}
 	
 	""
@@ -166,15 +168,16 @@ muestra$dia_semana <-
 \newpage
 
 
-# Inroducci?n
+# Inroducción
 
-En general se ha observado una tendencia creciente en la circulaci?n vehicular en las ciudades, Esto se asocia directamente a un mayor volumen de veh?culos, lo que genera mayores tiempo de circulaci?n, enlentecimiento de la movilidad urbana y mayores posibilidades de cometer faltas o accedentes de tr?nsito, cuando las ciudades no logran adaptarse a dicha coyuntura. Por otro lado, y vinculado a lo anterior, un mayor volumen de veh?culos conlleva a un enlentecimiento en los tiempos de movilidad, que genera un comporamiento espont?neo de los conductores en usar como regulaci?n de este fen?meno, la velocidad de circulaci?n. Por parte de las autoridades de las ciudades se ha hecho continuos esfuerzos por combatir esta problem?tica con estrictas regulaciones a la velocidad y control vehicular. 
+En general se ha observado una tendencia creciente en la circulación vehicular en las ciudades, Esto se asocia directamente a un mayor volumen de vehículos, lo que genera mayores tiempos de circulación, enlentecimiento de la movilidad urbana y mayores posibilidades de cometer faltas o accedentes de tránsito, cuando las ciudades no logran adaptarse a dicha coyuntura. Por otro lado, y vinculado a lo anterior, un mayor volumen de vehículos conlleva a un enlentecimiento en los tiempos de movilidad, que genera un comportamiento espontáneo de los conductores en usar como regulación de este fenómeno, la velocidad de circulación. Por parte de las autoridades de las ciudades se ha hecho continuos esfuerzos por combatir esta problemática con estrictas regulaciones a la velocidad y control vehicular. 
 
-En particular, en la capital del pa?s, la Intendencia de Montevideo (IM) a partir de su Departamento de Movilidad en conjunto con el Ministerio de Transporte y Obras P?blicas (MTOP) son quienes se encargan de este tipo de regulaciones, no solo a nivel de calles sino de carteler?a y se?alizaciones, muchas veces a partir de la incorporaci?n de un sistema de monitoreo digital con video en ciertos puntos de la ciudad. El Centro de Gesti?n de Movilidad (CGM) de la IM es quien se encarga de esta tarea, monitoreando y tomando registro de lo acontecido a partir de las c?maras de video-vigilancia. 
+En particular, en la capital del país, la Intendencia de Montevideo (IM) a partir de su Departamento de Movilidad en conjunto con el Ministerio de Transporte y Obras Públicas (MTOP) son quienes se encargan de este tipo de regulaciones, no solo a nivel de calles sino de cartelera y señalizaciones, muchas veces a partir de la incorporación de un sistema de monitoreo digital con vídeo en ciertos puntos de la ciudad. El Centro de Gestión de Movilidad (CGM) de la IM es quien se encarga de esta tarea, monitoreando y tomando registro de lo acontecido a partir de las cámaras de vídeo-vigilancia. 
 
-Por esto, el objetivo general de este trabajo se basa en un estudio de las velocidades de los veh?culos que circulan en Montevideo en conjunto con la cantidad de veh?culos que se logran capturar a partir del CGM. En particular surge el inter?s de estudiar geogr?ficamente los vol?menes de circulaci?n y su asociaci?n con las velocidades registradas. Por otro lado, estudiar aquellos puntos con mayores registros de velocidad y aquellos con menores registros a fin de capturar la potencial necesidad de regulaci?n en ciertos puntos de la capital. Adem?s, puede ser de inter?s el estudio d?a a d?a de los vol?menes y las velocidades registradas a fin de observar algun patr?n entre febrero y marzo, en t?rmios de d?as de la semana y horarios donde la circulaci?n es m?xima o que logra minimizar las velocidades de circulaci?n. Estos elementos en su conjunto pueden contribuir a la detecci?n de potenciales aplicaciones de pol?ticas departamentales que desemboquen en una ciudad "amigable" en t?rminos de la circulaci?n urbana.
+Por esto, el objetivo general de este trabajo se basa en un estudio de las velocidades de los vehículos que circulan en Montevideo en conjunto con la cantidad de vehículos que se logran capturar a partir del CGM. En particular surge el interés de estudiar geográficamente los volúmenes de circulación y su asociación con las velocidades registradas. Por otro lado, estudiar aquellos puntos con mayores registros de velocidad y aquellos con menores registros a fin de capturar la potencial necesidad de regulación en ciertos puntos de la capital. Además, puede ser de interés el estudio día a día de los volúmenes y las velocidades registradas a fin de observar algún patrón entre febrero y marzo, en términos de días de la semana y horarios donde la circulación es máxima o que logra minimizar las velocidades de circulación. Estos elementos en su conjunto pueden contribuir a la detección de potenciales aplicaciones de políticas departamentales que desemboquen en una ciudad "amigable" en términos de la circulación urbana.
 
-En lo que sigue de este trabajo se propone realizar una descripci?n de los datos a utilizar en t?rminos de su fuente de obtenci?n, tipos de datos, cantidad de observaciones, variables, entre otras. M?s adelante en futuro desarrollo de este trabajo se profundizar? en an?lisis exploratorios que permitan discernir en funci?n de los objetivos planteados. 
+En lo que sigue de este trabajo se propone realizar una descripción de los datos a utilizar en términos de su fuente de obtención, tipos de datos, cantidad de observaciones, variables, entre otras. Más adelante en futuro desarrollo de este trabajo se profundizar en análisis exploratorios que permitan discernir en función de los objetivos planteados.
+
 
 
 \newpage
@@ -208,8 +211,8 @@ variables <-
 descripcion <-
   c(
     "Id de la c?mara que est? monitoerando un determinado carril",
-    "N?mero del carril que se est? monitoreando",
-    "D?a en que se toma la muestra",
+    "Número del carril que se est? monitoreando",
+    "Día en que se toma la muestra",
     "Hora en que se toma la muestra",
     "Nombre de la v?a en la que se mide el tr?nsito",
     "Nombre de la v?a que forma el cruce desde donde vienen los veh?culos",
@@ -223,7 +226,7 @@ descripcion <-
 
 tabla_variables <- data.frame(cbind(variables,descripcion))
 
-colnames(tabla_variables) <- c("Variables", "Descripci?n")
+colnames(tabla_variables) <- c("Variables", "Descripción")
 
 tabla_variables %>%
   kable(booktabs = T,
@@ -231,22 +234,22 @@ tabla_variables %>%
     kable_styling(latex_options = c("striped", "hold_position"))
 ```
 
-Respecto a las variables anteriores, la longitud y la latitud son variables de tipo "float", mientras que las v?as son textos y las restantes son variables num?ricas en el conjunto de los n?meros enteros, a excepci?n de aquellas vinculadas a d?as y horas. Estas variables tienen un formato propio y fueron cohercionadas a formato `Date` para su correcto tratamiento. Dada la gran cantidad de observaciones con las que contamos, decidimos categorizar las variables fecha y hora, en ambas bases, de la siguiente forma: 
+Respecto a las variables anteriores, la longitud y la latitud son variables de tipo "float", mientras que las v?as son textos y las restantes son variables numéricas en el conjunto de los n?meros enteros, a excepción de aquellas vinculadas a d?as y horas. Estas variables tienen un formato propio y fueron cohesionadas a formato `Date` para su correcto tratamiento. Dada la gran cantidad de observaciones con las que contamos, decidimos categorizar las variables fecha y hora, en ambas bases, de la siguiente forma: 
 
 ```{r echo=FALSE}
-variables2 <-
+categorias <-
   c(
     "Principio de mes",
     "Mitad de mes",
     "Fin de mes",
-    "Ma?ana",
-    "Medio d?a",
+    "Mañana",
+    "Medio día",
     "Media tarde",
     "Noche",
     "Madrugada"
   )
 
-descripcion2 <- c(
+descripcion_2 <- c(
   "Del 1 al 10 de cada mes",
   "Del 11 al 20 de cada mes",
   "Del 21 al 28 en el caso de Febrero, y del 21 al 31 en el caso de Marzo",
@@ -257,22 +260,22 @@ descripcion2 <- c(
   "De las 00.01 a las 7.59"
 )
 
-tabla_variables2 <- data.frame(cbind(variables2,descripcion2))
+tabla_variables2 <- data.frame(cbind(categorias,descripcion_2))
 
-colnames(tabla_variables2) <- c("Categorizaci?n","Descripci?n")
+colnames(tabla_variables2) <- c("Categorización","Descripción")
 
 tabla_variables2 %>% kable(
   booktabs = T,
-  caption = "Tabla resumen de las categor?as creadas para Fecha y Hora") %>%   
+  caption = "Tabla resumen de las categorías creadas para Fecha y Hora") %>%   
     kable_styling(latex_options = c("striped","hold_position"))
 
 ```
 
-A partir de una tabla de frecuencias se obtiene que el el 32% de los veh?culos capturados  por las c?maras (variables volumen y velocidad) ocurren a principio de mes, el 33% sobre mediados de mes y un 35% sobre fin de mes. A simple vista, y sin realizar un an?lisis m?s profundo, no pareciera haber grandes diferencias, en t?rminos generales, en el volumen de veh?culos en el correr del mes.
+A partir de una tabla de frecuencias se obtiene que el 32% de los vehículos capturados por las cámaras (variables volumen y velocidad) ocurren a principio de mes, el 33% sobre mediados de mes y un 35% sobre fin de mes. A simple vista, y sin realizar un análisis más profundo, no pareciera haber grandes diferencias, en términos generales, en el volumen de vehículos en el correr del mes.
 
-En cuanto al volumen de veh?culos capturado por la c?mara en los ?ltimos 5 minutos, se observa un promedio total de 17 veh?culos, mientras si discriminamos por mes, se obtiene un promedio de 16 y 17, para Febrero y Marzo, respectivamente. Por otro lado, se observa una velocidad promedio de 30.9 km/h si tomamos en cuenta la totalidad de las observaciones, mientras que asciende levemente a 31.0 km/h para el mes de Febrero y se ubica en 30.8 km/h para el mes de Marzo. Los resultados siguen esta misma l?ea si consideramos la categorizaci?n anteriormente mencionada para la fecha de los registros; 30.8km/h para los primeros 10 d?as del mes, 31.0 km/h para mitad de mes y fin de mes.  
+En cuanto al volumen de vehículos capturado por la cámara en los últimos 5 minutos, se observa un promedio total de 17 vehículos, mientras si discriminamos por mes, se obtiene un promedio de 16 y 17, para febrero y marzo, respectivamente. Por otro lado, se observa una velocidad promedio de 30.9 km/h si tomamos en cuenta la totalidad de las observaciones, mientras que asciende levemente a 31.0 km/h para el mes de febrero y se ubica en 30.8 km/h para el mes de marzo. Los resultados siguen esta misma línea si consideramos la categorización anteriormente mencionada para la fecha de los registros; 30.8km/h para los primeros 10 días del mes, 31.0 km/h para mitad de mes y fin de mes.  
 
-Por ?ltimo, observamos los desv?os de las variables Volumen y Velocidad promedio, y luego la correlaci?n entre ambas. La primera de las mencionadas tiene una desviaci?n est?ndar de  18.6, mientras que la segunda una de 17.0. Mirando el coeficiente de correlaci?n, se observa que este es de 0.02, indicando una correlaci?n baja, lo que podr?a llegar a ser contraintuitivo. 
+Por último, observamos los desvíos de las variables Volumen y Velocidad promedio, y luego la correlación entre ambas. La primera de las mencionadas tiene una desviación estándar de 18.6, mientras que la segunda una de 17.0. Mirando el coeficiente de correlación, se observa que este es de 0.02, indicando una correlación baja, lo que podrá llegar a ser contra intuitivo.
 
 
 ```{r map}
@@ -324,7 +327,77 @@ df_municipios %>%
 ```{r boxplot}
 # Dispersion: velocidad x conteo faceteado por hora, momento del mes, ...
 
+
+muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
+  geom_point(alpha=1/3)+
+  labs(x="Cantidad de vehículos detectados en el carril en los ?ltimos 5 minutos", 
+       y="Promedio de  las velocidades de los autos que circularon por el carril durante los ?ltimos 5 minutos") +
+  theme(aspect.ratio = 1,
+        legend.title = element_text(size = 8, face = "bold",hjust = 0.5),
+        axis.title.x = element_text(size = 8, face = "bold",hjust = 0.5),
+        axis.title.y = element_text(size = 8, face = "bold",hjust = 0.5),
+        axis.text.x = element_text(size=8, angle=45,hjust=1)
+        ) +
+  facet_wrap( ~cat_hora, ncol = 5)
+
+
 ```
+
+
+```{r boxplot}
+# Dispersion: velocidad x conteo faceteado por hora, momento del mes, ...
+
+
+muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
+  geom_point(alpha=1/3)+
+  labs(x="Cantidad de vehículos detectados en el carril en los ?ltimos 5 minutos", 
+       y="Promedio de  las velocidades de los autos que circularon por el carril durante los ?ltimos 5 minutos") +
+  theme(aspect.ratio = 1,
+        legend.title = element_text(size = 8, face = "bold",hjust = 0.5),
+        axis.title.x = element_text(size = 8, face = "bold",hjust = 0.5),
+        axis.title.y = element_text(size = 8, face = "bold",hjust = 0.5),
+        axis.text.x = element_text(size=8, angle=45,hjust=1)
+        ) +
+  facet_wrap( ~dia_semana, ncol = 3)
+
+
+```
+
+
+```{r boxplot}
+# Dispersion: velocidad x conteo faceteado por hora, momento del mes, ...
+
+
+muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
+  geom_point(alpha=1/3)+
+  labs(x="Cantidad de vehículos detectados en el carril en los ?ltimos 5 minutos", 
+       y="Promedio de  las velocidades de los autos que circularon por el carril durante los ?ltimos 5 minutos") +
+  theme(aspect.ratio = 1,
+        legend.title = element_text(size = 8, face = "bold",hjust = 0.5),
+        axis.title.x = element_text(size = 8, face = "bold",hjust = 0.5),
+        axis.title.y = element_text(size = 8, face = "bold",hjust = 0.5),
+        axis.text.x = element_text(size=8, angle=45,hjust=1)
+        ) +
+  facet_wrap( ~cat_fecha, ncol = 3)
+
+
+```
+
+
+ggplot(muestra, aes(x = cat_fecha, y = cat_hora, fill = velocidad_promedio)) + geom_tile()
+
+ggplot(muestra, aes(x = cat_hora, y = dia_semana, fill = velocidad_promedio)) + geom_tile
+
+ggplot(muestra, aes(x = cat_fecha, y = dia_semana, fill = velocidad_promedio)) + geom_tile()
+
+ggplot(muestra, aes(x = cat_fecha, y = cat_hora, fill = volume)) + geom_tile()
+
+ggplot(muestra, aes(x = cat_hora, y = dia_semana, fill = volume)) + geom_tile()
+
+ggplot(muestra, aes(x = cat_fecha, y = dia_semana, fill = volume)) + geom_tile()
+
+
+
 
 ```{r barplot_conteo}
 # Barras: dias de la semana (cada barra por municipio)
