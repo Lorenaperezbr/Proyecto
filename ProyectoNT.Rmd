@@ -21,6 +21,7 @@ library(tidyverse)
 library(kableExtra)
 library(rgdal)
 library(maptools)
+library(sf) # NOS DA ERROR
 ```
 
 ```{r data_source, echo = FALSE, include = FALSE}
@@ -75,6 +76,8 @@ rm(list=c("conteo_feb","velocidad_feb", "conteo_mar", "velocidad_mar", "febrero"
 municipios_2$long <- (municipios_2$long*-1)/10000
 municipios_2$lat <- (municipios_2$lat*-1)/100000
 
+
+# QUEREMOS HACER UN JOIN DE LOS PUNTOS DE NUESTRA BASE "FEBRERO_MARZO" A LOS MUNICIPIOS DEFINIDOS EN EL SHAPEFILE "MUNICIPIOS". LOS MATCHEARÍAMOS POR LONGITUD Y LATITUD.
 
 base <- left_join(febrero_marzo, municipios_2, by = c('longitud'= "long", 'latitud'='lat'))
 
