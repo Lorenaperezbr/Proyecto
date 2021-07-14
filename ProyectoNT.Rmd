@@ -20,28 +20,16 @@ library(tidyverse)
 library(kableExtra)
 library(rgdal)
 library(maptools)
+library(data.table)
 ```
 
 ```{r data_source, echo = FALSE, include = FALSE}
-
 # Carga de los data sets
+conteo_feb <- readRDS("data/raw/conteo_feb.rds")
+conteo_mar <- readRDS("data/raw/conteo_mar.rds")
 
-conteo_feb <- read.csv("https://catalogodatos.gub.uy/dataset/95a35fa3-9629-41a6-976a-5fb8c900fdec/resource/b985762d-c1c1-4dd0-bc57-6c3ab53e8ff8/download/autoscope_02_2021_volumen.csv", header = TRUE, sep = ";")
-
-conteo_mar <- read.csv("https://catalogodatos.gub.uy/dataset/95a35fa3-9629-41a6-976a-5fb8c900fdec/resource/6df7fc9c-8331-4d93-928c-cd69b48940a2/download/autoscope_03_2021.csv", header = TRUE, sep = ";")
-
-velocidad_feb <- read.csv("https://catalogodatos.gub.uy/dataset/64189920-546e-4266-a8ee-476524313661/resource/01ba56d8-2dab-4d8b-8391-d03159314144/download/autoscope_02_2021_velocidad.csv", header = TRUE, sep = ";")
-
-velocidad_mar <- read.csv("https://catalogodatos.gub.uy/dataset/64189920-546e-4266-a8ee-476524313661/resource/da56b7db-dcef-41e0-8f16-a00406ae7c1c/download/autoscope_03_2021_velocidad.csv", header = TRUE, sep = ";")
-
-#Dejo provisorio lo de abajo porque me funciona mejor que cargar la data desde la web.
-#conteo_feb <- read.csv("C:/Users/olive/OneDrive/Escritorio/Proyecto_NT_Golffeld_Olivera_Perez_Vieyto/autoscope_02_2021_volumen.csv", header = TRUE, sep = ";")
-
-#conteo_mar <- read.csv("C:/Users/olive/OneDrive/Escritorio/Proyecto_NT_Golffeld_Olivera_Perez_Vieyto/autoscope_03_2021.csv", header = TRUE, sep = ";")
-
-#velocidad_feb <- read.csv("C:/Users/olive/OneDrive/Escritorio/Proyecto_NT_Golffeld_Olivera_Perez_Vieyto/autoscope_02_2021_velocidad.csv", header = TRUE, sep = ";")
-
-#velocidad_mar <- read.csv("C:/Users/olive/OneDrive/Escritorio/Proyecto_NT_Golffeld_Olivera_Perez_Vieyto/autoscope_03_2021_velocidad.csv", header = TRUE, sep = ";")
+velocidad_feb <- readRDS("data/raw/velocidad_feb.rds")
+velocidad_mar <- readRDS("data/raw/velocidad_mar.rds")
 
 municipios <- readOGR("ine_ccz_mvd.shp")
 municipios_2 <- fortify(municipios)
@@ -50,23 +38,20 @@ municipios_2 <- fortify(municipios)
 
 
 ```{r data_set, echo = FALSE, include = FALSE}
+febrero <- conteo_feb[velocidad_feb, 
+                      on = c('cod_detector', 'id_carril', 'fecha', 'hora', 'latitud', 'longitud'), nomatch = 0]
+marzo <- conteo_mar[velocidad_mar, 
+                    on = c('cod_detector', 'id_carril', 'fecha', 'hora', 'latitud', 'longitud'), nomatch = 0]
 
-
-febrero <- inner_join(conteo_feb, velocidad_feb, by = c('ï..cod_detector'='ï..cod_detector', 'id_carril'='id_carril', 'fecha'='fecha', 'hora'='hora', 'latitud'='latitud', 'longitud'='longitud')) 
-
-marzo <- inner_join(conteo_mar, velocidad_mar, by = c('ï..cod_detector'='ï..cod_detector', 'id_carril'='id_carril', 'fecha'='fecha', 'hora'='hora', 'latitud'='latitud', 'longitud'='longitud')) 
-
-
+# febrero <- inner_join(conteo_feb, velocidad_feb, by = c('cod_detector'='cod_detector', 'id_carril'='id_carril', 'fecha'='fecha', 'hora'='hora', 'latitud'='latitud', 'longitud'='longitud')) 
+# marzo <- inner_join(conteo_mar, velocidad_mar, by = c('cod_detector'='cod_detector', 'id_carril'='id_carril', 'fecha'='fecha', 'hora'='hora', 'latitud'='latitud', 'longitud'='longitud')) 
 
 febrero_marzo <- rbind(febrero, marzo)
 
-
 rm(list=c("conteo_feb","velocidad_feb", "conteo_mar", "velocidad_mar", "febrero", "marzo"))
-
 
 municipios_2$long <- (municipios_2$long*-1)/10000
 municipios_2$lat <- (municipios_2$lat*-1)/100000
-
 
 base <- left_join(febrero_marzo, municipios_2, by = c('longitud'= "long", 'latitud'='lat'))
 
@@ -313,7 +298,7 @@ df_municipios %>%
   
 ```
 
-```{r boxplot}
+```{r boxplot_0}
 # Boxplots por municipios --- lo dejo escrito en comentario porque queda unificar los municipios de cada obs a la base original y a la muestra
 
 #p1<-muestra %>% ggplot(aes(x=municipios, y=velocidad_promedio)) +  geom_boxplot(aes(fill = municipios)) + 
@@ -324,7 +309,7 @@ df_municipios %>%
 
 ```
 
-```{r boxplot}
+```{r boxplot_1}
 # Dispersion: velocidad x conteo faceteado por hora, momento del mes, ...
 
 
@@ -344,7 +329,7 @@ muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
 ```
 
 
-```{r boxplot}
+```{r boxplot_2}
 # Dispersion: velocidad x conteo faceteado por hora, momento del mes, ...
 
 
@@ -364,7 +349,7 @@ muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
 ```
 
 
-```{r boxplot}
+```{r boxplot_3}
 # Dispersion: velocidad x conteo faceteado por hora, momento del mes, ...
 
 
