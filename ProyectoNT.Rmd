@@ -388,7 +388,7 @@ ggplot(muestra, aes(x = cat_fecha, y = dia_semana, fill = volume)) + geom_tile()
 ```{r barplot_conteo}
 # Barras: dias de la semana (cada barra por municipio)
 
-conteo_muestra %>% 
+conteo %>% 
   ggplot(aes(x = dia)) +
   geom_bar() +
   facet_grid(vars()) # Separar por municipio 
@@ -396,17 +396,64 @@ conteo_muestra %>%
 ```
 ```{r barplot_valocidad}
 
-velocidad_muestra %>% 
-  group_by(dia) %>% 
-    summarise(min = min(velocidad_promedio),
-              max = max(velocidad_promedio)) %>% 
-      ggplot(aes(x = dia, y = max)) +
-      geom_col() +
-      facet_grid(vars()) # Separar por municipio 
+
+muestra %>%
+  filter(velocidad_promedio > 0) %>%
+  group_by(dia_semana) %>%
+  summarise(Mínimo = min(velocidad_promedio),
+            Máximo = max(velocidad_promedio)) %>% pivot_longer(cols = c(Mínimo, Máximo), names_to =
+                                                                 "Valores") %>%
+  ggplot(aes(x = dia_semana, y = value, fill = Valores)) +
+  geom_col(position = "dodge", stat = "identity") + labs(y =
+                                                           "Velocidad promedio en los últimos 5 minutos (km/h)", title = "Mínima y máxima velocidad promedio registrada por día de la semana") +
+  geom_text(aes(label = paste(value, "km/h")),colour = "white", size = 2,
+    vjust = 1.5, position = position_dodge(.9))+
+  theme(
+  axis.title.x = element_blank(),
+  legend.title = element_blank(),
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  panel.background = element_blank(),
+  axis.title.y = element_text(size = 10, hjust = 0.5),
+  legend.text = element_text(size = 6),
+  axis.text = element_text(size = 6)) + 
+  scale_fill_manual(values=c("#d9421c","#54e84f")) +
+  facet_grid(vars()) # Separar por municipio 
 
 # Ac? me imagin? que en cada d?a haya dos barras, una de min y una de max, pero creo que no se puede graficar dos variables distintas en el eje y. ?Ideas?
 
 ```
+
+```{r barplot_valocidad}
+
+
+muestra %>%
+  filter(velocidad_promedio > 0) %>%
+  group_by(dia_semana, cat_hora) %>%
+  summarise(Mínimo = min(velocidad_promedio),
+            Máximo = max(velocidad_promedio)) %>% pivot_longer(cols = c(Mínimo, Máximo), values_to="Valores") %>%
+  ggplot(aes(x = dia_semana, y = value, fill = Valores)) +
+  geom_col(position = "dodge", stat = "identity") + labs(y =
+                                                           "Velocidad promedio en los últimos 5 minutos (km/h)", title = "Mínima y máxima velocidad promedio registrada por día de la semana") +
+  geom_text(aes(label = paste(value, "km/h")),colour = "white", size = 2,
+    vjust = 1.5, position = position_dodge(.9))+
+  theme(
+  axis.title.x = element_blank(),
+  legend.title = element_blank(),
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  panel.background = element_blank(),
+  axis.title.y = element_text(size = 10, hjust = 0.5),
+  legend.text = element_text(size = 6),
+  axis.text = element_text(size = 6)) + 
+  scale_fill_manual(values=c("#d9421c","#54e84f")) +
+  facet_grid(.~cat_hora) 
+
+#Se me ocurrio hacerlo tambien general, por momento del dia, si no les parece lo borramos. Igual lo que no me esta quedando es el pivot_long, me dice que no lo puede hacer por no ser multiplos. Pero la variable cat_hora no la quiero tocar
+
+```
+
+
 
 ```{r}
 #Graficos de correlaciones. Se puede extender a municipios.
