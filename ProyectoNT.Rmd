@@ -43,6 +43,13 @@ velocidad_mar <- read.csv("https://catalogodatos.gub.uy/dataset/64189920-546e-42
 
 #velocidad_mar <- read.csv("C:/Users/olive/OneDrive/Escritorio/Proyecto_NT_Golffeld_Olivera_Perez_Vieyto/autoscope_03_2021_velocidad.csv", header = TRUE, sep = ";")
 
+############################## Ange
+# velocidad_feb <- read.csv("autoscope_02_2021_velocidad.csv", header = TRUE, sep = ";")
+# conteo_feb <- read.csv("autoscope_02_2021_volumen.csv", header = TRUE, sep = ";")
+# velocidad_mar <- read.csv("autoscope_03_2021_velocidad.csv", header = TRUE, sep = ";")
+# conteo_mar <- read.csv("autoscope_03_2021_volumen.csv", header = TRUE, sep = ";")
+
+
 municipios <- readOGR("ine_ccz_mvd.shp")
 municipios_2 <- fortify(municipios)
 ```
@@ -338,7 +345,8 @@ muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
         axis.title.y = element_text(size = 8, face = "bold",hjust = 0.5),
         axis.text.x = element_text(size=8, angle=45,hjust=1)
         ) +
-  facet_wrap( ~cat_hora, ncol = 5)
+  facet_wrap( ~cat_hora, ncol = 5) +
+  geom_smooth(method = "lm")
 
 
 ```
@@ -358,7 +366,8 @@ muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
         axis.title.y = element_text(size = 8, face = "bold",hjust = 0.5),
         axis.text.x = element_text(size=8, angle=45,hjust=1)
         ) +
-  facet_wrap( ~dia_semana, ncol = 3)
+  facet_wrap( ~dia_semana, ncol = 3) +
+  geom_smooth(method = "lm")
 
 
 ```
@@ -378,7 +387,8 @@ muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
         axis.title.y = element_text(size = 8, face = "bold",hjust = 0.5),
         axis.text.x = element_text(size=8, angle=45,hjust=1)
         ) +
-  facet_wrap( ~cat_fecha, ncol = 3)
+  facet_wrap( ~cat_fecha, ncol = 3) +
+  geom_smooth(method = "lm")
 
 
 ```
