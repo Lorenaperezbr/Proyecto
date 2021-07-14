@@ -21,6 +21,7 @@ library(tidyverse)
 library(kableExtra)
 library(rgdal)
 library(maptools)
+library(GGally)
 library(sf) # NOS DA ERROR
 ```
 
@@ -342,14 +343,14 @@ df_municipios %>%
 muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
   geom_point(alpha=1/3)+
   labs(x="Cantidad de vehículos detectados en el carril en los ?ltimos 5 minutos", 
-       y="Promedio de  las velocidades de los autos que circularon por el carril durante los ?ltimos 5 minutos") +
+       y="Promedio de  las velocidades durante los últimos 5 minutos") +
   theme(aspect.ratio = 1,
         legend.title = element_text(size = 8, face = "bold",hjust = 0.5),
         axis.title.x = element_text(size = 8, face = "bold",hjust = 0.5),
         axis.title.y = element_text(size = 8, face = "bold",hjust = 0.5),
         axis.text.x = element_text(size=8, angle=45,hjust=1)
         ) +
-  facet_wrap( ~cat_hora, ncol = 5) +
+  facet_wrap( ~cat_hora, ncol = 3) +
   geom_smooth(method = "lm")
 
 
@@ -363,7 +364,7 @@ muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
 muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
   geom_point(alpha=1/3)+
   labs(x="Cantidad de vehículos detectados en el carril en los ?ltimos 5 minutos", 
-       y="Promedio de  las velocidades de los autos que circularon por el carril durante los ?ltimos 5 minutos") +
+       y="Promedio de  las velocidades durante los últimos 5 minutos") +
   theme(aspect.ratio = 1,
         legend.title = element_text(size = 8, face = "bold",hjust = 0.5),
         axis.title.x = element_text(size = 8, face = "bold",hjust = 0.5),
@@ -384,7 +385,7 @@ muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
 muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
   geom_point(alpha=1/3)+
   labs(x="Cantidad de vehículos detectados en el carril en los ?ltimos 5 minutos", 
-       y="Promedio de  las velocidades de los autos que circularon por el carril durante los ?ltimos 5 minutos") +
+       y="Promedio de  las velocidades durante los últimos 5 minutos") +
   theme(aspect.ratio = 1,
         legend.title = element_text(size = 8, face = "bold",hjust = 0.5),
         axis.title.x = element_text(size = 8, face = "bold",hjust = 0.5),
@@ -435,6 +436,23 @@ velocidad_muestra %>%
 # Ac? me imagin? que en cada d?a haya dos barras, una de min y una de max, pero creo que no se puede graficar dos variables distintas en el eje y. ?Ideas?
 
 ```
+
+```{r}
+#Graficos de correlaciones. Se puede extender a municipios.
+ggpairs(muestra, c(10,15), mapping = ggplot2::aes(color = cat_hora, alpha = 0.5),
+        diag = list(continuous = wrap("densityDiag")),
+        lower = list(continuous = wrap("points", alpha=0.9)))
+
+ggpairs(muestra, c(10,15), mapping = ggplot2::aes(color = dia_semana, alpha = 0.5),
+        diag = list(continuous = wrap("densityDiag")),
+        lower = list(continuous = wrap("points", alpha=0.9)))
+
+ggpairs(muestra, c(10,15), mapping = ggplot2::aes(color = cat_fecha, alpha = 0.5),
+        diag = list(continuous = wrap("densityDiag")),
+        lower = list(continuous = wrap("points", alpha=0.9)))
+```
+
+
 
 # minimo y maximo - velocidad
 
