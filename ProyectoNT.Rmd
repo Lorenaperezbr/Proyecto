@@ -21,6 +21,7 @@ library(kableExtra)
 library(rgdal)
 library(maptools)
 library(sf) # NOS DA ERROR
+library(GGally)
 library(data.table)
 ```
 
@@ -459,6 +460,22 @@ velocidad_muestra %>%
 
 ```
 
+```{r}
+#Graficos de correlaciones. Se puede extender a municipios.
+ggpairs(muestra, c(10,15), mapping = ggplot2::aes(color = cat_hora, alpha = 0.5),
+        diag = list(continuous = wrap("densityDiag")),
+        lower = list(continuous = wrap("points", alpha=0.9)))
+
+ggpairs(muestra, c(10,15), mapping = ggplot2::aes(color = dia_semana, alpha = 0.5),
+        diag = list(continuous = wrap("densityDiag")),
+        lower = list(continuous = wrap("points", alpha=0.9)))
+
+ggpairs(muestra, c(10,15), mapping = ggplot2::aes(color = cat_fecha, alpha = 0.5),
+        diag = list(continuous = wrap("densityDiag")),
+        lower = list(continuous = wrap("points", alpha=0.9)))
+```
+
+
 # minimo y maximo - velocidad
 
 ```{r}
@@ -468,17 +485,6 @@ velocidad_muestra %>%
 #   summarise(velocidad_minima= min(velocidad_promedio), velocidad_maxima = max(velocidad_promedio), volumen_minimo= min(volume), #volumen_maximo=max(volume))
 
 ```
-
-
-
-
-
-
-
-
-
-
-
 
 ## Referencias
 
