@@ -32,7 +32,7 @@ library(data.table)
 base <- readRDS("data/processed/febrero_marzo_join.rds")
 
 # Ver el comentario en preprocessing. Carga de municipios.
-municipios <- st_read("data/geo/mdeo_barrios/")
+municipios <- st_read("data/geo/mdeo_barrios")
 st_crs(x = municipios) <-  5382
 municipios <- st_transform(municipios, "+init=epsg:4326")
 
@@ -135,7 +135,7 @@ muestra$dia_semana <-
 \vspace{1cm}
 
 	Autores:
-	Federico Golffeld - Martín Olivera - Lorena Pérez - Ángela Vieyto
+	Federico Golffeld - Martín Olivera - Lorena Perez - Ángela Vieyto
 	
 	\vspace{1cm}
 	
@@ -261,49 +261,15 @@ En cuanto al volumen de vehículos capturado por la cámara en los últimos 5 mi
 Por último, observamos los desvíos de las variables Volumen y Velocidad promedio, y luego la correlación entre ambas. La primera de las mencionadas tiene una desviación estándar de 18.6, mientras que la segunda una de 17.0. Mirando el coeficiente de correlación, se observa que este es de 0.02, indicando una correlación baja, lo que podrá llegar a ser contra intuitivo.
 
 
-```{r map}
-df_municipios <- ggplot2::fortify(municipios)
-
-# Mapa
-df_municipios %>% 
-  ggplot(aes(x = long, y = lat, group = group)) +
-  geom_polygon()
-
-# Intent? hacer un join para relacionar longitud y latitud de los dos objetos, pero no me queda bien
-conteo_muestra$longitud <- conteo_muestra$longitud*-100000
-conteo_muestra$latitud <- conteo_muestra$latitud*-100000
-
-conteo_map <- df_municipios %>% 
-                left_join(conteo_muestra, by = c("long" = "longitud",
-                                                 "lat" = "latitud"))
-
-conteo_muestra %>% 
-  group_by(longitud && latitud) %>% 
-    summarise(volumen_hora)
-
-# No me doy cuenta c?mo matchear?amos el municipio a trav?s de long y lat, porque en la base de municipios hay un mill?n de coordenadas por id, miren esto:
-
-table(df_municipios$id) # No se puede con un igual, con un entre, no me doy cuenta...
-
-
-# Intent? hacerlo superponiendo gr?ficos, pero tampoco qued?
-df_municipios %>% 
-  ggplot(aes(x = long, y = lat, group = group)) +
-  geom_polygon() +
-  geom_point(data = conteo_muestra, aes(x = longitud,
-                                        y = latitud,
-                                        size = volumen_hora))
-  
-```
 
 ```{r boxplot}
 # Boxplots por municipios --- lo dejo escrito en comentario porque queda unificar los municipios de cada obs a la base original y a la muestra
 
-#p1<-muestra %>% ggplot(aes(x=municipios, y=velocidad_promedio)) +  geom_boxplot(aes(fill = municipios)) + 
-#  labs(x="Municipios", y="Velocidad Promedio")
-#p2<-muestra %>% ggplot(aes(x=municipios, y=volume)) +  geom_boxplot(aes(fill = municipios)) + 
-#  labs(x="Municipios", y="Conteo de Vehículos")
-#grid.arrange(p1, p2, nrow=1, ncol=2)
+p1<-base %>% ggplot(aes(x=reorder(factor(CCZ),-velocidad_promedio,median), y=velocidad_promedio)) +  geom_boxplot()  +
+ labs(x="Centro comunal zonal", y="Velocidad Promedio") 
+p2<-base %>% ggplot(aes(x=factor(CCZ), y=volume)) +  geom_boxplot(aes(fill = CCZ)) +
+ labs(x="Centro Comunal Zonal", y="Conteo de Vehículos")
+grid.arrange(p1, p2, nrow=1, ncol=2)
 
 ```
 
@@ -313,15 +279,15 @@ df_municipios %>%
 
 muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
   geom_point(alpha=1/3)+
-  labs(x="Cantidad de vehículos detectados en el carril en los ?ltimos 5 minutos", 
-       y="Promedio de  las velocidades de los autos que circularon por el carril durante los ?ltimos 5 minutos") +
+  labs(x="Cantidad de vehículos detectados en el carril en los últimos 5 minutos", 
+       y="Promedio de  las velocidades de los autos que circularon por el carril durante los últimos 5 minutos") +
   theme(aspect.ratio = 1,
         legend.title = element_text(size = 8, face = "bold",hjust = 0.5),
         axis.title.x = element_text(size = 8, face = "bold",hjust = 0.5),
         axis.title.y = element_text(size = 8, face = "bold",hjust = 0.5),
         axis.text.x = element_text(size=8, angle=45,hjust=1)
         ) +
-  facet_wrap( ~cat_hora, ncol = 5) +
+  facet_wrap( ~cat_hora, ncol=5) +
   geom_smooth(method = "lm")
 
 
@@ -388,10 +354,10 @@ ggplot(muestra, aes(x = cat_fecha, y = dia_semana, fill = volume)) + geom_tile()
 ```{r barplot_conteo}
 # Barras: dias de la semana (cada barra por municipio)
 
-conteo %>% 
-  ggplot(aes(x = dia)) +
-  geom_bar() +
-  facet_grid(vars()) # Separar por municipio 
+muestra %>% 
+  ggplot(aes(x = cat_fecha, y=volume)) +
+  geom_col() +
+  facet_wrap(~factor(CCZ)) # Separar por CCZ 
 
 ```
 ```{r barplot_valocidad}
