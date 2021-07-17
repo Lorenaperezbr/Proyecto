@@ -36,27 +36,15 @@ municipios <- st_read("data/geo/mdeo_barrios")
 st_crs(x = municipios) <-  5382
 municipios <- st_transform(municipios, "+init=epsg:4326")
 
-# municipios <- readOGR("ine_ccz_mvd.shp")
-# municipios_2 <- fortify(municipios)
 ```
-
-
 
 ```{r data_set, echo = FALSE, include = FALSE}
 # Grafica test
-ggplot() + 
-  geom_sf(data = municipios) + 
+ggplot() +
+  geom_sf(data = municipios) +  
   geom_sf(data = base) +
   theme_minimal()
 
-# Más ejemplos: https://cengel.github.io/R-spatial/mapping.html
-# https://ggplot2-book.org/maps.html
-# https://geocompr.robinlovelace.net/
-
-# QUEREMOS HACER UN JOIN DE LOS PUNTOS DE NUESTRA BASE "FEBRERO_MARZO" A LOS MUNICIPIOS DEFINIDOS EN EL SHAPEFILE "MUNICIPIOS". LOS MATCHEARÍAMOS POR LONGITUD Y LATITUD.
-# base <- left_join(febrero_marzo, municipios_2, by = c('longitud'= "long", 'latitud'='lat'))
-#Luego de esto sacaria todas las columnas que no vamos a usarr
-          
 ```
 
 ```{r manejo_fechas, echo = FALSE, include = FALSE}
@@ -70,28 +58,17 @@ base$hora <- hms(base$hora)
 
 ```
 
-```{r muestras, echo = FALSE, include = FALSE}
-# MUESTRA VELOCIDAD
-muestra <- sample_n(base, 1000)
-
-```
-
-```{r data_cleaning, echo = FALSE, include = FALSE}
-# Verificamos que no haya datos faltantes
-str(base)
-apply(is.na(base), 2, which) # No se observan datos faltantes
-```
 
 ```{r categorizacion, echo = FALSE, include = FALSE}
 # Categorizamos las horas en mañana (8-12), tarde (12-17), media tarde (17-20), noche (20-00) y madrugada (00-8)
 
-muestra$cat_hora <- ifelse(muestra$hora >= "8H 00M 0S" & muestra$hora < "12H 00M 0S",
+base$cat_hora <- ifelse(base$hora >= "8H 00M 0S" & base$hora < "12H 00M 0S",
                            "Mañana",
-                           ifelse(muestra$hora >= "12H 00M 0S" & muestra$hora < "17H 00M 0S",
+                           ifelse(base$hora >= "12H 00M 0S" & base$hora < "17H 00M 0S",
                                   "Medio dia",
-                                  ifelse(muestra$hora >= "17H 00M 0S" & muestra$hora < "20H 00M 0S",
+                                  ifelse(base$hora >= "17H 00M 0S" & base$hora < "20H 00M 0S",
                                          "Media tarde",
-                                         ifelse(muestra$hora >= "20H 00M 0S" & muestra$hora < "23H 59M 59S",
+                                         ifelse(base$hora >= "20H 00M 0S" & base$hora < "23H 59M 59S",
                                                 "Noche",
                                                 "Madrugada"
                                                 )
@@ -100,10 +77,10 @@ muestra$cat_hora <- ifelse(muestra$hora >= "8H 00M 0S" & muestra$hora < "12H 00M
                            )
 
 
-muestra$cat_fecha <- ifelse(
-  (muestra$fecha >= "2021-02-01" & muestra$fecha <= "2021-02-10") | (muestra$fecha >= "2021-03-01" & muestra$fecha <= "2021-03-10"),
+base$cat_fecha <- ifelse(
+  (base$fecha >= "2021-02-01" & base$fecha <= "2021-02-10") | (base$fecha >= "2021-03-01" & base$fecha <= "2021-03-10"),
   "Principio de mes",
-  ifelse((muestra$fecha >= "2021-02-11" & muestra$fecha <= "2021-02-20") | (muestra$fecha >= "2021-03-11" &  muestra$fecha <= "2021-03-20"),
+  ifelse((base$fecha >= "2021-02-11" & base$fecha <= "2021-02-20") | (base$fecha >= "2021-03-11" &  base$fecha <= "2021-03-20"),
          "Mitad de mes",
          "Fin de mes"
          )
@@ -111,9 +88,9 @@ muestra$cat_fecha <- ifelse(
 
 
       
-muestra$dia_semana <-
+base$dia_semana <-
   factor(
-    wday(muestra$fecha),
+    wday(base$fecha),
     labels = c("1" = "Domingo",
                "2" = "Lunes",
                "3" = "Martes",
@@ -124,6 +101,10 @@ muestra$dia_semana <-
                )
     )
 
+
+
+base <- subset(base, select= -c(fecha, hora, dsc_avenida , dsc_int_anterior ,  dsc_int_siguiente ,  i.dsc_avenida, i.dsc_int_anterior,  i.dsc_int_siguiente))
+  
 ```
 
 \begin{center}
@@ -171,7 +152,7 @@ En lo que sigue de este trabajo se propone realizar una descripción de los dato
 
 Para realizar este estudio se consideran datos brindados por el Centro de Gesti?n de Movilidad (CGM) del Departamento de Movilidad de la Intendencia de Montevideo (IM). Se cuentan con datos con frecuencia mensual referentes a la velocidad de circulaci?n y el volumen de circulaci?n de veh?culos en la ciudad de Montevideo donde se detallan los registros de las c?maras de CGM con d?a y horario de lo acontecido. Para este ejercicio se consideran datos para los meses de Febero y Marzo de 2021 - "El sistema genera un registro cada 5 minutos, las medidas que se explican a continuaci?n corresponden a la suma de todos los veh?culos de los 5 minutos anteriores a la fecha y hora del registro. Tambi?n se publican datos particulares del sensor que permiten conocer su ubicaci?n y entender el sentido de circulaci?n que se est? midiendo". Cabe destacar la particularidad de que en los meses de verano la movilidad suele ser inferior a otros meses del a?o y considerando un contexto de pandemia, estos datos pueden estar afectados a la coyuntura.
 
-Por tanto, se cuenta con 7623354 observaciones correspondiente a Febrero y Marzo de 2021 para cada una de las bases de datos utilizadas: la velocidad de circulaci+on vehicular y el volumen de circulaci?n. En cuanto al set de variables consideradas, los datos vinculados a la velocidad de circulaci?n cuenta con 10 variables mientras que los datos de conteo vehicular cuenta con 11 observaciones. Sin embago, considerando que hay variables id?nticas en ambas fuentes de datos, en total se cuenta con 12 variables. La siguiente tabla muestra el set de variables consideradas en este estudio con su debida descripci?n. 
+Por tanto, se cuenta con 7623354 observaciones correspondiente a Febrero y Marzo de 2021 para cada una de las bases de datos utilizadas: la velocidad de circulaci+on vehicular y el volumen de circulaci?n. En cuanto al set de variables consideradas, los datos vinculados a la velocidad de circulaci?n cuenta con 10 variables mientras que los datos de conteo vehicular cuenta con 11 observaciones. Sin embago, considerando que hay variables id?nticas en ambas fuentes de datos, en total se cuenta con 12 variables. La siguiente tabla base el set de variables consideradas en este estudio con su debida descripci?n. 
 
 
 
@@ -195,8 +176,8 @@ descripcion <-
   c(
     "Id de la c?mara que est? monitoerando un determinado carril",
     "Número del carril que se est? monitoreando",
-    "Día en que se toma la muestra",
-    "Hora en que se toma la muestra",
+    "Día en que se toma la base",
+    "Hora en que se toma la base",
     "Nombre de la v?a en la que se mide el tr?nsito",
     "Nombre de la v?a que forma el cruce desde donde vienen los veh?culos",
     "Nombre de la v?a que forma el cruce donde est? el medidor",
@@ -263,21 +244,19 @@ Por último, observamos los desvíos de las variables Volumen y Velocidad promed
 
 
 ```{r boxplot}
-# Boxplots por municipios --- lo dejo escrito en comentario porque queda unificar los municipios de cada obs a la base original y a la muestra
+# Boxplots por municipios --- lo dejo escrito en comentario porque queda unificar los municipios de cada obs a la base original y a la base
 
 p1<-base %>% ggplot(aes(x=reorder(factor(CCZ),-velocidad_promedio,median), y=velocidad_promedio)) +  geom_boxplot()  +
  labs(x="Centro comunal zonal", y="Velocidad Promedio") 
-p2<-base %>% ggplot(aes(x=factor(CCZ), y=volume)) +  geom_boxplot(aes(fill = CCZ)) +
- labs(x="Centro Comunal Zonal", y="Conteo de Vehículos")
+p2<-base %>% ggplot(aes(x=reorder(factor(CCZ),-volume,median), y=volume)) +  geom_boxplot()  +
+ labs(x="Centro comunal zonal", y="Conteo de Vehiculos") 
+
 grid.arrange(p1, p2, nrow=1, ncol=2)
 
 ```
 
 ```{r boxplot}
-# Dispersion: velocidad x conteo faceteado por hora, momento del mes, ...
-
-
-muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
+base %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
   geom_point(alpha=1/3)+
   labs(x="Cantidad de vehículos detectados en el carril en los últimos 5 minutos", 
        y="Promedio de  las velocidades de los autos que circularon por el carril durante los últimos 5 minutos") +
@@ -298,7 +277,7 @@ muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
 # Dispersion: velocidad x conteo faceteado por hora, momento del mes, ...
 
 
-muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
+base %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
   geom_point(alpha=1/3)+
   labs(x="Cantidad de vehículos detectados en el carril en los ?ltimos 5 minutos", 
        y="Promedio de  las velocidades de los autos que circularon por el carril durante los ?ltimos 5 minutos") +
@@ -319,7 +298,7 @@ muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
 # Dispersion: velocidad x conteo faceteado por hora, momento del mes, ...
 
 
-muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
+base %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
   geom_point(alpha=1/3)+
   labs(x="Cantidad de vehículos detectados en el carril en los ?ltimos 5 minutos", 
        y="Promedio de  las velocidades de los autos que circularon por el carril durante los ?ltimos 5 minutos") +
@@ -336,17 +315,17 @@ muestra %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
 ```
 
 
-ggplot(muestra, aes(x = cat_fecha, y = cat_hora, fill = velocidad_promedio)) + geom_tile()
+ggplot(base, aes(x = cat_fecha, y = cat_hora, fill = velocidad_promedio)) + geom_tile()
 
-ggplot(muestra, aes(x = cat_hora, y = dia_semana, fill = velocidad_promedio)) + geom_tile
+ggplot(base, aes(x = cat_hora, y = dia_semana, fill = velocidad_promedio)) + geom_tile
 
-ggplot(muestra, aes(x = cat_fecha, y = dia_semana, fill = velocidad_promedio)) + geom_tile()
+ggplot(base, aes(x = cat_fecha, y = dia_semana, fill = velocidad_promedio)) + geom_tile()
 
-ggplot(muestra, aes(x = cat_fecha, y = cat_hora, fill = volume)) + geom_tile()
+ggplot(base, aes(x = cat_fecha, y = cat_hora, fill = volume)) + geom_tile()
 
-ggplot(muestra, aes(x = cat_hora, y = dia_semana, fill = volume)) + geom_tile()
+ggplot(base, aes(x = cat_hora, y = dia_semana, fill = volume)) + geom_tile()
 
-ggplot(muestra, aes(x = cat_fecha, y = dia_semana, fill = volume)) + geom_tile()
+ggplot(base, aes(x = cat_fecha, y = dia_semana, fill = volume)) + geom_tile()
 
 
 
@@ -354,37 +333,56 @@ ggplot(muestra, aes(x = cat_fecha, y = dia_semana, fill = volume)) + geom_tile()
 ```{r barplot_conteo}
 # Barras: dias de la semana (cada barra por municipio)
 
-muestra %>% 
+base %>% 
   ggplot(aes(x = cat_fecha, y=volume)) +
   geom_col() +
   facet_wrap(~factor(CCZ)) # Separar por CCZ 
 
 ```
+```{r barplot_conteo}
+# Barras: dias de la semana (cada barra por municipio)
+
+base %>% 
+  group_by(cat_fecha, CCZ) %>% 
+  summarise(promedio_vel=mean(velocidad_promedio)) %>% 
+  ggplot(aes(x = cat_fecha, y=promedio_vel)) +
+  geom_col(stat='identity') +
+  facet_wrap(~factor(CCZ)) # Separar por CCZ 
+
+```
+
 ```{r barplot_valocidad}
 
 
-muestra %>%
+base %>%
   filter(velocidad_promedio > 0) %>%
-  group_by(dia_semana) %>%
+  group_by(dia_semana, CCZ) %>% 
   summarise(Mínimo = min(velocidad_promedio),
-            Máximo = max(velocidad_promedio)) %>% pivot_longer(cols = c(Mínimo, Máximo), names_to =
-                                                                 "Valores") %>%
+            Máximo = max(velocidad_promedio)) %>%
+  pivot_longer(
+    cols = c(CCZ, Mínimo, Máximo),
+    names_to = "Valores") %>%
   ggplot(aes(x = dia_semana, y = value, fill = Valores)) +
-  geom_col(position = "dodge", stat = "identity") + labs(y =
-                                                           "Velocidad promedio en los últimos 5 minutos (km/h)", title = "Mínima y máxima velocidad promedio registrada por día de la semana") +
-  geom_text(aes(label = paste(value, "km/h")),colour = "white", size = 2,
-    vjust = 1.5, position = position_dodge(.9))+
+  geom_col(position = "dodge", 
+           stat = "identity") + 
+  labs(y ="Velocidad promedio en los últimos 5 minutos (km/h)", 
+       title = "Mínima y máxima velocidad promedio registrada por día de la semana") +
+  geom_text(aes(label = paste(value, "km/h")),
+            colour = "white",
+            size = 2,
+            vjust = 1.5, 
+            position = position_dodge(.9)) +
   theme(
-  axis.title.x = element_blank(),
-  legend.title = element_blank(),
-  panel.grid.major = element_blank(),
-  panel.grid.minor = element_blank(),
-  panel.background = element_blank(),
-  axis.title.y = element_text(size = 10, hjust = 0.5),
-  legend.text = element_text(size = 6),
-  axis.text = element_text(size = 6)) + 
+    axis.title.x = element_blank(),
+    legend.title = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.title.y = element_text(size = 10, hjust = 0.5),
+    legend.text = element_text(size = 6),
+    axis.text = element_text(size = 6)) + 
   scale_fill_manual(values=c("#d9421c","#54e84f")) +
-  facet_grid(vars()) # Separar por municipio 
+  facet_wrap(~factor(CCZ))# Separar por municipio 
 
 # Ac? me imagin? que en cada d?a haya dos barras, una de min y una de max, pero creo que no se puede graficar dos variables distintas en el eje y. ?Ideas?
 
@@ -393,7 +391,7 @@ muestra %>%
 ```{r barplot_valocidad}
 
 
-muestra %>%
+base %>%
   filter(velocidad_promedio > 0) %>%
   group_by(dia_semana, cat_hora) %>%
   summarise(Mínimo = min(velocidad_promedio),
@@ -423,15 +421,15 @@ muestra %>%
 
 ```{r}
 #Graficos de correlaciones. Se puede extender a municipios.
-ggpairs(muestra, c(10,15), mapping = ggplot2::aes(color = cat_hora, alpha = 0.5),
+ggpairs(base, c("volume", "velocidad_promedio"), mapping = ggplot2::aes(color = cat_hora, alpha = 0.5),
         diag = list(continuous = wrap("densityDiag")),
         lower = list(continuous = wrap("points", alpha=0.9)))
 
-ggpairs(muestra, c(10,15), mapping = ggplot2::aes(color = dia_semana, alpha = 0.5),
+ggpairs(base, c("volume", "velocidad_promedio"), mapping = ggplot2::aes(color = dia_semana, alpha = 0.5),
         diag = list(continuous = wrap("densityDiag")),
         lower = list(continuous = wrap("points", alpha=0.9)))
 
-ggpairs(muestra, c(10,15), mapping = ggplot2::aes(color = cat_fecha, alpha = 0.5),
+ggpairs(base, c("volume", "velocidad_promedio"), mapping = ggplot2::aes(color = cat_fecha, alpha = 0.5),
         diag = list(continuous = wrap("densityDiag")),
         lower = list(continuous = wrap("points", alpha=0.9)))
 ```
@@ -441,7 +439,7 @@ ggpairs(muestra, c(10,15), mapping = ggplot2::aes(color = cat_fecha, alpha = 0.5
 
 ```{r}
 
-#muestra %>% 
+#base %>% 
 #  group_by(municipio) %>% 
 #   summarise(velocidad_minima= min(velocidad_promedio), velocidad_maxima = max(velocidad_promedio), volumen_minimo= min(volume), #volumen_maximo=max(volume))
 
