@@ -3,7 +3,7 @@ library(tidyverse)
 library(DT)
 
 
-base <- readRDS("data/processed/febrero_marzo_join.rds")
+base <- readRDS("data/processed/base_app.rds")
 
 ui <- fluidPage(
   titlePanel("Datos de Propina"),

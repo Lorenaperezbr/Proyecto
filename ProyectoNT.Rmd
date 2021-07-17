@@ -20,7 +20,7 @@ library(tidyverse)
 library(kableExtra)
 library(rgdal)
 library(maptools)
-library(sf) # NOS DA ERROR
+library(sf)
 library(GGally)
 library(data.table)
 ```
@@ -439,6 +439,12 @@ ggpairs(base, c("volume", "velocidad_promedio"), mapping = ggplot2::aes(color = 
 #   summarise(velocidad_minima= min(velocidad_promedio), velocidad_maxima = max(velocidad_promedio), volumen_minimo= min(volume), #volumen_maximo=max(volume))
 
 ```
+
+
+```{r guardar_datos_app, echo = FALSE, eval = FALSE}
+saveRDS(base, "data/processed/base_app.rds")
+```
+
 
 ## Referencias
 
