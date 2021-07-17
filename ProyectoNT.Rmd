@@ -310,7 +310,7 @@ base %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
 ```
 
 
-ggplot(base, aes(x = cat_fecha, y = cat_hora, fill = velocidad_promedio)) + geom_tile()
+ggplot(base, aes(x = cat_fecha, y = cat_hora, fill = velocidad_promedio)) + geom_tile() 
 
 ggplot(base, aes(x = cat_hora, y = dia_semana, fill = velocidad_promedio)) + geom_tile
 
@@ -334,6 +334,9 @@ base %>%
   facet_wrap(~factor(CCZ)) # Separar por CCZ 
 
 ```
+
+
+
 ```{r barplot_conteo}
 # Barras: dias de la semana (cada barra por municipio)
 
@@ -345,6 +348,23 @@ base %>%
   facet_wrap(~factor(CCZ)) # Separar por CCZ 
 
 ```
+
+base %>% 
+  ggplot(aes(x = reorder(CCZ, as.numeric(volume)),
+              y = volume,
+              fill = cat_fecha)) +
+  geom_bar(stat = "identity")
+  
+
+
+base %>% 
+  ggplot(aes(x = reorder(CCZ, -as.numeric(volume)),
+              y = volume,
+  )) +
+  geom_bar(stat = "identity")
+
+<!-- NO LOGRAMOS ORDENAR LAS BARRAS EN EL EJE X-->
+
 
 ```{r barplot_valocidad}
 
