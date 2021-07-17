@@ -24,7 +24,7 @@ marzo <- conteo_mar[velocidad_mar,
 febrero_marzo <- rbind(febrero, marzo)
 rm(list=c("conteo_feb","velocidad_feb", "conteo_mar", "velocidad_mar", "febrero", "marzo"))
 
-# OBSERVACIÓN: Les guardo febrero_marzo en "processed" PERO si estos datos no los van a usar, entonces deberían borrarlos.
+
 # La buena práctica es: se guardan los datos de entrada (raw), se procesan y solo se guardan los datos finales en processed o si fuese
 # necesario para el análisis algún conjunto puntual intermedio pero NO todos los datos de pasos intermedios.
 # Acá se los guardo para que vean y decidan pero luego limpien.
@@ -33,7 +33,6 @@ rm(list=c("conteo_feb","velocidad_feb", "conteo_mar", "velocidad_mar", "febrero"
 # una vez que se clona el repo. Pero ustedes trabajen con los finales en el Rmd (les va a ahorrar bastante tiempo).
 
 saveRDS(febrero_marzo, "data/processed/febrero_marzo.rds") 
-# Osea, se los dejo subido (así corren enseguida el .Rmd) al repo, luego pueden borrarla para que no demore.
 
 # Cargar municipios
 municipios <- st_read("data/geo/mdeo_barrios")

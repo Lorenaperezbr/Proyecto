@@ -31,11 +31,6 @@ library(data.table)
 # Carga de join.
 base <- readRDS("data/processed/febrero_marzo_join.rds")
 
-# Ver el comentario en preprocessing. Carga de municipios.
-municipios <- st_read("data/geo/mdeo_barrios")
-st_crs(x = municipios) <-  5382
-municipios <- st_transform(municipios, "+init=epsg:4326")
-
 ```
 
 ```{r data_set, echo = FALSE, include = FALSE}
@@ -62,7 +57,7 @@ base$hora <- hms(base$hora)
 ```{r categorizacion, echo = FALSE, include = FALSE}
 # Categorizamos las horas en mañana (8-12), tarde (12-17), media tarde (17-20), noche (20-00) y madrugada (00-8)
 
-base$cat_hora <- ifelse(base$hora >= "8H 00M 0S" & base$hora < "12H 00M 0S",
+base$cat_hora <- ifelse(base$hora >= "08H 00M 0S" & base$hora < "12H 00M 0S",
                            "Mañana",
                            ifelse(base$hora >= "12H 00M 0S" & base$hora < "17H 00M 0S",
                                   "Medio dia",
