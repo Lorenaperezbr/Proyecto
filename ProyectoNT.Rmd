@@ -98,7 +98,8 @@ base$dia_semana <-
 
 
 
-base <- subset(base, select= -c(fecha, hora, dsc_avenida , dsc_int_anterior ,  dsc_int_siguiente ,  i.dsc_avenida, i.dsc_int_anterior,  i.dsc_int_siguiente))
+base <- subset(base, select= -c( hora, dsc_avenida , dsc_int_anterior ,  dsc_int_siguiente ,  i.dsc_avenida, i.dsc_int_anterior,  i.dsc_int_siguiente))
+base$CCZ<-factor(base$CCZ, levels=c(1:17))
   
 ```
 
@@ -253,7 +254,7 @@ grid.arrange(p1, p2, nrow=1, ncol=2)
 ```{r boxplot}
 base %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
   geom_point(alpha=1/3)+
-  labs(x="Cantidad de vehículos detectados en el carril en los últimos 5 minutos", 
+  labs(x="Cantidad de vehículos detectados", 
        y="Promedio de  las velocidades de los autos que circularon por el carril durante los últimos 5 minutos") +
   theme(aspect.ratio = 1,
         legend.title = element_text(size = 8, face = "bold",hjust = 0.5),
@@ -274,7 +275,7 @@ base %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
 
 base %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
   geom_point(alpha=1/3)+
-  labs(x="Cantidad de vehículos detectados en el carril en los ?ltimos 5 minutos", 
+  labs(x="Cantidad de vehículos detectados", 
        y="Promedio de  las velocidades de los autos que circularon por el carril durante los ?ltimos 5 minutos") +
   theme(aspect.ratio = 1,
         legend.title = element_text(size = 8, face = "bold",hjust = 0.5),
@@ -295,7 +296,7 @@ base %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
 
 base %>% ggplot(aes(x=volume,y=velocidad_promedio)) +
   geom_point(alpha=1/3)+
-  labs(x="Cantidad de vehículos detectados en el carril en los ?ltimos 5 minutos", 
+  labs(x="Cantidad de vehículos detectados", 
        y="Promedio de  las velocidades de los autos que circularon por el carril durante los ?ltimos 5 minutos") +
   theme(aspect.ratio = 1,
         legend.title = element_text(size = 8, face = "bold",hjust = 0.5),
@@ -349,12 +350,15 @@ base %>%
 
 ```
 
+```{r}
 base %>% 
-  ggplot(aes(x = reorder(CCZ, as.numeric(volume)),
+  mutate(CCZ=fct_reorder(CCZ, -volume, .fun = "sum"))%>%
+  ggplot(aes(x = CCZ,
               y = volume,
               fill = cat_fecha)) +
-  geom_bar(stat = "identity")
-  
+  geom_bar(stat = "identity")+
+  scale_y_continuous(labels=scales::comma)
+```
 
 
 base %>% 

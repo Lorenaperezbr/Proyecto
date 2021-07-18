@@ -1,6 +1,7 @@
 library(shiny)
 library(tidyverse)
 library(DT)
+library(stringr)
 
 
 base <- readRDS("data/processed/base_app.rds")
@@ -50,7 +51,7 @@ ui <- fluidPage(
                    column(6,
                           selectInput("x_tile",
                                       "Graficar:",
-                                      c("cat_hora", "Momento del mes", "Día de la semana")
+                                      c("cat_hora", "cat_fecha", "dia_semana")
                           )
                           ),
                    column(6,
@@ -58,19 +59,19 @@ ui <- fluidPage(
                             condition = "input.x_tile == 'cat_hora'",
                             selectInput("y_tile",
                                       "Contra:",
-                                      c("cat_fecha", "Día de la semana"))),
+                                      c("cat_fecha", "dia_semana"))),
                           
                           conditionalPanel(
-                            condition = "input.x_tile == 'Momento del mes'",
+                            condition = "input.x_tile == 'cat_fecha'",
                             selectInput("y_tile",
                                         "Contra:",
-                                        c("Rango horario", "Día de la semana"))),
+                                        c("cat_hora", "dia_semana"))),
                           
                           conditionalPanel(
-                            condition = "input.x_tile == 'Día de la semana'",
+                            condition = "input.x_tile == 'dia_semana'",
                             selectInput("y_tile",
                                         "Contra:",
-                                        c("Rango horario", "Momento del mes")))
+                                        c("cat_hora", "cat_fecha")))
                    )
                    
                    # Cambios pendientes:
@@ -106,7 +107,25 @@ server <- function(input, output){
   # Gráfico con datos de velocidad.
   
   # Opciones: elegir variables en eje x y y, filtrar info.
+# 
 
+  
+  datos <- reactive({
+ 
+    select_CCZ <- if (is.null(input$CCZ)) { unique(base$CCZ)} else {as.list(input$CCZ)}
+    select_cat_hora <- if (is.null(input$cat_hora)) {unique(base$cat_hora)} else {as.list(input$cat_hora)}
+    select_cat_fecha <- if (is.null(input$cat_fecha)) {unique(base$cat_fecha)} else {as.list(input$cat_fecha)}
+    
+    
+    as.data.frame(select (base, -c(AREA, PERIMETER, geometry))) %>% 
+    filter(CCZ %in% select_CCZ,
+           cat_hora %in% select_cat_hora,
+           cat_fecha %in% select_cat_fecha,
+           fecha>=input$fecha[1] & fecha <=input$fecha[2]
+           )
+    
+  })
+  
   
   var_x <- reactive(
     if (input$x_tile == "Día de la semana") {
@@ -129,20 +148,19 @@ server <- function(input, output){
   )
   
   grafico <- reactive(
-    ggplot(base, aes(x = .data[[input$x_tile]],
+    ggplot(datos(), aes(x = .data[[input$x_tile]],
                      y = .data[[input$y_tile]],
                      fill = velocidad_promedio)) +
       geom_tile() +
-      labs(x = .data[[input$x_tile]],
-           y = .data[[input$y_tile]],
-           fill = "Velocidad Promedio") +
+      labs(fill = "Velocidad Promedio") +
       
       theme(legend.position = "bottom",
-            axis.text.x = element_text(angle = 90, vjust = 0.5))
+            axis.text.x = element_text(angle = 90, vjust = 0.5))+
+      scale_fill_gradient(low="#cf5d6b",high = "#54020c")
   )
   
   grafico2 <- reactive(
-    ggplot(base, aes(x = .data[[input$x_tile]],
+    ggplot(datos(), aes(x = .data[[input$x_tile]],
                      y = .data[[input$y_tile]],
                      fill = volume)) +
       geom_tile() +
@@ -151,9 +169,41 @@ server <- function(input, output){
            fill = "Cantidad") +
       
       theme(legend.position = "bottom",
-            axis.text.x = element_text(angle = 90, vjust = 0.5))
+            axis.text.x = element_text(angle = 90, vjust = 0.5))+
+      scale_fill_gradient(low="#61c968",high = "#023606")
   )
   
+  grafico3 <- reactive({
+    datos() %>%
+      mutate(CCZ = fct_reorder(CCZ,-volume, .fun = "sum")) %>%
+      ggplot(aes(x = CCZ,
+                 y = volume,
+                 fill = cat_fecha)) +
+      geom_bar(stat = "identity") +
+      scale_y_continuous(labels = scales::comma, expand = c(0, 0)) + theme(legend.position = c(.78, .85),panel.background = element_blank(),axis.line = element_line(size = 0.5, colour = "black")) +
+      labs(x = "Centros Comunales Zonales", y = "Cantidad de vehículos detectados", fill =
+             "Momento del mes") +
+      scale_fill_brewer(palette = "Dark2")
+  })
+ 
+  grafico4 <- reactive({
+    datos() %>%
+      group_by(CCZ) %>%
+      summarise(Máximo = max(velocidad_promedio)) %>%
+      mutate(CCZ = fct_reorder(CCZ, -Máximo, .fun = "mean")) %>%
+      ggplot(aes(x = CCZ,
+                 y = Máximo,)) +
+      geom_bar(stat = "identity", fill = "#941020") +
+      scale_y_continuous(expand = c(0, 0)) + theme(
+        legend.position = "bottom",
+        panel.background = element_blank(),
+        axis.line = element_line(size = 0.5, colour = "black")
+      ) +
+      labs(x = "Centros Comunales Zonales", y = "Máxima Velocidad promedio (km/h)", fill =
+             "Momento del mes")
+  })
+  
+  # OUTPUTS 
   output$tile_1 <- renderPlot({
     plot(grafico())
   })
@@ -162,15 +212,20 @@ server <- function(input, output){
     plot(grafico2())
   })
   
+  
   # Cambios pendientes:
   # - Colores de la escala, que el oscuro sea el mayor.
   # - Orden de las etiquetas en los ejes.
   # - Revisar si el color azul es el más adecuado.
   # - Dejar el gráfico reactivo a los filtros que elegimos en los input.
   
+  output$bar_1 <- renderPlot({
+    plot(grafico3())
+  })
   
-  
-  
+  output$bar_2 <- renderPlot({
+    plot(grafico4())
+  })
 # Pestaña Resumen:
   # Gráfico de barras con datos de conteo.
   # Gráfico de barras con datos de velocidad.
