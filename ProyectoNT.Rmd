@@ -134,27 +134,31 @@ base$CCZ <- factor(base$CCZ, levels = c(1:17))
 \newpage
 
 
+
 # Inroducción
 
-En general se ha observado una tendencia creciente en la circulación vehicular en las ciudades, Esto se asocia directamente a un mayor volumen de vehículos, lo que genera mayores tiempos de circulación, enlentecimiento de la movilidad urbana y mayores posibilidades de cometer faltas o accedentes de tránsito, cuando las ciudades no logran adaptarse a dicha coyuntura. Por otro lado, y vinculado a lo anterior, un mayor volumen de vehículos conlleva a un enlentecimiento en los tiempos de movilidad, que genera un comportamiento espontáneo de los conductores en usar como regulación de este fenómeno, la velocidad de circulación. Por parte de las autoridades de las ciudades se ha hecho continuos esfuerzos por combatir esta problemática con estrictas regulaciones a la velocidad y control vehicular. 
+En general se ha observado una tendencia creciente en la circulación vehicular en las ciudades (https://negocios.elpais.com.uy/noticias/venta-autos-cero-kilometro-aumento-marzo-marcas-compradas.html). Esto se puede asocia directamente a un mayor volumen de vehículos, lo que genera mayores tiempos de circulación, enlentecimiento de la movilidad urbana y mayores posibilidades de cometer faltas o accedentes de tránsito, cuando las ciudades no logran adaptarse a dicha coyuntura. Por otro lado, y vinculado a lo anterior, un mayor volumen de vehículos conlleva a un enlentecimiento en los tiempos de movilidad, que genera un comportamiento espontáneo de los conductores en usar como regulación de este fenómeno, la velocidad de circulación. Por parte de las autoridades de las ciudades se ha hecho continuos esfuerzos por combatir esta problemática con estrictas regulaciones a la velocidad y control vehicular . El estudio de la relación existente entre el conteo vehicular y la velocidad de circulación ha sido estudiada, por ejemplo en que proporción se reduce la velocidad promedio conforme varía la cantidad de vehículos. Naranjo-Torres, D. (2015) encuentran que para la ciudad de Bogotá la presencia de un nuevo vehículo en circulación reduciría la velocidad promedio  entre 1,37 km/h y 1,68 km/h.
 
-En particular, en la capital del país, la Intendencia de Montevideo (IM) a partir de su Departamento de Movilidad en conjunto con el Ministerio de Transporte y Obras Públicas (MTOP) son quienes se encargan de este tipo de regulaciones, no solo a nivel de calles sino de cartelera y señalizaciones, muchas veces a partir de la incorporación de un sistema de monitoreo digital con vídeo en ciertos puntos de la ciudad. El Centro de Gestión de Movilidad (CGM) de la IM es quien se encarga de esta tarea, monitoreando y tomando registro de lo acontecido a partir de las cámaras de vídeo-vigilancia. 
 
-Por esto, el objetivo general de este trabajo se basa en un estudio de las velocidades de los vehículos que circulan en Montevideo en conjunto con la cantidad de vehículos que se logran capturar a partir del CGM. En particular surge el interés de estudiar geográficamente los volúmenes de circulación y su asociación con las velocidades registradas. Por otro lado, estudiar aquellos puntos con mayores registros de velocidad y aquellos con menores registros a fin de capturar la potencial necesidad de regulación en ciertos puntos de la capital. Además, puede ser de interés el estudio día a día de los volúmenes y las velocidades registradas a fin de observar algún patrón entre febrero y marzo, en términos de días de la semana y horarios donde la circulación es máxima o que logra minimizar las velocidades de circulación. Estos elementos en su conjunto pueden contribuir a la detección de potenciales aplicaciones de políticas departamentales que desemboquen en una ciudad "amigable" en términos de la circulación urbana.
+En particular, en la capital del país, la Intendencia de Montevideo (IM) a partir de su Departamento de Movilidad en conjunto con el Ministerio de Transporte y Obras Públicas (MTOP) son quienes se encargan de este tipo de regulaciones, no solo a nivel de calles sino de cartelera y señalizaciones, muchas veces a partir de la incorporación de un sistema de monitoreo digital con vídeo en ciertos puntos de la ciudad. El Centro de Gestión de Movilidad (CGM) de la IM es quien se encarga de esta tarea, monitoreando y tomando registro de lo acontecido a partir de las cámaras de vídeo-vigilancia. Los principales objetivos se basan en mejorar la fluidez y los tiempos de viajes, así como regular los potenciales accidentes que se puedan generar. (https://montevideo.gub.uy/centro-de-gestion-de-movilidad)
 
-En lo que sigue de este trabajo se propone realizar una descripción de los datos a utilizar en términos de su fuente de obtención, tipos de datos, cantidad de observaciones, variables, entre otras. Más adelante en futuro desarrollo de este trabajo se profundizar en análisis exploratorios que permitan discernir en función de los objetivos planteados.
+"Es la puesta en marcha de diversos Sistemas Inteligentes de Transporte aplicados en tiempo real a la administración, gestión y control del tránsito y del transporte de la ciudad." (CGM - Intendencia de Montevideo. https://montevideo.gub.uy/centro-de-gestion-de-movilidad).
 
+En cuanto a la velocidad de circulación, un exceso que no sea controlado por parte de las autoridades se pueden potenciar fallos humanos agravando potenciales siniestros de tránsito. Por tanto, en el departamento de Montevideo rige una reglamentación de velocidad máxima de 45 km/h, mientras que en caso que se indique lo contrario, se puede determinar máximos a niveles más bajos o más altos. "La única excepción es donde la señalización indica otras alternativas". En particular se ha observado algunas particularidades que motivan la formulación de políticas de regulación vehicular, como: la baja probabilidad de sobrevivencia ante siniestro a velocidades mayores a 60 km/h. (Fuente: https://www.gub.uy/unidad-nacional-seguridad-vial/comunicacion/publicaciones/volante-hay-limites-velocidad)
+
+Por esto, el objetivo general de este trabajo se basa en un estudio de las velocidades de los vehículos que circulan en Montevideo en conjunto con la cantidad de vehículos que se logran capturar a partir del CGM. En particular surge el interés de estudiar geográficamente los volúmenes de circulación y su asociación con las velocidades registradas. Por otro lado, estudiar aquellos puntos con mayores registros de velocidad y aquellos con menores registros a fin de capturar la potencial necesidad de regulación en ciertos puntos de la capital. Estos elementos en su conjunto pueden contribuir a la detección de potenciales aplicaciones de políticas departamentales que cumplan con un mayor fluidez vehícular y un tráfico más seguro, alineándose a los objetivos propuestos a priori por el CGM.
+
+En lo que sigue de este trabajo se propone realizar una descripción de los datos a utilizar en términos de su fuente de obtención, tipos de datos, cantidad de observaciones, variables, entre otras. Luego se desarrolla un análisis exploratorio de los datos a fin de lograr explicar los objetivos pautados anteriormente a partir de visualización estadística y en particular, en la sección 4 se desarrolla la aplicación propuesta en R-Shiny (qué se puede encontrar en ella y cuál es su principal contribución). Finalmente se presentar las conclusiones de este informe así como lineamientos futuros. 
 
 
 \newpage
 
 
-
 # Datos
 
-Para realizar este estudio se consideran datos brindados por el Centro de Gestión de Movilidad (CGM) del Departamento de Movilidad de la Intendencia de Montevideo (IM). Se cuentan con datos con frecuencia mensual referentes a la velocidad de circulación y el volumen de circulación de vehículos en la ciudad de Montevideo donde se detallan los registros de las cámaras de CGM con día y horario de lo acontecido. Para este ejercicio se consideran datos para los meses de Febero y Marzo de 2021 - "El sistema genera un registro cada 5 minutos, las medidas que se explican a continuación corresponden a la suma de todos los vehículos de los 5 minutos anteriores a la fecha y hora del registro. También se publican datos particulares del sensor que permiten conocer su ubicación y entender el sentido de circulación que se está midiendo". Cabe destacar la particularidad de que en los meses de verano la movilidad suele ser inferior a otros meses del año y considerando un contexto de pandemia, estos datos pueden estar afectados a la coyuntura.
+Para realizar este estudio se consideran datos brindados por el Centro de Gestión de Movilidad (CGM) del Departamento de Movilidad de la Intendencia de Montevideo (IM). Se cuentan con datos con frecuencia mensual referentes a la velocidad de circulación y el volumen de circulación de vehículos en la ciudad de Montevideo donde se detallan los registros de las cámaras de CGM con día y horario de lo acontecido. Se consideran datos para los meses de Febero y Marzo de 2021 - "El sistema genera un registro cada 5 minutos, las medidas que se explican a continuación corresponden a la suma de todos los vehículos de los 5 minutos anteriores a la fecha y hora del registro. También se publican datos particulares del sensor que permiten conocer su ubicación y entender el sentido de circulación que se está midiendo" (https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo). Cabe destacar la particularidad de que en los meses de verano la movilidad suele ser inferior a otros meses del año y considerando un contexto de pandemia, estos datos pueden estar afectados a la coyuntura.
 
-Por tanto, se cuenta con 7623354 observaciones correspondiente a Febrero y Marzo de 2021 para cada una de las bases de datos utilizadas: la velocidad de circulaci+on vehicular y el volumen de circulación. En cuanto al set de variables consideradas, los datos vinculados a la velocidad de circulación cuenta con 10 variables mientras que los datos de conteo vehicular cuenta con 11 observaciones. Sin embago, considerando que hay variables idénticas en ambas fuentes de datos, en total se cuenta con 12 variables. La siguiente tabla base el set de variables consideradas en este estudio con su debida descripción. 
+Por tanto, se cuenta con 7623354 observaciones correspondiente a Febrero y Marzo de 2021 para cada una de las bases de datos utilizadas: la velocidad de circulaci+on vehicular y el volumen de circulaci?n. En cuanto al set de variables consideradas, los datos vinculados a la velocidad de circulaci?n cuenta con 10 variables mientras que los datos de conteo vehicular cuenta con 11 observaciones. Sin embago, considerando que hay variables id?nticas en ambas fuentes de datos, en total se cuenta con 12 variables. La siguiente tabla base el set de variables consideradas en este estudio con su debida descripción. 
 
 ```{r, echo = FALSE}
 variables <-
@@ -198,7 +202,7 @@ tabla_variables %>%
     kable_styling(latex_options = c("striped", "hold_position"))
 ```
 
-Respecto a las variables anteriores, la longitud y la latitud son variables de tipo "float", mientras que las vías son textos y las restantes son variables numéricas en el conjunto de los números enteros, a excepción de aquellas vinculadas a días y horas. Estas variables tienen un formato propio y fueron cohesionadas a formato `Date` para su correcto tratamiento. Dada la gran cantidad de observaciones con las que contamos, decidimos categorizar las variables fecha y hora, en ambas bases, de la siguiente forma: 
+Respecto a las variables anteriores, la longitud y la latitud son variables de tipo "float", mientras que las v?as son textos y las restantes son variables numéricas en el conjunto de los n?meros enteros, a excepción de aquellas vinculadas a d?as y horas. Estas variables tienen un formato propio y fueron cohesionadas a formato `Date` para su correcto tratamiento. Dada la gran cantidad de observaciones con las que contamos, decidimos categorizar las variables fecha y hora, en ambas bases, de la siguiente forma: 
 
 ```{r echo = FALSE}
 categorias <-
@@ -234,33 +238,23 @@ tabla_variables2 %>%
   kable_styling(latex_options = c("striped", "hold_position"))
 ```
 
-A partir de una tabla de frecuencias se obtiene que el 32% de los vehículos capturados por las cámaras (variables volumen y velocidad) ocurren a principio de mes, el 33% sobre mediados de mes y un 35% sobre fin de mes. A simple vista, y sin realizar un análisis más profundo, no pareciera haber grandes diferencias, en términos generales, en el volumen de vehículos en el correr del mes.
+A partir de una tabla de frecuencias se obtiene que el 32% de los vehículos capturados por las cámaras (variables volumen y velocidad) ocurren a principio de mes, el 33% sobre mediados de mes y un 35% sobre fin de mes.
 
-En cuanto al volumen de vehículos capturado por la cámara en los últimos 5 minutos, se observa un promedio total de 17 vehículos, mientras si discriminamos por mes, se obtiene un promedio de 16 y 17, para febrero y marzo, respectivamente. Por otro lado, se observa una velocidad promedio de 30.9 km/h si tomamos en cuenta la totalidad de las observaciones, mientras que asciende levemente a 31.0 km/h para el mes de febrero y se ubica en 30.8 km/h para el mes de marzo. Los resultados siguen esta misma línea si consideramos la categorización anteriormente mencionada para la fecha de los registros; 30.8km/h para los primeros 10 días del mes, 31.0 km/h para mitad de mes y fin de mes.  
+En cuanto al volumen de vehículos capturado por la cámara en los últimos 5 minutos, se observa un promedio total de 17 vehículos, mientras si discriminamos por mes, se obtiene un promedio de 16 y 17, para febrero y marzo, respectivamente. Por otro lado, se observa una velocidad promedio de 30.9 km/h si se toma en cuenta la totalidad de las observaciones, mientras que asciende levemente a 31.0 km/h para el mes de febrero y se ubica en 30.8 km/h para el mes de marzo. Los resultados siguen esta misma línea si consideramos la categorización anteriormente mencionada para la fecha de los registros; 30.8km/h para los primeros 10 días del mes, 31.0 km/h para mitad de mes y fin de mes.  
 
 Por último, observamos los desvíos de las variables Volumen y Velocidad promedio, y luego la correlación entre ambas. La primera de las mencionadas tiene una desviación estándar de 18.6, mientras que la segunda una de 17.0. Mirando el coeficiente de correlación, se observa que este es de 0.02, indicando una correlación baja, lo que podrá llegar a ser contra intuitivo.
 
-```{r boxplot}
-# Boxplots por municipios --- lo dejo escrito en comentario porque queda unificar los municipios de cada obs a la base original y a la base
+# Análisis Exploratorio
 
-p1 <- base %>%
-        ggplot(aes(x = reorder(factor(CCZ), -velocidad_promedio,median),
-                   y = velocidad_promedio)) + 
-        geom_boxplot()  +
-        labs(x = "Centro comunal zonal",
-             y = "Velocidad Promedio") 
+A partir de los objetivos planteados y de los datos obtenidos por el centro de gestión de movilidad se puede contar con datos de conteo y velocidad promedio de vehículos para los meses de Febrero y Marzo de 2021. Unificando los datos se puede realizar entonces, análisis exploratorio en términos de los indicadores de interés. En particular, haciéndo especial énfasis en la relación existente entre la velocidad promedio y el conteo vehícular e incorporando luego, información geográfica para localizar no solo los detectores de CGM sino también los registros según detector. Para ello, se propoen herramientas de visualización a partir de gráficos (usando librerías como ggplot2, maptools, sf, GGally) y luego, el desarrollo de una aplicación a partir de R-Shiny.
 
-p2 <- base %>%
-        ggplot(aes(x = reorder(factor(CCZ), -volume, median),
-                   y = volume)) +
-        geom_boxplot() +
-        labs(x = "Centro comunal zonal",
-             y = "Conteo de Vehiculos") 
+## Análisis de la relación entre conteo vehícular y velocidad promedio
 
-grid.arrange(p1, p2, nrow = 1, ncol = 2)
-```
+Para el análisis exploratorio, en primer lugar se puede realizar una descripción en función de los dos indicadores principales en este informe: el conteo y la velocidad promedio de circulación vehicular. 
 
-```{r boxplot}
+Cuando se observa a partir de un diagrama de dispersión la velocidad promedio y el volumen de vehiculos, este se puede observar para todos los datos registrados, así como según ciertas categorizaciones. La Figura \ref{fig:dispersion1} muestra la relación, al menos de asociación existente entre los indicadores antes mencionados. A partir de la misma se pueden realizar dos observaciones: en primer lugar, que la relación entre ambos indicadores es positiva, aludiendo a que ante mayor cantidad de vehículos en circulación, mayor se observa la velocidad promedio. Esto aunque no parecería intuitivo a priori, puede asociarse a incrementos en la dinámica de circulación donde a fin de evitar potenciales aglomeraciones vehiculares, los sitios con mayor acumulación de vehículos se puede vincular con registros de velocidad promedio algo superiores. Otra observación viene dada por la categorización según momento del día. En esta línea, la noche y la madrugada parecen ser los momentos del día que mayor explican la relación encontrada anteriormente, mientras que durante el día y la tarde, como se esperaría a priori, la relación observada entre la cantidad de vehículo y sus velocidades tienen una relación no tan clara. 
+
+```{r dispersion1, echo=FALSE, warning=FALSE, fig.cap="Nube de puntos de la cantidad de vehículos y la velocidad promedio capturadas por las cámaras de CGM, según categoría horaria del día"}
 base %>%
   ggplot(aes(x = volume,
              y = velocidad_promedio)) +
@@ -284,10 +278,14 @@ base %>%
   facet_wrap( ~cat_hora,
               ncol = 5) +
   geom_smooth(method = "lm")
-```
 
-```{r boxplot}
+
+```
+En segundo plano, este mismo diagrama de dispersión permite categorizarse por días de la semana. Previo a la observación de los datos, se esperaría que no existan sustanciales diferencias cuando se consideran los días de la semana, debido a que el flujo de vehículos entre semana sería similar (más aún en Montevideo), pudiéndose esperar una relación más clara durante los días del fin de semana.
+
+```{r dispersion2, echo=FALSE, warning=FALSE, fig.cap="Nube de puntos de la cantidad de vehículos y la velocidad promedio capturadas por las cámaras de CGM, según día de la semana."}
 # Dispersion: velocidad x conteo faceteado por hora, momento del mes, ...
+
 
 base %>%
   ggplot(aes(x = volume,
@@ -312,10 +310,15 @@ base %>%
   facet_wrap( ~dia_semana,
               ncol = 3) +
   geom_smooth(method = "lm")
-```
 
-```{r boxplot}
+```
+En este sentido, la Figura \ref{fig:dispersion2} efectivamente se alinea a lo hipotetizado anteriormente donde no parece existir diferencias importantes entre los días de la semana, siendo los fines de semana aquellos días donde la relación entre velocidad y conteo mantiene una mayor correlación positiva.
+
+Análogamente a lo anterior, la Figura \ref{fig:dispersion3} muestra que en términos del momento del mes la relación de asociación encontrada es positiva y no varía de forma sustancial a traves de las franjas diarias durante los meses. 
+
+```{r dispersion3, echo=FALSE, warning=FALSE, fig.cap="Nube de puntos de la cantidad de vehículos y la velocidad promedio capturadas por las cámaras de CGM, según momento del mes"}
 # Dispersion: velocidad x conteo faceteado por hora, momento del mes, ...
+
 
 base %>%
   ggplot(aes(x = volume,
@@ -340,7 +343,93 @@ base %>%
   facet_wrap( ~cat_fecha,
               ncol = 3) +
   geom_smooth(method = "lm")
+
+
 ```
+A partir de lo anterior, parece clara la existencia de relaciones de asociación positiva entre velocidad y conteo. Sin embargo, la magnitud de la correlación observada no se puede observar a partir de las figuras anteriores su grado de significación estadística. La Figura \ref{fig:correlaciones} muestra las correlaciones cruzadas entre la velocidad promedio y la cantidad de vehículos categorizando en función de lo presentado anteriormente y obteniendo el coeficiente de correlación lineal entre ambos indicadores para todos los datos así como para cada categoría. Algo en común es que las correlaciones en todos los casos es significativa estadísticamente y con signo positivo asociado a que incrementos en la cantidad de vehículos se vincula con mayores velocidades promedio. Se observa que la correlación es mayor durante la madrugada, los días martes y miércoles y durante la mitad del mes. Sin embago no se observan importantes discrepancias cuando se considera la correlación para todos los datos.
+
+```{r correlaciones, echo=FALSE, warning=FALSE, fig.cap="Correlaciones y densidades del volumen y la velocidad promedio de vehículos según categoría horaria, día de la semana y momento del mes"}
+#Graficos de correlaciones. Se puede extender a municipios.
+ggpairs(base, c("volume", "velocidad_promedio"),
+        mapping = ggplot2::aes(color = cat_hora,
+                               alpha = 0.5),
+        diag = list(continuous = wrap("densityDiag")),
+        lower = list(continuous = wrap("points",
+                                       alpha = 0.9)))
+
+ggpairs(base, c("volume", "velocidad_promedio"),
+        mapping = ggplot2::aes(color = dia_semana,
+                               alpha = 0.5),
+        diag = list(continuous = wrap("densityDiag")),
+        lower = list(continuous = wrap("points",
+                                       alpha = 0.9)))
+
+ggpairs(base, c("volume", "velocidad_promedio"),
+        mapping = ggplot2::aes(color = cat_fecha,
+                               alpha = 0.5),
+        diag = list(continuous = wrap("densityDiag")),
+        lower = list(continuous = wrap("points",
+                                       alpha = 0.9)))
+```
+Un segundo aspecto a explorar viene dado por lo que se observa en la diagonal principal de los trés gráficos de la figura anterior. Se observa la densidad de los datos, las cuales muestran la frecuencia de observaciones que se observan en cada nivel de las variables en cuestión. Esto permite ver valores más frecuentes (modo), asimestrías, valores medios, entre otros. En cuanto a las velocidades promedio, se observa que hay mayores observaciones en velocidades promedio muy bajas (esto puede deberse a que las cámaras capturan vehículos estacionados o reduciéndo sus velocidades debido a que están en semáforos o esquinas. Se puede asociar a vehículos parados, o frenando o acelerando) o en valores poco debajo del máximo permitido en la capital (45 km/h). Sin embargo, existe cierta asimetría asociada a observaciones con registros con altas velocidades. Observando por momento del día, como parece intuitivo, la noche y la madrugada son los momentos con mayores registros a velocidades más altas, mientras que las distribuciones a la tarde tienen mayores frecuencias a velocidades comparativamente inferiores. En cuanto a velocidades, cuando se observa por día de la semana o por categoría del mes no se observan diferencias en cuanto a la distribución de los datos. En cuanto al conteo, se observan mayores registros durante el día (en particular media tarde, sobre los días jueves).
+
+A continuación se propone incluir al análisis información geográfica permitiendo localizar las observación en función de la localización de las cámaras de CGM según Centro Comunal Zonal (CCZ)
+
+## Información geográfica
+
+
+Previo a la descrpción de los datos incorporando la localización geográfica de los mismo, la Figura \ref{fig:mapa} muestra la localización de los detectores del CGM dentro de Montevideo dividiendo según CCZ. Los datos recolectados cuentan con 110 cámaras ubicadas en Montevideo y vienen representados a partir de puntos en el mapa de la figura que sigue. Se encuentra que los radares se encuentran concentrados en la zona céntrica de Montevideo, en particular, en los CCZ de los municipios, B, C, CH, E, y generalmente sobre las arterias principales de la ciudad (en particular, se encuentra gran cantidad de cámaras sobre Bvar. Artigas y Av. Italia). Sin embargo, también es notorio que hay zonas de la capital donde no hay radares o hay un radar solo, o que en general hay menor cantidad que en zonas más céntricas. Esto parece tener sentido en términos de los puntos de mayor participación ciudadana (Centro, Cordon, Pocitos, Buceo, Tres Cruces, etc) donde es necesaria una mayor regulación y cuidado en lo que concierne a la velocidad de los vehículos asociado a la cantidad de vehículos que circula. 
+
+Sin embargo, esto debe considerarse a la hora de considerar en particula, el conteo vehicular por CCZ debido a que hay algunos que registran muchos menos vehículos debido a que la zona no cuenta con demasiadas cámaras. Adicionalmente, también sería pertinente notar que donde mayor concentración hay de cámaras, mayor chances hay de que un mismo vehículo cruce más de una cámara en su circuito y se registre más de una vez (eso sumado a que de por sí, ya hay mayor flujo vehicular).
+
+```{r mapa, echo=FALSE, warning=FALSE, fig.cap="Mapa de Montevideo particionado según CCZ localizando las cámaras del CGM"}
+
+ggplot() +
+  geom_sf(data = municipios) +  
+  geom_sf(data = base) +
+  theme_minimal()
+```
+
+En línea al estudio localizando las observaciones según CCZ, la Figura \ref{fig:boxplot} muestra la distribución de la velocidad promedio y el conteo vehicular distinguiendo según CCZ a partir de un diagrama de caja ordenado según la mediana de los datos según CCZ. Vale recordar que la caja representa al rango intercuartílico (RI) de la distribución, los bigotes superiores e inferiores representan 1.5 veces el RI y los puntos por fuera, datos considerados atípicos. 
+
+```{r boxplot, echo=FALSE, warning=FALSE, fig.cap="Distribución del volumen y la velocidad promedio de los vehículos discriminando por Centro Comunal Zonal (CCZ)"}
+
+
+p1<-base %>% ggplot(aes(x=reorder(factor(CCZ),-velocidad_promedio,median), y=velocidad_promedio)) +  geom_boxplot()  +
+ labs(x="Centro comunal zonal", y="Velocidad Promedio") 
+p2<-base %>% ggplot(aes(x=reorder(factor(CCZ),-volume,median), y=volume)) +  geom_boxplot()  +
+ labs(x="Centro comunal zonal", y="Conteo de Vehiculos") 
+
+grid.arrange(p1, p2, nrow=1, ncol=2)
+
+```
+
+En cuanto a la velocidad promedio se observa que el CCZ 10, 17 y 8 son aquellos donde la mediana de las velocidades promedio es mayor. Estos CCZ pertenecen a distintos municipios y se asocian a distintas partes de la ciudad (municipio F, A y E - Maroñas, Cerro, Carrasco, respectivamente). El CCZ 17 aunque es el único que no presenta datos atípicos presenta una caja más grande y por lo tanto los datos contenidos dentro de su rango intercuartílico son más volátiles en comparación al resto de los zonales. Los CCZ 16 y 1 (municipio B y C, Centro y Aguada, respectivamente) son aquellos con menores mediana en términos de sus velocidades promedios registradas. Estos últimos CCZ en términos de conteo vehicular se asocian a con una mediana de volúmen baja aludiendo a lo observado anteriormente donde la velocidad y el volumen se correlacionan positivamente. La observación es análoga observando los tres CCZ mencionados al comienzo. Estas asociaciones no son estrictas, pero mantienen esa línea (el CCZ 10 de mayor mediana en velocidad no es el mayor con mediana de conteo, pero sí se ubica entre aquellos con mayor registro).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ggplot(base, aes(x = cat_fecha, y = cat_hora, fill = velocidad_promedio)) + geom_tile() 
 
@@ -354,7 +443,7 @@ ggplot(base, aes(x = cat_hora, y = dia_semana, fill = volume)) + geom_tile()
 
 ggplot(base, aes(x = cat_fecha, y = dia_semana, fill = volume)) + geom_tile()
 
-```{r barplot_conteo}
+```{r barplot_conteo, echo=FALSE, warning=FALSE, fig.cap="Conteo vehicular según Centro Comunal Zonal discriminando por momento del mes."}
 # Barras: dias de la semana (cada barra por municipio)
 
 base %>% 
@@ -365,7 +454,7 @@ base %>%
 
 ```
 
-```{r barplot_conteo}
+```{r barplot_velocidad, eval=FALSE, echo=FALSE, warning=FALSE, fig.cap="Promedio de la velocidad media registrada por cámaras de CGM, según Centro Comunal Zonal discriminando por momento del mes."}
 # Barras: dias de la semana (cada barra por municipio)
 
 base %>% 
@@ -474,29 +563,7 @@ base %>%
 
 ```
 
-```{r correlacion}
-#Graficos de correlaciones. Se puede extender a municipios.
-ggpairs(base, c("volume", "velocidad_promedio"),
-        mapping = ggplot2::aes(color = cat_hora,
-                               alpha = 0.5),
-        diag = list(continuous = wrap("densityDiag")),
-        lower = list(continuous = wrap("points",
-                                       alpha = 0.9)))
 
-ggpairs(base, c("volume", "velocidad_promedio"),
-        mapping = ggplot2::aes(color = dia_semana,
-                               alpha = 0.5),
-        diag = list(continuous = wrap("densityDiag")),
-        lower = list(continuous = wrap("points",
-                                       alpha = 0.9)))
-
-ggpairs(base, c("volume", "velocidad_promedio"),
-        mapping = ggplot2::aes(color = cat_fecha,
-                               alpha = 0.5),
-        diag = list(continuous = wrap("densityDiag")),
-        lower = list(continuous = wrap("points",
-                                       alpha = 0.9)))
-```
 
 ```{r}
 base %>%
@@ -507,25 +574,32 @@ base %>%
             volumen_maximo = max(volume))
 ```
 
-```{r map, echo = FALSE, include = FALSE}
-# Grafica test
 
-ggplot() +
-  geom_sf(data = municipios) +  
-  geom_sf(data = base, aes(fill = volume)) +
-  theme_minimal()
-```
 
 ```{r guardar_datos_app, echo = FALSE, eval = FALSE}
 saveRDS(base, "data/processed/base_app.rds")
 ```
 
-## Referencias
 
-[1] Catálogo de Datos Abiertos. Conteo de Vehículos del Centro de Gestión de Movilidad. Febrero 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-conteo-de-vehiculos-del-centro-de-gestion-de-la-movilidad/resource/b985762d-c1c1-4dd0-bc57-6c3ab53e8ff8
+# Descripción de la Aplicación Shiny
 
-[2] Catálogo de Datos Abiertos. Conteo de Vehículos del Centro de Gestión de Movilidad. Marzo 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-conteo-de-vehiculos-del-centro-de-gestion-de-la-movilidad/resource/6df7fc9c-8331-4d93-928c-cd69b48940a2
 
-[3] Catálogo de Datos Abiertos. Velocidad promedio vehicular en las principales avenidas de montevideo. Febrero 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo/resource/01ba56d8-2dab-4d8b-8391-d03159314144
+# Consideraciones Finales
 
-[4] Catálogo de Datos Abiertos. Velocidad promedio vehicular en las principales avenidas de montevideo. Marzo 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo/resource/da56b7db-dcef-41e0-8f16-a00406ae7c1c?view_id=abf43575-848a-40a7-94a3-dd9c378ff988
+
+# Referencias
+
+[1] Cat?logo de Datos Abiertos. Conteo de Veh?culos del Centro de Gesti?n de Movilidad. Febrero 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-conteo-de-vehiculos-del-centro-de-gestion-de-la-movilidad/resource/b985762d-c1c1-4dd0-bc57-6c3ab53e8ff8
+
+
+[2] Cat?logo de Datos Abiertos. Conteo de Veh?culos del Centro de Gesti?n de Movilidad. Marzo 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-conteo-de-vehiculos-del-centro-de-gestion-de-la-movilidad/resource/6df7fc9c-8331-4d93-928c-cd69b48940a2
+
+[3] Cat?logo de Datos Abiertos. Velocidad promedio vehicular en las principales avenidas de montevideo. Febrero 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo/resource/01ba56d8-2dab-4d8b-8391-d03159314144
+
+[4] Cat?logo de Datos Abiertos. Velocidad promedio vehicular en las principales avenidas de montevideo. Marzo 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo/resource/da56b7db-dcef-41e0-8f16-a00406ae7c1c?view_id=abf43575-848a-40a7-94a3-dd9c378ff988
+
+[5] https://negocios.elpais.com.uy/noticias/venta-autos-cero-kilometro-aumento-marzo-marcas-compradas.html
+
+[6] Naranjo-Torres, D. (2015). Análisis de la relación velocidad-densidad vehicular de la avenida calle 26 en Bogotá. Ingenio Magno, 6(1), 76-88.
+
+[7] https://www.gub.uy/unidad-nacional-seguridad-vial/comunicacion/publicaciones/volante-hay-limites-velocidad
