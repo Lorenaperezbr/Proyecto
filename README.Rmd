@@ -1,7 +1,7 @@
 ---
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 # Estudio de circulación vehicular en Montevideo: febrero-marzo 2021
 
