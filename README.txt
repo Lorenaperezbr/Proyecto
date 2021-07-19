@@ -27,10 +27,10 @@ Puedes interactuar con los datos desde la Shiny App desarrollada por el equipo (
 ## Autores
 
 
-* **Federico Golffeld* - [fgolffeld](https://github.com/fgolffeld)
-* **Lorena Perez* - [Lorenaperezbr](https://github.com/Lorenaperezbr)
-* **Martin Olivera* - [martinoliverab](https://github.com/martinoliverab)
-* **Angela Veyto* - [angelavieyto](https://github.com/angelavieyto)
+* **Federico Golffeld** - [fgolffeld](https://github.com/fgolffeld)
+* **Lorena Perez** - [Lorenaperezbr](https://github.com/Lorenaperezbr)
+* **Martin Olivera** - [martinoliverab](https://github.com/martinoliverab)
+* **Angela Veyto** - [angelavieyto](https://github.com/angelavieyto)
 
 También puedes mirar la lista de todos los [contribuyentes](https://github.com/Lorenaperezbr/Proyecto/graphs/contributors) quíenes han participado en este proyecto. 
 
