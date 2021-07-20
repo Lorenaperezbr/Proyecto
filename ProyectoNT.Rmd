@@ -405,7 +405,7 @@ En línea al estudio localizando las observaciones según CCZ, la Figura \ref{fi
 
 ```{r boxplot, echo=FALSE, warning=FALSE, fig.cap="Distribución del volumen y la velocidad promedio de los vehículos discriminando por Centro Comunal Zonal (CCZ)"}
 
-
+library(gridExtra)
 p1<-base %>% ggplot(aes(x=reorder(factor(CCZ),-velocidad_promedio,median), y=velocidad_promedio)) +  geom_boxplot()  +
  labs(x="Centro comunal zonal", y="Velocidad Promedio") 
 p2<-base %>% ggplot(aes(x=reorder(factor(CCZ),-volume,median), y=volume)) +  geom_boxplot()  +
