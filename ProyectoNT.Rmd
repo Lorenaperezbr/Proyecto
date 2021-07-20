@@ -114,8 +114,7 @@ base$CCZ <- factor(base$CCZ, levels = c(1:17))
 	Nuevas Tecnologías para el análisis de datos
 	\vspace{1cm}
 	
-	""
-\vspace{1cm}
+
 
 	Autores:
 	Federico Golffeld - Martín Olivera - Lorena Perez - Ángela Vieyto
@@ -394,7 +393,7 @@ ggplot() +
   theme_minimal()
 ```
 
-El siguiente cuadro resume en términos de volume y velocidad promedio el mínimo y el máximo de cada indicador discriminando según CCZ a fin de denotar zonas donde el tráfico es mayor y donde los niveles de velocidades promedios se encuentran por fuera de lo establecido a nivel departamental. Se observa que la velocidad máxima en todos los CCZ excede los límites permitidos, incluso superan los 60 km/h. El CCZ 3 ubicado en la zona de la Aguada (Municipio C) es el que tiene el mayor registro en términos de velocidad. Esto merece especial atención al tratarse de una zona comercial, muy habitada y por tanto, muy transitada. Sería conveniente contar con esta información a fin de tener insumos para regular estos aspectos y alinearse a los objetivos departamentales. Por otro lado, como sí es intuitivo, el CCZ 2 (correpondiente al Municipio B, que incluye a la zona del centro de Montevideo) es el que registra mayor volumen vehicular. Esto se debe estrictamente a que se trata de un centro comercial, laboral, educativo, etc. 
+El siguiente cuadro resume en términos de volume y velocidad promedio el mínimo y el máximo de cada indicador discriminando según CCZ a fin de denotar zonas donde el tráfico es mayor y donde los niveles de velocidades promedios se encuentran por fuera de lo establecido a nivel departamental. Se observa que la velocidad máxima en todos los CCZ excede los límites permitidos, incluso superan los 60 km/h. El CCZ 5 ubicado en la zona de Punta Carretas (Municipio CH) es el que tiene el mayor registro en términos de velocidad y también en términos de conteo vehicular. Esto merece especial atención al tratarse de una zona comercial, muy habitada y por tanto, muy transitada. Sería conveniente contar con esta información a fin de tener insumos para regular estos aspectos y alinearse a los objetivos departamentales. 
 
 ```{r, message=FALSE, warning=FALSE}
 base %>%
@@ -419,7 +418,7 @@ grid.arrange(p1, p2, nrow=1, ncol=2)
 
 ```
 
-En cuanto a la velocidad promedio se observa que el CCZ 10, 17 y 8 son aquellos donde la mediana de las velocidades promedio es mayor. Estos CCZ pertenecen a distintos municipios y se asocian a distintas partes de la ciudad (municipio F, A y E - Maroñas, Cerro, Carrasco, respectivamente). El CCZ 17 aunque es el único que no presenta datos atípicos presenta una caja más grande y por lo tanto los datos contenidos dentro de su rango intercuartílico son más volátiles en comparación al resto de los zonales. Los CCZ 16 y 1 (municipio B y C, Centro y Aguada, respectivamente) son aquellos con menores mediana en términos de sus velocidades promedios registradas. Estos últimos CCZ en términos de conteo vehicular se asocian a con una mediana de volúmen baja aludiendo a lo observado anteriormente donde la velocidad y el volumen se correlacionan positivamente. La observación es análoga observando los tres CCZ mencionados al comienzo. Estas asociaciones no son estrictas, pero mantienen esa línea (el CCZ 10 de mayor mediana en velocidad no es el mayor con mediana de conteo, pero sí se ubica entre aquellos con mayor registro).
+En cuanto a la velocidad promedio se observa que el CCZ 10, 17 y 8 son aquellos donde la mediana de las velocidades promedio es mayor. Estos CCZ pertenecen a distintos municipios y se asocian a distintas partes de la ciudad (municipio F, A y E - Maroñas, Cerro, Carrasco, respectivamente). El CCZ 17 aunque es el único que no presenta datos atípicos presenta una caja más grande y por lo tanto los datos contenidos dentro de su rango intercuartílico son más volátiles en comparación al resto de los zonales. Los CCZ 16 y 1 (municipio B y C, Centro y Aguada, respectivamente) son aquellos con menores mediana en términos de sus velocidades promedios registradas. Estos últimos CCZ en términos de conteo vehicular se asocian a con una mediana de volúmen baja aludiendo a lo observado anteriormente donde la velocidad y el volumen se correlacionan positivamente. La observación es análoga observando los tres CCZ mencionados al comienzo. Estas asociaciones no son estrictas, pero mantienen esa línea (el CCZ 17 de mayor mediana en velocidad no es el mayor con mediana de conteo, pero sí se ubica entre aquellos con mayor registro).
 
 Considerando la observación antes realizada en cuanto a los resultados obtenidos de la descripción de los datos de conteo, la Figura \ref{fig:boxplot_conteo} muestra el conteo vehicular segun Centro Comunal Zonal distinguiendo por momento del mes. A priori, no se esperaría que estos flujos sean disímiles a lo largo del mes. Sin embargo, por la propia dinámica de movilidad concentrada en el centro de la capital, adicionado a que hay mayor control (en términos de cantidad de cámaras de CGM) en dichos puntos de la ciudad. Los CCZ 2 y 5 son aquellos que muestran mayor volumen en cuanto a la cantidad de vehículos que circulan. En contrapartida, los CCZ 12 y 17 son aquellos con menor movilidad. Estos CCZ se corresponden, en el primer caso a los barrios centro y Punta Carretas; mientras que en los últimos casos se corresponden a los barrios Colón y Cerros, barrios alejados del centro de movilidad laboral y comercial de Montevideo.
 
@@ -452,7 +451,7 @@ base %>%
 
 Las Figuras \ref{fig:barplot_velocidad} y \ref{fig:barplit_velocidad1} muestran de forma análoga el ejercicio anterior, pero considerando el promedio de la velocidad media registrada por las cámaras de CGM. Cuando se observa a lo largo del mes, como parecería intuitivo a priori no se verifican diferencias a lo largo del mes en términos de la velocidad promedio. Sin embargo, cuando se distingue según día de la semana, los fines de semana, probablemente asociado a la menor circulación observada, los registros de velocidad son algo superiores respecto de los restantes días. El CCZ 10 ubicado en las intermediaciones de Jardines del Hipódromo es donde se registran mayores velocidades en comparación al resto de los CCZ.
 
-```{r barplot_velocidad, eval=FALSE, echo=FALSE, warning=FALSE, fig.cap="Promedio de la velocidad media registrada por cámaras de CGM, según Centro Comunal Zonal discriminando por momento del mes."}
+```{r barplot_velocidad, message=FALSE, echo=FALSE, warning=FALSE, fig.cap="Promedio de la velocidad media registrada por cámaras de CGM, según Centro Comunal Zonal discriminando por momento del mes."}
 # Barras: dias de la semana (cada barra por municipio)
 
 base %>% 
@@ -469,7 +468,7 @@ base %>%
 
 ```
 
-```{r barplot_velocidad1, eval=FALSE, echo=FALSE, warning=FALSE, fig.cap="Promedio de la velocidad media registrada por cámaras de CGM, según Centro Comunal Zonal discriminando por momento del mes."}
+```{r barplot_velocidad1, eval=FALSE, message=FALSE, echo=FALSE, warning=FALSE, fig.cap="Promedio de la velocidad media registrada por cámaras de CGM, según Centro Comunal Zonal discriminando por momento del mes."}
 # Barras: dias de la semana (cada barra por municipio)
 
 base %>% 
@@ -631,17 +630,32 @@ Se puede acceder a la aplicación a partir del sigueinte link:
 
 # Consideraciones Finales
 
+Este estudio toma datos de fuentes departamentales sobre datos de conteo vehícular y velocidades promedios capturadas por las cámaras del Centro de Gestión de Movilidad. Se propone un análisis descritivo en términos de estos indicadores a fin de lograr caracterizar las relacioes existentes entre velocidad y volumen. A su vez, se introduce información geográfica a los datos de velocidad y conteo a fin de ampliar el análisis localizando mayores velocidades promedios o mayor concentración vehicular. 
+
+Se realizan correlaciones cruzadas entre correlaciones, diagramas de dispersión con sus rectas de regresión asociadas y mapas que complementan lo anterior localizando las observaciones según Centro Comunal Zonal. 
+
+Se encuentra que existen relaciones de asociación o correlaciones positivas entre las velocidades promedios y los volúmenes vehiculares registrados por las cámaras de CGM. Esto se alinea a lo encontrado por Naranjo-Torres (2015) donde mayor cantidad de vehículos promueve que los conductores dinamicen su circulación acrecentando sus velocidades, en promedio. Se encuentra que la velocidad es algo superior durante la madrugada y la noche y mayor conteo vehicular durante el medio día y la media tarde. 
+
+Por otro lado localizando estas observaciones según CCZ se encuentra mayor cantidad de vehículos así como mayor velocidad promedio de circulación en el CCZ ubicado en la zona de Punta Carretas. Esto resulta clave a fin de que los hacedores de políticas públicas departamentales consideren que una zona comercial, muy habitada cuente con máximas velocidades promedio y que justo coincida con la zona de máxima circulación. Sin embargo, lo anterior se deduce considerando los máximos registros. Si se consideran otros estadísticos como la mediana muestral, otros CCZ son los que registran mayor velocidad promedio (Maroñas, Cerro y Carrasco) mientras que Centro y Aguada (zonas de gran tráfico vehicular) cuentan con menor mediana de velocidad promedio. 
+
+Por último, no se observan sustanciales diferencias cuando se consideran momentos del mes, y se observan mínimas diferencias cuando se consideran los indicadores según día de la semana (reduciendo la movilidad durante los fines de semana). Estas conclusiones se extienden a lo largo de los 17 municipios.
+
+A partir de lo anterior se logra una primera aproximación a una caracterización de la movilidad urbana detectando relaciones de asociación entre volumen y velocidad promedio de vehículos junto con una localización geográfica categorizada a partir de los CCZ. Esto sirve de insumo a los municipios y a la IM a fin de lograr optimizar la movilidad y contruir políticas que sigan los lineamientros del CGM formulados por la IM.
+
+Como trabajo futuro se puede extender este estudio con técnicas más sofisticadas de análisis exploratorio multivariado, a fin de lograr caracterizar perfiles de zonas asociadas a su comportamiento en el tránsito. Se pueden desarrollar técnicas de análisis factoria o análisis de clusters para un mejor aproximación y especificidad de los resultados a fin de focalizar mejor las políticas formuladas en pro a un mejor bienestar. Otra propuesta puede venir dada por herramientas de análisis que permitan optimizar la velocidad promedio que optimice la cantidad de vehículos que circulan en la capital. Para ello se pueden desarrollar y estimar modelos econométricos (como por ejemplo regresiones lineales que incluyan la dinámica temporal de los datos - dado que se enceuntran disponibles). 
+
+
 
 # Referencias
 
-[1] Cat?logo de Datos Abiertos. Conteo de Veh?culos del Centro de Gesti?n de Movilidad. Febrero 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-conteo-de-vehiculos-del-centro-de-gestion-de-la-movilidad/resource/b985762d-c1c1-4dd0-bc57-6c3ab53e8ff8
+[1] Catálogo de Datos Abiertos. Conteo de Vehículos del Centro de Gestión de Movilidad. Febrero 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-conteo-de-vehiculos-del-centro-de-gestion-de-la-movilidad/resource/b985762d-c1c1-4dd0-bc57-6c3ab53e8ff8
 
 
-[2] Cat?logo de Datos Abiertos. Conteo de Veh?culos del Centro de Gesti?n de Movilidad. Marzo 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-conteo-de-vehiculos-del-centro-de-gestion-de-la-movilidad/resource/6df7fc9c-8331-4d93-928c-cd69b48940a2
+[2] Catálogo de Datos Abiertos. Conteo de Vehículos del Centro de Gestión de Movilidad. Marzo 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-conteo-de-vehiculos-del-centro-de-gestion-de-la-movilidad/resource/6df7fc9c-8331-4d93-928c-cd69b48940a2
 
-[3] Cat?logo de Datos Abiertos. Velocidad promedio vehicular en las principales avenidas de montevideo. Febrero 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo/resource/01ba56d8-2dab-4d8b-8391-d03159314144
+[3] Catálogo de Datos Abiertos. Velocidad promedio vehicular en las principales avenidas de montevideo. Febrero 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo/resource/01ba56d8-2dab-4d8b-8391-d03159314144
 
-[4] Cat?logo de Datos Abiertos. Velocidad promedio vehicular en las principales avenidas de montevideo. Marzo 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo/resource/da56b7db-dcef-41e0-8f16-a00406ae7c1c?view_id=abf43575-848a-40a7-94a3-dd9c378ff988
+[4] Catálogo de Datos Abiertos. Velocidad promedio vehicular en las principales avenidas de montevideo. Marzo 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo/resource/da56b7db-dcef-41e0-8f16-a00406ae7c1c?view_id=abf43575-848a-40a7-94a3-dd9c378ff988
 
 [5] https://negocios.elpais.com.uy/noticias/venta-autos-cero-kilometro-aumento-marzo-marcas-compradas.html
 
