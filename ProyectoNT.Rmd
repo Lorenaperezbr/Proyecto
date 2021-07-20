@@ -614,6 +614,16 @@ saveRDS(base, "data/processed/base_app.rds")
 
 # Descripción de la Aplicación Shiny
 
+Adicionalmente al estudio descriptivo realizado en la sección anterior que resume y busca explicar los objetivos planteados en términos de conteo vehicular y velocidad promedio, se desarrolla una aplicación web a traves de la plataforma R-Shiny. Esta aplicación permite realizar visualizaciones reactivas e interactivas que permiten contribuir a los objetivos observando los volumenes y velocidades de vehiculos según distintos escenarios: momentos del mes, del día, días de la semana, centros comunales zonales, entre otros. 
+
+En este caso la aplicación cuenta de tres principales partes distinguidas a partir de tres pestañas: una primer pestaña que contiene el mapa de Montevideo dividido según CCZ donde se permite observar el volumen vehicular bajo distintos esquemas: categorías del mes, día, día de la semana y CCZ. Se puede visualizar como fluctua el conteo vehícular bajo distintos esquemas a fin de lograr identificar alguna caracterización de la movilidad urbana. 
+
+Una segunda pestaña contiene dos gráficos de mosaicos: uno para la velocidad promedio y otro para el conteo vehicular. Esta herramienta permite visualizar como se comportan los indicadores cuando se cruzan modalidades de las distintas variables cualitativas insertas en el menú desplegable disponible. La nitidez del color de cada celda refleja distintos niveles de los indicadores formulados en función de las modalidades de las variables que se permiten cruzar en el análisis. 
+
+Por último, una tercer herramienta de visualización disponible en la aplicación Shiny permite visualizar algunas descriptivas generales en cuanto a velocidad y volumen. Se proponen herramientas de visualización de conteo distinguiendo por momento del mes, velocidades promedio asociados a los CCZ y otras descriptivas insertas en formato cuadro visualizando según días de la semana descriptivas de los indicadores principales en este trabajo.
+
+Se puede acceder a la aplicación a partir del sigueinte link: 
+
 
 # Consideraciones Finales
 
