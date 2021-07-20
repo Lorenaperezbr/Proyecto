@@ -390,6 +390,17 @@ ggplot() +
   theme_minimal()
 ```
 
+En primer lugar, el cuadro a continuación resume en términos de volume y velocidad promedio el mínimo y el máximo de cada indicador discriminando según CCZ a fin de denotar zonas donde el tráfico es mayor y donde los niveles de velocidades promedios se encuentran por fuera de lo establecido a nivel departamental. Se observa que la velocidad máxima en todos los CCZ excede los límites permitidos, incluso superan los 60 km/h. El CCZ 3 ubicado en la zona de la Aguada (Municipio C) es el que tiene el mayor registro en términos de velocidad. Esto merece especial atención al tratarse de una zona comercial, muy habitada y por tanto, muy transitada. Sería conveniente contar con esta información a fin de tener insumos para regular estos aspectos y alinearse a los objetivos departamentales. Por otro lado, como sí es intuitivo, el CCZ 2 correpondiente al Municipio B que incluye a la zona del centro de Montevideo es el que registra mayor volumen vehicular. Esto se debe estrictamente a que se trata de un centro comercial, laboral, educativo, etc. 
+
+```{r}
+base %>%
+ group_by(CCZ) %>%
+  summarise(velocidad_minima = min(velocidad_promedio),
+            velocidad_maxima = max(velocidad_promedio),
+            volumen_minimo = min(volume),
+            volumen_maximo = max(volume))
+```
+
 En línea al estudio localizando las observaciones según CCZ, la Figura \ref{fig:boxplot} muestra la distribución de la velocidad promedio y el conteo vehicular distinguiendo según CCZ a partir de un diagrama de caja ordenado según la mediana de los datos según CCZ. Vale recordar que la caja representa al rango intercuartílico (RI) de la distribución, los bigotes superiores e inferiores representan 1.5 veces el RI y los puntos por fuera, datos considerados atípicos. 
 
 ```{r boxplot, echo=FALSE, warning=FALSE, fig.cap="Distribución del volumen y la velocidad promedio de los vehículos discriminando por Centro Comunal Zonal (CCZ)"}
@@ -406,6 +417,67 @@ grid.arrange(p1, p2, nrow=1, ncol=2)
 
 En cuanto a la velocidad promedio se observa que el CCZ 10, 17 y 8 son aquellos donde la mediana de las velocidades promedio es mayor. Estos CCZ pertenecen a distintos municipios y se asocian a distintas partes de la ciudad (municipio F, A y E - Maroñas, Cerro, Carrasco, respectivamente). El CCZ 17 aunque es el único que no presenta datos atípicos presenta una caja más grande y por lo tanto los datos contenidos dentro de su rango intercuartílico son más volátiles en comparación al resto de los zonales. Los CCZ 16 y 1 (municipio B y C, Centro y Aguada, respectivamente) son aquellos con menores mediana en términos de sus velocidades promedios registradas. Estos últimos CCZ en términos de conteo vehicular se asocian a con una mediana de volúmen baja aludiendo a lo observado anteriormente donde la velocidad y el volumen se correlacionan positivamente. La observación es análoga observando los tres CCZ mencionados al comienzo. Estas asociaciones no son estrictas, pero mantienen esa línea (el CCZ 10 de mayor mediana en velocidad no es el mayor con mediana de conteo, pero sí se ubica entre aquellos con mayor registro).
 
+Considerando la observación antes realizada en cuanto a los resultados obtenidos de la descripción de los datos de conteo, la Figura \ref{fig:boxplot_conteo} muestra el conteo vehicular segun Centro Comunal Zonal distinguiendo por momento del mes. A priori, no se esperaría que estos flujos sean disímiles a lo largo del mes. Sin embargo, por la propia dinámica de movilidad concentrada en el centro de la capital, adicionado a que hay mayor control (en términos de cantidad de cámaras de CGM) en dichos puntos de la ciudad. Los CCZ 2 y 5 son aquellos que muestran mayor volumen en cuanto a la cantidad de vehículos que circulan. En contrapartida, los CCZ 12 y 17 son aquellos con menor movilidad. Estos CCZ se corresponden, en el primer caso a los barrios centro y Punta Carretas; mientras que en los últimos casos se corresponden a los barrios Colón y Cerros, barrios alejados del centro de movilidad laboral y comercial de Montevideo.
+
+
+```{r barplot_conteo, echo=FALSE, warning=FALSE, fig.cap="Conteo vehicular según Centro Comunal Zonal discriminando por momento del mes."}
+# Barras: dias de la semana (cada barra por municipio)
+base %>% 
+  mutate(CCZ = fct_reorder(CCZ, -volume, .fun = "sum")) %>%
+    ggplot(aes(x = CCZ,
+               y = volume,
+               fill = cat_fecha)) +
+    geom_bar(stat = "identity")+
+    scale_y_continuous(labels = scales::comma)
+
+```
+Sin embargo, así como no se observan sustanciales diferencias en cuanto al conteo vehicular a lo largo del mes, cuando se observa a traves de los días de la semana, como es de esperar, la Figura \ref{fig:barplot_conteo1} muestra que durante los fines de semana, la movilidad se reduce a lo largo de todos los CCZ. Esta observación es más clara en las zonas céntricas de mayor movilidad asociado a que son centros laborales que tienen picos de movilidad durante la semana y valles sobre Sábados y Domingos.
+
+```{r barplot_conteo1, echo=FALSE, warning=FALSE, fig.cap="Conteo vehicular según Centro Comunal Zonal discriminando por día de la semana."}
+# Barras: dias de la semana (cada barra por municipio)
+
+base %>% 
+  mutate(CCZ = fct_reorder(CCZ, -volume, .fun = "sum")) %>%
+    ggplot(aes(x = CCZ,
+               y = volume,
+               fill = dia_semana)) +
+    geom_bar(stat = "identity")+
+    scale_y_continuous(labels = scales::comma)
+
+```
+
+Las Figuras \ref{fig:barplot_velocidad} y \ref{fig:barplit_velocidad1} muestran de forma análoga el ejercicio anterior, pero considerando el promedio de la velocidad media registrada por las cámaras de CGM. Cuando se observa a lo largo del mes, como parecería intuitivo a priori no se verifican diferencias a lo largo del mes en términos de la velocidad promedio. Sin embargo, cuando se distingue según día de la semana, los fines de semana, probablemente asociado a la menor circulación observada, los registros de velocidad son algo superiores respecto de los restantes días. El CCZ 10 ubicado en las intermediaciones de Jardines del Hipódromo es donde se registran mayores velocidades en comparación al resto de los CCZ.
+
+```{r barplot_velocidad, eval=FALSE, echo=FALSE, warning=FALSE, fig.cap="Promedio de la velocidad media registrada por cámaras de CGM, según Centro Comunal Zonal discriminando por momento del mes."}
+# Barras: dias de la semana (cada barra por municipio)
+
+base %>% 
+  group_by(cat_fecha, CCZ) %>% 
+    summarise(promedio_vel = mean(velocidad_promedio)) %>% 
+      mutate(CCZ = fct_reorder(CCZ, -promedio_vel, .fun = "sum")) %>%
+    ggplot(aes(x = CCZ,
+               y = promedio_vel,
+               fill = cat_fecha)) +
+    geom_bar(stat = "identity")+
+    scale_y_continuous(labels = scales::comma)
+
+
+
+```
+
+```{r barplot_velocidad1, eval=FALSE, echo=FALSE, warning=FALSE, fig.cap="Promedio de la velocidad media registrada por cámaras de CGM, según Centro Comunal Zonal discriminando por momento del mes."}
+# Barras: dias de la semana (cada barra por municipio)
+
+base %>% 
+  group_by(dia_semana, CCZ) %>% 
+    summarise(promedio_vel = mean(velocidad_promedio)) %>% 
+      mutate(CCZ = fct_reorder(CCZ, -promedio_vel, .fun = "sum")) %>%
+    ggplot(aes(x = CCZ,
+               y = promedio_vel,
+               fill = dia_semana)) +
+    geom_bar(stat = "identity")+
+    scale_y_continuous(labels = scales::comma)
+```
 
 
 
@@ -422,14 +494,7 @@ En cuanto a la velocidad promedio se observa que el CCZ 10, 17 y 8 son aquellos 
 
 
 
-
-
-
-
-
-
-
-
+```{r, eval=FALSE}
 
 ggplot(base, aes(x = cat_fecha, y = cat_hora, fill = velocidad_promedio)) + geom_tile() 
 
@@ -443,49 +508,22 @@ ggplot(base, aes(x = cat_hora, y = dia_semana, fill = volume)) + geom_tile()
 
 ggplot(base, aes(x = cat_fecha, y = dia_semana, fill = volume)) + geom_tile()
 
-```{r barplot_conteo, echo=FALSE, warning=FALSE, fig.cap="Conteo vehicular según Centro Comunal Zonal discriminando por momento del mes."}
-# Barras: dias de la semana (cada barra por municipio)
 
-base %>% 
-  ggplot(aes(x = cat_fecha,
-             y = volume)) +
-  geom_col() +
-  facet_wrap(~factor(CCZ)) # Separar por CCZ 
 
-```
-
-```{r barplot_velocidad, eval=FALSE, echo=FALSE, warning=FALSE, fig.cap="Promedio de la velocidad media registrada por cámaras de CGM, según Centro Comunal Zonal discriminando por momento del mes."}
-# Barras: dias de la semana (cada barra por municipio)
-
-base %>% 
-  group_by(cat_fecha, CCZ) %>% 
-    summarise(promedio_vel = mean(velocidad_promedio)) %>% 
-      ggplot(aes(x = cat_fecha,
-                 y = promedio_vel)) +
-      geom_col(stat = 'identity') +
-      facet_wrap(~factor(CCZ)) # Separar por CCZ 
-
-```
-
-```{r barplot}
-base %>% 
-  mutate(CCZ = fct_reorder(CCZ, -volume, .fun = "sum")) %>%
-    ggplot(aes(x = CCZ,
-               y = volume,
-               fill = cat_fecha)) +
-    geom_bar(stat = "identity")+
-    scale_y_continuous(labels = scales::comma)
-```
 
 base %>% 
   ggplot(aes(x = reorder(CCZ, -as.numeric(volume)),
               y = volume)) +
   geom_bar(stat = "identity")
 
-<!-- NO LOGRAMOS ORDENAR LAS BARRAS EN EL EJE X-->
+#-- NO LOGRAMOS ORDENAR LAS BARRAS EN EL EJE X-->
+```
 
 
-```{r barplot_valocidad}
+
+
+
+```{r barplot_valocidad3, eval=FALSE}
 base %>%
   filter(velocidad_promedio > 0) %>%
     group_by(dia_semana, CCZ) %>% 
@@ -523,7 +561,7 @@ base %>%
 
 ```
 
-```{r barplot_valocidad}
+```{r barplot_valocidad4, eval=FALSE}
 base %>%
   filter(velocidad_promedio > 0) %>%
     group_by(dia_semana, cat_hora) %>%
@@ -565,14 +603,7 @@ base %>%
 
 
 
-```{r}
-base %>%
- group_by(CCZ) %>%
-  summarise(velocidad_minima = min(velocidad_promedio),
-            velocidad_maxima = max(velocidad_promedio),
-            volumen_minimo = min(volume),
-            volumen_maximo = max(volume))
-```
+
 
 
 
