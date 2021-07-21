@@ -10,22 +10,6 @@ municipios <- st_read("./data/geo/mdeo_barrios")
 st_crs(x = municipios) <- 5382
 municipios <- st_transform(municipios, "+init=epsg:4326")
 
-resumenes <- base %>% 
-              group_by(CCZ) %>% 
-                summarise(res_volume = sum(volume),
-                          res_velocidad_promedio = max(velocidad_promedio))
-
-st_crs(resumenes) <- st_crs(municipios)
-municipios <- st_join(municipios, resumenes, left = T)
-
-
-vars <- data.frame("Variable x" = c("cat_hora", "cat_hora",
-                                    "cat_fecha", "cat_fecha",
-                                    "dia_semana", "dia_semana"),
-                   "Variable y" = c("cat_fecha", "dia_semana",
-                                    "cat_hora", "dia_semana",
-                                    "cat_hora", "cat_fecha"))
-
 
 ui <- fluidPage(
   titlePanel("Estudio de circulación vehicular en Montevideo: febrero-marzo 2021"),
@@ -122,38 +106,31 @@ ui <- fluidPage(
                                           "Momento del mes" = "cat_fecha")))
                  ),
                  
-                 fluidRow(
-                   column(6,plotOutput("tile_1")),
-                   column(6,plotOutput("tile_2"))
-                 ))
+                 conditionalPanel(
+                   condition = "input.x_tile == 'cat_hora'",
+                   fluidRow(
+                     column(6,plotOutput("tile_1_1")),
+                     column(6,plotOutput("tile_1_2"))
+                   )
+                 ),
+                 
+                 conditionalPanel(
+                   condition = "input.x_tile == 'cat_fecha'",
+                   fluidRow(
+                     column(6,plotOutput("tile_2_1")),
+                     column(6,plotOutput("tile_2_2"))
+                   )
+                 ),
+                 
+                 conditionalPanel(
+                   condition = "input.x_tile == 'dia_semana'",
+                   fluidRow(
+                     column(6,plotOutput("tile_3_1")),
+                     column(6,plotOutput("tile_3_2"))
+                   )
+                 )
+                 )
         )))))
-
-
-
-
-# conditionalPanel(
-#   condition = "input.x_tile == 'cat_hora'",
-#   selectInput("y_tile1",
-#               "Contra:",
-#               c("Momento del mes" = "cat_fecha",
-#                 "Día de la semana" = "dia_semana"))
-# ),
-# 
-# conditionalPanel(
-#   condition = "input.x_tile == 'cat_fecha'",
-#   selectInput("y_tile2",
-#               "Contra:",
-#               c("Rango horario" = "cat_hora",
-#                 "Día de la semana" = "dia_semana"))
-# ),
-# 
-# conditionalPanel(
-#   condition = "input.x_tile == 'dia_semana'",
-#   selectInput("y_tile3",
-#               "Contra:",
-#               c("Rango horario" = "cat_hora",
-#                 "Momento del mes" = "cat_fecha")))
-
 
 
 
@@ -191,6 +168,16 @@ server <- function(input, output, session){
              fecha>=input$fecha[1] & fecha <=input$fecha[2]
       )
     })
+  
+  resumenes <- reactive({
+    datos() %>% 
+      group_by(CCZ) %>% 
+      summarise(res_volume = sum(volume),
+                res_velocidad_promedio = max(velocidad_promedio))
+  })
+    
+  st_crs(resumenes()) <- st_crs(municipios)
+  municipios <- st_join(municipios, resumenes(), left = T)
   
 ############# Pestana MAPA
   # Opciones: 
@@ -247,30 +234,30 @@ server <- function(input, output, session){
     }
   )
   
-  var_y <- reactive({
-    
-    if (input$x_tile == "cat_hora") {
-      var_y <- get(input$y_tile1)
-      
-    } else if (input$x_tile == "cat_fecha") {
-      var_y <- get(input$y_tile2)
-      
-    } else {
-      var_y <- get(input$y_tile3)
-    }
-  })
+  # var_y <- reactive({
+  #   
+  #   if (input$x_tile == "cat_hora") {
+  #     var_y <- get(input$y_tile1)
+  #     
+  #   } else if (input$x_tile == "cat_fecha") {
+  #     var_y <- get(input$y_tile2)
+  #     
+  #   } else {
+  #     var_y <- get(input$y_tile3)
+  #   }
+  # })
   
   
-  grafico <- reactive({
+  graf_tile_1_1 <- reactive({
     
     ggplot(datos(),
            aes(x = .data[[input$x_tile]],
-               y = as.character(var_y()),
+               y = .data[[input$y_tile1]],
                fill = velocidad_promedio)) +
     geom_tile() +
     labs(
-    #      x = lab_x(),
-    #      y = lab_y(),
+         x = lab_x(),
+         y = lab_y(),
          fill = "Velocidad Promedio") +
     theme(legend.position = "bottom",
           aspect.ratio = 1,
@@ -286,14 +273,16 @@ server <- function(input, output, session){
                         high = "#54020c")
   })
   
-  grafico2 <- reactive({
+  graf_tile_1_2 <- reactive({
     
     ggplot(datos(),
            aes(x = .data[[input$x_tile]],
-               y = .data[[input$y_tile]],
+               y = .data[[input$y_tile1]],
                fill = volume)) +
     geom_tile() +
-    labs(fill = "Cantidad") +
+    labs(x = lab_x(),
+         y = lab_y(),
+         fill = "Cantidad") +
     theme(legend.position = "bottom",
           aspect.ratio = 1,
           legend.title = element_text(face = "bold",
@@ -310,12 +299,133 @@ server <- function(input, output, session){
   
   
   # OUTPUTS 
-  output$tile_1 <- renderPlot({
-    plot(grafico())
+  output$tile_1_1 <- renderPlot({
+    plot(graf_tile_1_1())
   })
   
-  output$tile_2 <- renderPlot({
-    plot(grafico2())
+  output$tile_1_2 <- renderPlot({
+    plot(graf_tile_1_2())
+  })
+  
+  
+  graf_tile_2_1 <- reactive({
+    
+    ggplot(datos(),
+           aes(x = .data[[input$x_tile]],
+               y = .data[[input$y_tile2]],
+               fill = velocidad_promedio)) +
+      geom_tile() +
+      labs(
+        x = lab_x(),
+        y = lab_y(),
+        fill = "Velocidad Promedio") +
+      theme(legend.position = "bottom",
+            aspect.ratio = 1,
+            legend.title = element_text(face = "bold",
+                                        hjust = 0.5),
+            axis.title.x = element_text(face = "bold",
+                                        hjust = 0.5),
+            axis.title.y = element_text(face = "bold",
+                                        hjust = 0.5),
+            axis.text.x = element_text(angle = 90,
+                                       vjust = 0.5)) +
+      scale_fill_gradient(low="#cf5d6b",
+                          high = "#54020c")
+  })
+  
+  graf_tile_2_2 <- reactive({
+    
+    ggplot(datos(),
+           aes(x = .data[[input$x_tile]],
+               y = .data[[input$y_tile2]],
+               fill = volume)) +
+      geom_tile() +
+      labs(x = lab_x(),
+           y = lab_y(),
+           fill = "Cantidad") +
+      theme(legend.position = "bottom",
+            aspect.ratio = 1,
+            legend.title = element_text(face = "bold",
+                                        hjust = 0.5),
+            axis.title.x = element_text(face = "bold",
+                                        hjust = 0.5),
+            axis.title.y = element_text(face = "bold",
+                                        hjust = 0.5),
+            axis.text.x = element_text(angle = 90,
+                                       vjust = 0.5)) +
+      scale_fill_gradient(low="#61c968",
+                          high = "#023606")
+  })
+  
+  
+  # OUTPUTS 
+  output$tile_2_1 <- renderPlot({
+    plot(graf_tile_2_1())
+  })
+  
+  output$tile_2_2 <- renderPlot({
+    plot(graf_tile_2_2())
+  })
+  
+  
+  
+  graf_tile_3_1 <- reactive({
+    
+    ggplot(datos(),
+           aes(x = .data[[input$x_tile]],
+               y = .data[[input$y_tile3]],
+               fill = velocidad_promedio)) +
+      geom_tile() +
+      labs(
+        x = lab_x(),
+        y = lab_y(),
+        fill = "Velocidad Promedio") +
+      theme(legend.position = "bottom",
+            aspect.ratio = 1,
+            legend.title = element_text(face = "bold",
+                                        hjust = 0.5),
+            axis.title.x = element_text(face = "bold",
+                                        hjust = 0.5),
+            axis.title.y = element_text(face = "bold",
+                                        hjust = 0.5),
+            axis.text.x = element_text(angle = 90,
+                                       vjust = 0.5)) +
+      scale_fill_gradient(low="#cf5d6b",
+                          high = "#54020c")
+  })
+  
+  graf_tile_3_2 <- reactive({
+    
+    ggplot(datos(),
+           aes(x = .data[[input$x_tile]],
+               y = .data[[input$y_tile3]],
+               fill = volume)) +
+      geom_tile() +
+      labs(x = lab_x(),
+           y = lab_y(),
+           fill = "Cantidad") +
+      theme(legend.position = "bottom",
+            aspect.ratio = 1,
+            legend.title = element_text(face = "bold",
+                                        hjust = 0.5),
+            axis.title.x = element_text(face = "bold",
+                                        hjust = 0.5),
+            axis.title.y = element_text(face = "bold",
+                                        hjust = 0.5),
+            axis.text.x = element_text(angle = 90,
+                                       vjust = 0.5)) +
+      scale_fill_gradient(low="#61c968",
+                          high = "#023606")
+  })
+  
+  
+  # OUTPUTS 
+  output$tile_3_1 <- renderPlot({
+    plot(graf_tile_3_1())
+  })
+  
+  output$tile_3_2 <- renderPlot({
+    plot(graf_tile_3_2())
   })
   
 
