@@ -2,10 +2,11 @@ library(shiny)
 library(tidyverse)
 library(DT)
 library(stringr)
+library(sf)
 
 
-base <- readRDS("data/processed/base_app.rds")
-municipios <- st_read("data/geo/mdeo_barrios")
+base <- readRDS("./data/processed/base_app.rds")
+municipios <- st_read("./data/geo/mdeo_barrios")
 st_crs(x = municipios) <- 5382
 municipios <- st_transform(municipios, "+init=epsg:4326")
 
@@ -48,7 +49,7 @@ ui <- fluidPage(
       selectInput('cat_hora', 
                   'Selecciona un rango horario:',
                   c("Madrugada",
-                    "Mañana",
+                    "Manana",
                     "Media tarde",
                     "Medio dia",
                     "Noche"),
@@ -68,7 +69,7 @@ ui <- fluidPage(
       tabsetPanel(
         
         tabPanel("Resumen",
-                 h2("Algun titulo interesante", align = "center"),
+                 h2("Principales Estadísticas", align = "center"),
                  fluidRow(
                    column(6,plotOutput("bar_1")),
                    column(6,plotOutput("bar_2"))),
@@ -76,7 +77,7 @@ ui <- fluidPage(
         ),
         
         tabPanel("Mapa",
-                 h2("Algun titulo interesante", align = "center"),
+                 h2("Visualización Geográfica", align = "center"),
                  plotOutput("map"),
                  selectInput("var_map",
                              "Selecciona una variable:",
@@ -85,7 +86,7 @@ ui <- fluidPage(
         ),
         
         tabPanel("Gráfico de Mosaico",
-                 h2("Algun titulo interesante", align = "center"),
+                 h2("Asociación entre categorías", align = "center"),
                  
                  fluidRow(
                    column(6,
@@ -191,10 +192,10 @@ server <- function(input, output, session){
       )
     })
   
-############# Pestaña MAPA
+############# Pestana MAPA
   # Opciones: 
   # Pintar municipios en escala de color según conteo o velocidad.
-  # Tamaño de los puntos en relación a conteo o velocidad registrada.
+  # Tamano de los puntos en relación a conteo o velocidad registrada.
   
   
 
@@ -218,7 +219,7 @@ server <- function(input, output, session){
   
   
   
-############# Pestaña GRÁFICO DE MOSAICO:
+############# Pestana GRÁFICO DE MOSAICO:
   
   lab_x <- reactive(
     if (input$x_tile == "cat_hora") {
@@ -317,8 +318,8 @@ server <- function(input, output, session){
     plot(grafico2())
   })
   
-  
-############# Pestaña RESUMEN
+
+############# Pestana RESUMEN
   
   grafico3 <- reactive({
     
