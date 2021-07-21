@@ -117,7 +117,7 @@ base$CCZ <- factor(base$CCZ, levels = c(1:17))
 
 
 	Autores:
-	Federico Golffeld - Martín Olivera - Lorena Perez - Ángela Vieyto
+	Federico Golffeld - Martín Olivera - Lorena Pérez - Ángela Vieyto
 	
 	\vspace{1cm}
 	
