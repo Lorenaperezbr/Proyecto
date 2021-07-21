@@ -2,11 +2,10 @@
 title: 'Estudio de circulación vehicular en Montevideo: febrero-marzo 2021'
 author: ''
 date: ''
-output:
-  pdf_document:  default
-  html_document:
-    df_print: paged
+output: bookdown::pdf_document2 
+  df_print: paged
 header-includes: \usepackage{float} \floatplacement{figure}{H}
+lang: "sp"
 ---
 ```{r setup, echo = FALSE, include = FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -114,11 +113,10 @@ base$CCZ <- factor(base$CCZ, levels = c(1:17))
 	Nuevas Tecnologías para el análisis de datos
 	\vspace{1cm}
 	
-	""
-\vspace{1cm}
+
 
 	Autores:
-	Federico Golffeld - Martín Olivera - Lorena Perez - Ángela Vieyto
+	Federico Golffeld - Martín Olivera - Lorena Pérez - Ángela Vieyto
 	
 	\vspace{1cm}
 	
@@ -252,9 +250,9 @@ A partir de los objetivos planteados y de los datos obtenidos por el centro de g
 
 Para el análisis exploratorio, en primer lugar se puede realizar una descripción en función de los dos indicadores principales en este informe: el conteo y la velocidad promedio de circulación vehicular. 
 
-Cuando se observa a partir de un diagrama de dispersión la velocidad promedio y el volumen de vehiculos, este se puede observar para todos los datos registrados, así como según ciertas categorizaciones. La Figura \ref{fig:dispersion1} muestra la relación, al menos de asociación existente entre los indicadores antes mencionados. A partir de la misma se pueden realizar dos observaciones: en primer lugar, que la relación entre ambos indicadores es positiva, aludiendo a que ante mayor cantidad de vehículos en circulación, mayor se observa la velocidad promedio. Esto aunque no parecería intuitivo a priori, puede asociarse a incrementos en la dinámica de circulación donde a fin de evitar potenciales aglomeraciones vehiculares, los sitios con mayor acumulación de vehículos se puede vincular con registros de velocidad promedio algo superiores. Otra observación viene dada por la categorización según momento del día. En esta línea, la noche y la madrugada parecen ser los momentos del día que mayor explican la relación encontrada anteriormente, mientras que durante el día y la tarde, como se esperaría a priori, la relación observada entre la cantidad de vehículos y sus velocidades tienen una relación no tan clara. 
+Cuando se observa a partir de un diagrama de dispersión la velocidad promedio y el volumen de vehiculos, este se puede observar para todos los datos registrados, así como según ciertas categorizaciones. La Figura \@ref(fig:dispersion1) muestra la relación, al menos de asociación existente entre los indicadores antes mencionados. A partir de la misma se pueden realizar dos observaciones: en primer lugar, que la relación entre ambos indicadores es positiva, aludiendo a que ante mayor cantidad de vehículos en circulación, mayor se observa la velocidad promedio. Esto aunque no parecería intuitivo a priori, puede asociarse a incrementos en la dinámica de circulación donde a fin de evitar potenciales aglomeraciones vehiculares, los sitios con mayor acumulación de vehículos se puede vincular con registros de velocidad promedio algo superiores. Otra observación viene dada por la categorización según momento del día. En esta línea, la noche y la madrugada parecen ser los momentos del día que mayor explican la relación encontrada anteriormente, mientras que durante el día y la tarde, como se esperaría a priori, la relación observada entre la cantidad de vehículos y sus velocidades tienen una relación no tan clara. 
 
-```{r dispersion1, echo=FALSE, warning=FALSE, fig.cap="Nube de puntos de la cantidad de vehículos y la velocidad promedio capturadas por las cámaras de CGM, según categoría horaria del día"}
+```{r dispersion1, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="Nube de puntos de la cantidad de vehículos y la velocidad promedio capturadas por las cámaras de CGM, según categoría horaria del día"}
 base %>%
   ggplot(aes(x = volume,
              y = velocidad_promedio)) +
@@ -284,7 +282,6 @@ base %>%
 En segundo plano, este mismo diagrama de dispersión permite categorizarse por días de la semana. Previo a la observación de los datos, se esperaría que no existan sustanciales diferencias cuando se consideran los días de la semana, debido a que el flujo de vehículos entre semana sería similar (más aún en Montevideo), pudiéndose esperar una relación más clara durante los días del fin de semana.
 
 ```{r dispersion2, echo=FALSE, warning=FALSE, message=FALSE,fig.cap="Nube de puntos de la cantidad de vehículos y la velocidad promedio capturadas por las cámaras de CGM, según día de la semana."}
-# Dispersion: velocidad x conteo faceteado por hora, momento del mes, ...
 
 
 base %>%
@@ -312,12 +309,11 @@ base %>%
   geom_smooth(method = "lm")
 
 ```
-En este sentido, la Figura \ref{fig:dispersion2} efectivamente se alinea a lo hipotetizado anteriormente donde no parece existir diferencias importantes entre los días de la semana, siendo los fines de semana aquellos días donde la relación entre velocidad y conteo mantiene una mayor correlación positiva.
+En este sentido, la Figura \@ref(fig:dispersion2) efectivamente se alinea a lo hipotetizado anteriormente donde no parece existir diferencias importantes entre los días de la semana, siendo los fines de semana aquellos días donde la relación entre velocidad y conteo mantiene una mayor correlación positiva.
 
-Análogamente a lo anterior, la Figura \ref{fig:dispersion3} muestra que en términos del momento del mes la relación de asociación encontrada es positiva y no varía de forma sustancial a traves de las franjas diarias durante los meses. 
+Análogamente a lo anterior, la Figura \@ref(fig:dispersion3) muestra que en términos del momento del mes la relación de asociación encontrada es positiva y no varía de forma sustancial a traves de las franjas diarias durante los meses. 
 
 ```{r dispersion3, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="Nube de puntos de la cantidad de vehículos y la velocidad promedio capturadas por las cámaras de CGM, según momento del mes"}
-# Dispersion: velocidad x conteo faceteado por hora, momento del mes, ...
 
 
 base %>%
@@ -346,10 +342,9 @@ base %>%
 
 
 ```
-A partir de lo anterior, parece clara la existencia de relaciones de asociación positiva entre velocidad y conteo. Sin embargo, la magnitud de la correlación observada y su nivel de significación no se puede observar a partir de las figuras anteriores. La Figura \ref{fig:correlaciones} muestra las correlaciones cruzadas entre la velocidad promedio y la cantidad de vehículos categorizando en función de lo presentado anteriormente y obteniendo el coeficiente de correlación lineal entre ambos indicadores para todos los datos así como para cada categoría. Algo en común es que, las correlaciones en todos los casos es significativa estadísticamente y con signo positivo asociado a que incrementos en la cantidad de vehículos se vincula con mayores velocidades promedio. Se observa que la correlación es mayor durante la noche, los días sábado y domingo y durante el principio de mes. Sin embargo, no se observan importantes discrepancias cuando se considera la correlación para todos los datos.
+A partir de lo anterior, parece clara la existencia de relaciones de asociación positiva entre velocidad y conteo. Sin embargo, la magnitud de la correlación observada y su nivel de significación no se puede observar a partir de las figuras anteriores. La Figura \@ref(fig:correlaciones) muestra las correlaciones cruzadas entre la velocidad promedio y la cantidad de vehículos categorizando en función de lo presentado anteriormente y obteniendo el coeficiente de correlación lineal entre ambos indicadores para todos los datos así como para cada categoría. Algo en común es que, las correlaciones en todos los casos es significativa estadísticamente y con signo positivo asociado a que incrementos en la cantidad de vehículos se vincula con mayores velocidades promedio. Se observa que la correlación es mayor durante la noche, los días sábado y domingo y durante el principio de mes. Sin embargo, no se observan importantes discrepancias cuando se considera la correlación para todos los datos.
 
-```{r correlaciones, echo=FALSE, warning=FALSE, fig.cap="Correlaciones y densidades del volumen y la velocidad promedio de vehículos según categoría horaria, día de la semana y momento del mes"}
-#Graficos de correlaciones. Se puede extender a municipios.
+```{r correlaciones, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="Correlaciones y densidades del volumen y la velocidad promedio de vehículos según categoría horaria, día de la semana y momento del mes"}
 ggpairs(base, c("volume", "velocidad_promedio"),
         mapping = ggplot2::aes(color = cat_hora,
                                alpha = 0.5),
@@ -366,14 +361,18 @@ ggpairs(base, c("volume", "velocidad_promedio"),
                                alpha = 0.5),
         diag = list(continuous = wrap("densityDiag")),
         lower = list(continuous = wrap("points",
-                                       alpha = 0.9)))
+                                       alpha = 0.9)),
+        labels=as_labeller(c("volume"="Cantidad de vehículos", "velocidad_promedio"="Velocidad Promedio"))
+        )
 
 ggpairs(base, c("volume", "velocidad_promedio"),
         mapping = ggplot2::aes(color = cat_fecha,
                                alpha = 0.5),
         diag = list(continuous = wrap("densityDiag")),
         lower = list(continuous = wrap("points",
-                                       alpha = 0.9)))
+                                       alpha = 0.9)),
+        labels=as_labeller(c("volume"="Cantidad de vehículos", "velocidad_promedio"="Velocidad Promedio"))
+        )
 ```
 Un segundo aspecto a explorar viene dado por lo que se observa en la diagonal principal de los trés gráficos de la figura anterior. Se observa la densidad de los datos, las cuales muestran la frecuencia de observaciones que se observan en cada nivel de las variables en cuestión. Esto permite ver valores más frecuentes (modo), asimestrías, valores medios, entre otros. En cuanto a las velocidades promedio, se observa que hay mayores observaciones en velocidades promedio muy bajas (esto puede deberse a que las cámaras capturan vehículos estacionados o reduciéndo sus velocidades debido a que están en semáforos o esquinas. Se puede asociar a vehículos parados, o frenando o acelerando), o en valores debajo del máximo permitido en la capital (45 km/h). Sin embargo, existe cierta asimetría asociada a observaciones con registros con altas velocidades. Observando por momento del día, como parece intuitivo, la noche y la madrugada son los momentos con mayores registros a velocidades más altas, mientras que las distribuciones a la tarde tienen mayores frecuencias a velocidades comparativamente inferiores. En cuanto a velocidades, cuando se observa por día de la semana o por categoría del mes no se observan diferencias en cuanto a la distribución de los datos. En cuanto al conteo, se observan mayores registros durante el día (en particular media tarde, sobre los días jueves).
 
@@ -382,11 +381,11 @@ A continuación se propone incluir al análisis información geográfica permiti
 ## Información geográfica
 
 
-Previo a la descrpción de los datos incorporando la localización geográfica de los mismo, la Figura \ref{fig:mapa} muestra la localización de los detectores del CGM dentro de Montevideo dividiendo según CCZ. Los datos recolectados cuentan con 110 cámaras ubicadas en Montevideo y vienen representados a partir de puntos en el mapa de la figura que sigue. Se encuentra que los radares se encuentran concentrados en la zona céntrica de Montevideo, en particular, en los CCZ de los municipios, B, C, CH, E, y generalmente sobre las arterias principales de la ciudad (en particular, se encuentra gran cantidad de cámaras sobre Bvar. Artigas y Av. Italia). Sin embargo, también es notorio que hay zonas de la capital donde no hay radares o hay un radar solo, o que en general hay menor cantidad que en zonas más céntricas. Esto parece tener sentido en términos de los puntos de mayor participación ciudadana (Centro, Cordon, Pocitos, Buceo, Tres Cruces, etc) donde es necesaria una mayor regulación y cuidado en lo que concierne a la velocidad de los vehículos asociado a la cantidad de vehículos que circulan. 
+Previo a la descrpción de los datos incorporando la localización geográfica de los mismo, la Figura \@ref(fig:mapa) muestra la localización de los detectores del CGM dentro de Montevideo dividiendo según CCZ. Los datos recolectados cuentan con 110 cámaras ubicadas en Montevideo y vienen representados a partir de puntos en el mapa de la figura que sigue. Se encuentra que los radares se encuentran concentrados en la zona céntrica de Montevideo, en particular, en los CCZ de los municipios, B, C, CH, E, y generalmente sobre las arterias principales de la ciudad (en particular, se encuentra gran cantidad de cámaras sobre Bvar. Artigas y Av. Italia). Sin embargo, también es notorio que hay zonas de la capital donde no hay radares o hay un radar solo, o que en general hay menor cantidad que en zonas más céntricas. Esto parece tener sentido en términos de los puntos de mayor participación ciudadana (Centro, Cordon, Pocitos, Buceo, Tres Cruces, etc) donde es necesaria una mayor regulación y cuidado en lo que concierne a la velocidad de los vehículos asociado a la cantidad de vehículos que circulan. 
 
 Sin embargo, esto debe tomarse en consideración a la hora de considerar en particular, el conteo vehicular por CCZ, debido a que hay algunos que registran muchos menos vehículos debido a que la zona no cuenta con demasiadas cámaras. Adicionalmente, también sería pertinente notar que donde mayor concentración hay de cámaras, mayor chances hay de que un mismo vehículo cruce más de una cámara en su circuito y se registre más de una vez (eso sumado a que de por sí, ya hay mayor flujo vehicular).
 
-```{r mapa, echo=FALSE, warning=FALSE, fig.cap="Mapa de Montevideo particionado según CCZ localizando las cámaras del CGM"}
+```{r mapa, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="Mapa de Montevideo particionado según CCZ localizando las cámaras del CGM"}
 
 ggplot() +
   geom_sf(data = municipios) +  
@@ -394,7 +393,7 @@ ggplot() +
   theme_minimal()
 ```
 
-El siguiente cuadro resume en términos de volume y velocidad promedio el mínimo y el máximo de cada indicador discriminando según CCZ a fin de denotar zonas donde el tráfico es mayor y donde los niveles de velocidades promedios se encuentran por fuera de lo establecido a nivel departamental. Se observa que la velocidad máxima en todos los CCZ excede los límites permitidos, incluso superan los 60 km/h. El CCZ 3 ubicado en la zona de la Aguada (Municipio C) es el que tiene el mayor registro en términos de velocidad. Esto merece especial atención al tratarse de una zona comercial, muy habitada y por tanto, muy transitada. Sería conveniente contar con esta información a fin de tener insumos para regular estos aspectos y alinearse a los objetivos departamentales. Por otro lado, como sí es intuitivo, el CCZ 2 (correpondiente al Municipio B, que incluye a la zona del centro de Montevideo) es el que registra mayor volumen vehicular. Esto se debe estrictamente a que se trata de un centro comercial, laboral, educativo, etc. 
+El siguiente cuadro resume en términos de volume y velocidad promedio el mínimo y el máximo de cada indicador discriminando según CCZ a fin de denotar zonas donde el tráfico es mayor y donde los niveles de velocidades promedios se encuentran por fuera de lo establecido a nivel departamental. Se observa que la velocidad máxima en todos los CCZ excede los límites permitidos, incluso superan los 60 km/h. El CCZ 5 ubicado en la zona de Punta Carretas (Municipio CH) es el que tiene el mayor registro en términos de velocidad y también en términos de conteo vehicular. Esto merece especial atención al tratarse de una zona comercial, muy habitada y por tanto, muy transitada. Sería conveniente contar con esta información a fin de tener insumos para regular estos aspectos y alinearse a los objetivos departamentales. 
 
 ```{r, message=FALSE, warning=FALSE}
 base %>%
@@ -402,12 +401,12 @@ base %>%
   summarise(velocidad_minima = min(velocidad_promedio),
             velocidad_maxima = max(velocidad_promedio),
             volumen_minimo = min(volume),
-            volumen_maximo = max(volume))
+            volumen_maximo = max(volume))%>%xtable()
 ```
 
-En línea al estudio localizando las observaciones según CCZ, la Figura \ref{fig:boxplot} muestra la distribución de la velocidad promedio y el conteo vehicular distinguiendo según CCZ a partir de un diagrama de caja ordenado según la mediana de los datos según CCZ. Vale recordar que la caja representa al rango intercuartílico (RI) de la distribución, los bigotes superiores e inferiores representan 1.5 veces el RI y los puntos por fuera, datos considerados atípicos. 
+En línea al estudio localizando las observaciones según CCZ, la Figura \@ref(fig:boxplot) muestra la distribución de la velocidad promedio y el conteo vehicular distinguiendo según CCZ a partir de un diagrama de caja ordenado según la mediana de los datos según CCZ. Vale recordar que la caja representa al rango intercuartílico (RI) de la distribución, los bigotes superiores e inferiores representan 1.5 veces el RI y los puntos por fuera, datos considerados atípicos. 
 
-```{r boxplot, echo=FALSE, warning=FALSE, fig.cap="Distribución del volumen y la velocidad promedio de los vehículos discriminando por Centro Comunal Zonal (CCZ)"}
+```{r boxplot, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="Distribución del volumen y la velocidad promedio de los vehículos discriminando por Centro Comunal Zonal (CCZ)"}
 
 library(gridExtra)
 p1<-base %>% ggplot(aes(x=reorder(factor(CCZ),-velocidad_promedio,median), y=velocidad_promedio)) +  geom_boxplot()  +
@@ -419,13 +418,12 @@ grid.arrange(p1, p2, nrow=1, ncol=2)
 
 ```
 
-En cuanto a la velocidad promedio se observa que el CCZ 10, 17 y 8 son aquellos donde la mediana de las velocidades promedio es mayor. Estos CCZ pertenecen a distintos municipios y se asocian a distintas partes de la ciudad (municipio F, A y E - Maroñas, Cerro, Carrasco, respectivamente). El CCZ 17 aunque es el único que no presenta datos atípicos presenta una caja más grande y por lo tanto los datos contenidos dentro de su rango intercuartílico son más volátiles en comparación al resto de los zonales. Los CCZ 16 y 1 (municipio B y C, Centro y Aguada, respectivamente) son aquellos con menores mediana en términos de sus velocidades promedios registradas. Estos últimos CCZ en términos de conteo vehicular se asocian a con una mediana de volúmen baja aludiendo a lo observado anteriormente donde la velocidad y el volumen se correlacionan positivamente. La observación es análoga observando los tres CCZ mencionados al comienzo. Estas asociaciones no son estrictas, pero mantienen esa línea (el CCZ 10 de mayor mediana en velocidad no es el mayor con mediana de conteo, pero sí se ubica entre aquellos con mayor registro).
+En cuanto a la velocidad promedio se observa que el CCZ 10, 17 y 8 son aquellos donde la mediana de las velocidades promedio es mayor. Estos CCZ pertenecen a distintos municipios y se asocian a distintas partes de la ciudad (municipio F, A y E - Maroñas, Cerro, Carrasco, respectivamente). El CCZ 17 aunque es el único que no presenta datos atípicos presenta una caja más grande y por lo tanto los datos contenidos dentro de su rango intercuartílico son más volátiles en comparación al resto de los zonales. Los CCZ 16 y 1 (municipio B y C, Centro y Aguada, respectivamente) son aquellos con menores mediana en términos de sus velocidades promedios registradas. Estos últimos CCZ en términos de conteo vehicular se asocian a con una mediana de volúmen baja aludiendo a lo observado anteriormente donde la velocidad y el volumen se correlacionan positivamente. La observación es análoga observando los tres CCZ mencionados al comienzo. Estas asociaciones no son estrictas, pero mantienen esa línea (el CCZ 17 de mayor mediana en velocidad no es el mayor con mediana de conteo, pero sí se ubica entre aquellos con mayor registro).
 
-Considerando la observación antes realizada en cuanto a los resultados obtenidos de la descripción de los datos de conteo, la Figura \ref{fig:boxplot_conteo} muestra el conteo vehicular segun Centro Comunal Zonal distinguiendo por momento del mes. A priori, no se esperaría que estos flujos sean disímiles a lo largo del mes. Sin embargo, por la propia dinámica de movilidad concentrada en el centro de la capital, adicionado a que hay mayor control (en términos de cantidad de cámaras de CGM) en dichos puntos de la ciudad. Los CCZ 2 y 5 son aquellos que muestran mayor volumen en cuanto a la cantidad de vehículos que circulan. En contrapartida, los CCZ 12 y 17 son aquellos con menor movilidad. Estos CCZ se corresponden, en el primer caso a los barrios centro y Punta Carretas; mientras que en los últimos casos se corresponden a los barrios Colón y Cerros, barrios alejados del centro de movilidad laboral y comercial de Montevideo.
+Considerando la observación antes realizada en cuanto a los resultados obtenidos de la descripción de los datos de conteo, la Figura \@ref(fig:boxplot_conteo) muestra el conteo vehicular segun Centro Comunal Zonal distinguiendo por momento del mes. A priori, no se esperaría que estos flujos sean disímiles a lo largo del mes. Sin embargo, por la propia dinámica de movilidad concentrada en el centro de la capital, adicionado a que hay mayor control (en términos de cantidad de cámaras de CGM) en dichos puntos de la ciudad. Los CCZ 2 y 5 son aquellos que muestran mayor volumen en cuanto a la cantidad de vehículos que circulan. En contrapartida, los CCZ 12 y 17 son aquellos con menor movilidad. Estos CCZ se corresponden, en el primer caso a los barrios centro y Punta Carretas; mientras que en los últimos casos se corresponden a los barrios Colón y Cerros, barrios alejados del centro de movilidad laboral y comercial de Montevideo.
 
 
-```{r barplot_conteo, echo=FALSE, warning=FALSE, fig.cap="Conteo vehicular según Centro Comunal Zonal discriminando por momento del mes."}
-# Barras: dias de la semana (cada barra por municipio)
+```{r barplot_conteo, echo=FALSE, warning=FALSE,message=FALSE, fig.cap="Conteo vehicular según Centro Comunal Zonal discriminando por momento del mes."}
 base %>% 
   mutate(CCZ = fct_reorder(CCZ, -volume, .fun = "sum")) %>%
     ggplot(aes(x = CCZ,
@@ -437,8 +435,7 @@ base %>%
 ```
 Sin embargo, así como no se observan sustanciales diferencias en cuanto al conteo vehicular a lo largo del mes, cuando se observa a traves de los días de la semana, como es de esperar, la Figura \ref{fig:barplot_conteo1} muestra que durante los fines de semana, la movilidad se reduce a lo largo de todos los CCZ. Esta observación es más clara en las zonas céntricas de mayor movilidad asociado a que son centros laborales que tienen picos de movilidad durante la semana y valles sobre Sábados y Domingos.
 
-```{r barplot_conteo1, echo=FALSE, warning=FALSE, fig.cap="Conteo vehicular según Centro Comunal Zonal discriminando por día de la semana."}
-# Barras: dias de la semana (cada barra por municipio)
+```{r barplot_conteo1, echo=FALSE, warning=FALSE,message=FALSE, fig.cap="Conteo vehicular según Centro Comunal Zonal discriminando por día de la semana."}
 
 base %>% 
   mutate(CCZ = fct_reorder(CCZ, -volume, .fun = "sum")) %>%
@@ -450,10 +447,9 @@ base %>%
 
 ```
 
-Las Figuras \ref{fig:barplot_velocidad} y \ref{fig:barplit_velocidad1} muestran de forma análoga el ejercicio anterior, pero considerando el promedio de la velocidad media registrada por las cámaras de CGM. Cuando se observa a lo largo del mes, como parecería intuitivo a priori no se verifican diferencias a lo largo del mes en términos de la velocidad promedio. Sin embargo, cuando se distingue según día de la semana, los fines de semana, probablemente asociado a la menor circulación observada, los registros de velocidad son algo superiores respecto de los restantes días. El CCZ 10 ubicado en las intermediaciones de Jardines del Hipódromo es donde se registran mayores velocidades en comparación al resto de los CCZ.
+Las Figuras \@ref(fig:barplot_velocidad) y \@ref(fig:barplit_velocidad1) muestran de forma análoga el ejercicio anterior, pero considerando el promedio de la velocidad media registrada por las cámaras de CGM. Cuando se observa a lo largo del mes, como parecería intuitivo a priori no se verifican diferencias a lo largo del mes en términos de la velocidad promedio. Sin embargo, cuando se distingue según día de la semana, los fines de semana, probablemente asociado a la menor circulación observada, los registros de velocidad son algo superiores respecto de los restantes días. El CCZ 10 ubicado en las intermediaciones de Jardines del Hipódromo es donde se registran mayores velocidades en comparación al resto de los CCZ.
 
-```{r barplot_velocidad, eval=FALSE, echo=FALSE, warning=FALSE, fig.cap="Promedio de la velocidad media registrada por cámaras de CGM, según Centro Comunal Zonal discriminando por momento del mes."}
-# Barras: dias de la semana (cada barra por municipio)
+```{r barplot_velocidad, message=FALSE, echo=FALSE, warning=FALSE, fig.cap="Promedio de la velocidad media registrada por cámaras de CGM, según Centro Comunal Zonal discriminando por momento del mes."}
 
 base %>% 
   group_by(cat_fecha, CCZ) %>% 
@@ -469,8 +465,7 @@ base %>%
 
 ```
 
-```{r barplot_velocidad1, eval=FALSE, echo=FALSE, warning=FALSE, fig.cap="Promedio de la velocidad media registrada por cámaras de CGM, según Centro Comunal Zonal discriminando por momento del mes."}
-# Barras: dias de la semana (cada barra por municipio)
+```{r barplot_velocidad1, eval=FALSE, message=FALSE, echo=FALSE, warning=FALSE, fig.cap="Promedio de la velocidad media registrada por cámaras de CGM, según Centro Comunal Zonal discriminando por momento del mes."}
 
 base %>% 
   group_by(dia_semana, CCZ) %>% 
@@ -482,130 +477,6 @@ base %>%
     geom_bar(stat = "identity")+
     scale_y_continuous(labels = scales::comma)
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-```{r, eval=FALSE}
-
-ggplot(base, aes(x = cat_fecha, y = cat_hora, fill = velocidad_promedio)) + geom_tile() 
-
-ggplot(base, aes(x = cat_hora, y = dia_semana, fill = velocidad_promedio)) + geom_tile()
-
-ggplot(base, aes(x = cat_fecha, y = dia_semana, fill = velocidad_promedio)) + geom_tile()
-
-ggplot(base, aes(x = cat_fecha, y = cat_hora, fill = volume)) + geom_tile()
-
-ggplot(base, aes(x = cat_hora, y = dia_semana, fill = volume)) + geom_tile()
-
-ggplot(base, aes(x = cat_fecha, y = dia_semana, fill = volume)) + geom_tile()
-
-
-
-
-base %>% 
-  ggplot(aes(x = reorder(CCZ, -as.numeric(volume)),
-              y = volume)) +
-  geom_bar(stat = "identity")
-
-#-- NO LOGRAMOS ORDENAR LAS BARRAS EN EL EJE X-->
-```
-
-
-
-
-
-```{r barplot_valocidad3, eval=FALSE}
-base %>%
-  filter(velocidad_promedio > 0) %>%
-    group_by(dia_semana, CCZ) %>% 
-      summarise(Mínimo = min(velocidad_promedio),
-                Máximo = max(velocidad_promedio)) %>%
-        pivot_longer(cols = c(CCZ, Mínimo, Máximo),
-                     names_to = "Valores") %>%
-          ggplot(aes(x = dia_semana,
-                     y = value,
-                     fill = Valores)) +
-          geom_col(position = "dodge", 
-                   stat = "identity") + 
-          labs(y ="Velocidad promedio en los últimos 5 minutos (km/h)", 
-               title = "Mínima y máxima velocidad promedio registrada por día de la semana") +
-          geom_text(aes(label = paste(value, "km/h")),
-                    colour = "white",
-                    size = 2,
-                    vjust = 1.5, 
-                    position = position_dodge(.9)) +
-          theme(
-            axis.title.x = element_blank(),
-            legend.title = element_blank(),
-            panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(),
-            panel.background = element_blank(),
-            axis.title.y = element_text(size = 10,
-                                        hjust = 0.5),
-            legend.text = element_text(size = 6),
-            axis.text = element_text(size = 6)
-          ) + 
-          scale_fill_manual(values = c("#d9421c", "#54e84f")) +
-          facet_wrap(~factor(CCZ))# Separar por municipio 
-
-# Acá me imaginé que en cada día haya dos barras, una de min y una de max, pero creo que no se puede graficar dos variables distintas en el eje y. ¿Ideas?
-
-```
-
-```{r barplot_valocidad4, eval=FALSE}
-base %>%
-  filter(velocidad_promedio > 0) %>%
-    group_by(dia_semana, cat_hora) %>%
-      summarise(Mínimo = min(velocidad_promedio),
-                Máximo = max(velocidad_promedio)) %>%
-        pivot_longer(cols = c(Mínimo, Máximo),
-                     values_to = "Valores") %>%
-          ggplot(aes(x = dia_semana,
-                     y = value,
-                     fill = Valores)) +
-          geom_col(position = "dodge",
-                   stat = "identity") +
-          labs(y = "Velocidad promedio en los últimos 5 minutos (km/h)",
-               title = "Mínima y máxima velocidad promedio registrada por día de la semana") +
-          geom_text(
-            aes(label = paste(value, "km/h")),
-            colour = "white",
-            size = 2,
-            vjust = 1.5,
-            position = position_dodge(.9)
-          ) +
-          theme(
-            axis.title.x = element_blank(),
-            legend.title = element_blank(),
-            panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(),
-            panel.background = element_blank(),
-            axis.title.y = element_text(size = 10,
-                                        hjust = 0.5),
-            legend.text = element_text(size = 6),
-            axis.text = element_text(size = 6)
-          ) +
-          scale_fill_manual(values = c("#d9421c", "#54e84f")) +
-          facet_grid(. ~ cat_hora)
-
-#Se me ocurrio hacerlo tambien general, por momento del dia, si no les parece lo borramos. Igual lo que no me esta quedando es el pivot_long, me dice que no lo puede hacer por no ser multiplos. Pero la variable cat_hora no la quiero tocar
-
-```
-
-
 
 
 
@@ -631,17 +502,32 @@ Se puede acceder a la aplicación a partir del sigueinte link:
 
 # Consideraciones Finales
 
+Este estudio toma datos de fuentes departamentales sobre datos de conteo vehícular y velocidades promedios capturadas por las cámaras del Centro de Gestión de Movilidad. Se propone un análisis descritivo en términos de estos indicadores a fin de lograr caracterizar las relacioes existentes entre velocidad y volumen. A su vez, se introduce información geográfica a los datos de velocidad y conteo a fin de ampliar el análisis localizando mayores velocidades promedios o mayor concentración vehicular. 
+
+Se realizan correlaciones cruzadas entre correlaciones, diagramas de dispersión con sus rectas de regresión asociadas y mapas que complementan lo anterior localizando las observaciones según Centro Comunal Zonal. 
+
+Se encuentra que existen relaciones de asociación o correlaciones positivas entre las velocidades promedios y los volúmenes vehiculares registrados por las cámaras de CGM. Esto se alinea a lo encontrado por Naranjo-Torres (2015) donde mayor cantidad de vehículos promueve que los conductores dinamicen su circulación acrecentando sus velocidades, en promedio. Se encuentra que la velocidad es algo superior durante la madrugada y la noche y mayor conteo vehicular durante el medio día y la media tarde. 
+
+Por otro lado localizando estas observaciones según CCZ se encuentra mayor cantidad de vehículos así como mayor velocidad promedio de circulación en el CCZ ubicado en la zona de Punta Carretas. Esto resulta clave a fin de que los hacedores de políticas públicas departamentales consideren que una zona comercial, muy habitada cuente con máximas velocidades promedio y que justo coincida con la zona de máxima circulación. Sin embargo, lo anterior se deduce considerando los máximos registros. Si se consideran otros estadísticos como la mediana muestral, otros CCZ son los que registran mayor velocidad promedio (Maroñas, Cerro y Carrasco) mientras que Centro y Aguada (zonas de gran tráfico vehicular) cuentan con menor mediana de velocidad promedio. 
+
+Por último, no se observan sustanciales diferencias cuando se consideran momentos del mes, y se observan mínimas diferencias cuando se consideran los indicadores según día de la semana (reduciendo la movilidad durante los fines de semana). Estas conclusiones se extienden a lo largo de los 17 municipios.
+
+A partir de lo anterior se logra una primera aproximación a una caracterización de la movilidad urbana detectando relaciones de asociación entre volumen y velocidad promedio de vehículos junto con una localización geográfica categorizada a partir de los CCZ. Esto sirve de insumo a los municipios y a la IM a fin de lograr optimizar la movilidad y contruir políticas que sigan los lineamientros del CGM formulados por la IM.
+
+Como trabajo futuro se puede extender este estudio con técnicas más sofisticadas de análisis exploratorio multivariado, a fin de lograr caracterizar perfiles de zonas asociadas a su comportamiento en el tránsito. Se pueden desarrollar técnicas de análisis factoria o análisis de clusters para un mejor aproximación y especificidad de los resultados a fin de focalizar mejor las políticas formuladas en pro a un mejor bienestar. Otra propuesta puede venir dada por herramientas de análisis que permitan optimizar la velocidad promedio que optimice la cantidad de vehículos que circulan en la capital. Para ello se pueden desarrollar y estimar modelos econométricos (como por ejemplo regresiones lineales que incluyan la dinámica temporal de los datos - dado que se enceuntran disponibles).
+
+
 
 # Referencias
 
-[1] Cat?logo de Datos Abiertos. Conteo de Veh?culos del Centro de Gesti?n de Movilidad. Febrero 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-conteo-de-vehiculos-del-centro-de-gestion-de-la-movilidad/resource/b985762d-c1c1-4dd0-bc57-6c3ab53e8ff8
+[1] Catálogo de Datos Abiertos. Conteo de Vehículos del Centro de Gestión de Movilidad. Febrero 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-conteo-de-vehiculos-del-centro-de-gestion-de-la-movilidad/resource/b985762d-c1c1-4dd0-bc57-6c3ab53e8ff8
 
 
-[2] Cat?logo de Datos Abiertos. Conteo de Veh?culos del Centro de Gesti?n de Movilidad. Marzo 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-conteo-de-vehiculos-del-centro-de-gestion-de-la-movilidad/resource/6df7fc9c-8331-4d93-928c-cd69b48940a2
+[2] Catálogo de Datos Abiertos. Conteo de Vehículos del Centro de Gestión de Movilidad. Marzo 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-conteo-de-vehiculos-del-centro-de-gestion-de-la-movilidad/resource/6df7fc9c-8331-4d93-928c-cd69b48940a2
 
-[3] Cat?logo de Datos Abiertos. Velocidad promedio vehicular en las principales avenidas de montevideo. Febrero 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo/resource/01ba56d8-2dab-4d8b-8391-d03159314144
+[3] Catálogo de Datos Abiertos. Velocidad promedio vehicular en las principales avenidas de montevideo. Febrero 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo/resource/01ba56d8-2dab-4d8b-8391-d03159314144
 
-[4] Cat?logo de Datos Abiertos. Velocidad promedio vehicular en las principales avenidas de montevideo. Marzo 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo/resource/da56b7db-dcef-41e0-8f16-a00406ae7c1c?view_id=abf43575-848a-40a7-94a3-dd9c378ff988
+[4] Catálogo de Datos Abiertos. Velocidad promedio vehicular en las principales avenidas de montevideo. Marzo 2021 https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo/resource/da56b7db-dcef-41e0-8f16-a00406ae7c1c?view_id=abf43575-848a-40a7-94a3-dd9c378ff988
 
 [5] https://negocios.elpais.com.uy/noticias/venta-autos-cero-kilometro-aumento-marzo-marcas-compradas.html
 
