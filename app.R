@@ -10,6 +10,15 @@ municipios <- st_read("./data/geo/mdeo_barrios")
 st_crs(x = municipios) <- 5382
 municipios <- st_transform(municipios, "+init=epsg:4326")
 
+resumenes <- base %>% 
+    group_by(CCZ) %>% 
+    summarise(res_volume = sum(volume),
+              res_velocidad_promedio = max(velocidad_promedio))
+
+
+st_crs(resumenes) <- st_crs(municipios)
+municipios <- st_join(municipios, resumenes, left = T)
+
 
 ui <- fluidPage(
   titlePanel("Estudio de circulación vehicular en Montevideo: febrero-marzo 2021"),
@@ -33,7 +42,7 @@ ui <- fluidPage(
       selectInput('cat_hora', 
                   'Selecciona un rango horario:',
                   c("Madrugada",
-                    "Manana",
+                    "Mañana",
                     "Media tarde",
                     "Medio dia",
                     "Noche"),
@@ -136,24 +145,7 @@ ui <- fluidPage(
 
 server <- function(input, output, session){
   
-  
-  # output$y_tile <- renderUI({
-  #   
-  #   mydata <- get(input$x_tile)
-  #   selectInput("prueba",
-  #               "Contra:",
-  #               names(mydata)
-  #               )
-  # })
-  
-  
-  # observe({
-  #   print(input$x_tile)
-  #   x <- vars %>% filter(Variable.x == input$x_tile) %>% select(Variable.y)
-  #   updateSelectInput(session, "y_tile", "Contra:", x)
-  # })
 
-  
   
   datos <- reactive({
     
@@ -169,22 +161,9 @@ server <- function(input, output, session){
       )
     })
   
-  resumenes <- reactive({
-    datos() %>% 
-      group_by(CCZ) %>% 
-      summarise(res_volume = sum(volume),
-                res_velocidad_promedio = max(velocidad_promedio))
-  })
-    
-  st_crs(resumenes()) <- st_crs(municipios)
-  municipios <- st_join(municipios, resumenes(), left = T)
   
 ############# Pestana MAPA
-  # Opciones: 
-  # Pintar municipios en escala de color según conteo o velocidad.
-  # Tamano de los puntos en relación a conteo o velocidad registrada.
-  
-  
+
 
   mapa <- reactive({
     ggplot() +
@@ -234,19 +213,7 @@ server <- function(input, output, session){
     }
   )
   
-  # var_y <- reactive({
-  #   
-  #   if (input$x_tile == "cat_hora") {
-  #     var_y <- get(input$y_tile1)
-  #     
-  #   } else if (input$x_tile == "cat_fecha") {
-  #     var_y <- get(input$y_tile2)
-  #     
-  #   } else {
-  #     var_y <- get(input$y_tile3)
-  #   }
-  # })
-  
+
   
   graf_tile_1_1 <- reactive({
     
@@ -491,9 +458,7 @@ server <- function(input, output, session){
                  fill = "Momento del mes")
   })
   
-  # Tabla de estadísticas desciptivas con group_by(variable elegida).
-  # Min, max, promedio diario, sd.
-  
+ 
   tabla1 <- reactive({
     
     datos() %>% 
