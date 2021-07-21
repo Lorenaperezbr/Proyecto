@@ -24,6 +24,7 @@ library(sf)
 library(GGally)
 library(data.table)
 library(gridExtra)
+library(DT)
 ```
 
 ```{r data_source, echo = FALSE, include = FALSE}
