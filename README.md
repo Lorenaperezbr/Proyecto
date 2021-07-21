@@ -22,7 +22,7 @@ Véase: https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-pr
 
 ## Shiny App 
 
-Puedes interactuar con los datos desde la Shiny App desarrollada por el equipo https://fgolffeld.shinyapps.io/Proyecto/
+Puedes interactuar con los datos desde la Shiny App desarrollada por el equipo https://martinoliverab.shinyapps.io/proyecto/
 
 ## Autores
 
