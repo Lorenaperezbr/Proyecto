@@ -24,7 +24,8 @@ library(sf)
 library(GGally)
 library(data.table)
 library(gridExtra)
-library()
+library(DT)
+library(ggpmisc)
 ```
 
 ```{r data_source, echo = FALSE, include = FALSE}

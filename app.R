@@ -3,7 +3,7 @@ library(tidyverse)
 library(DT)
 library(stringr)
 library(sf)
-
+library(ggpmisc)
 
 base <- readRDS("./data/processed/base_app.rds")
 municipios <- st_read("./data/geo/mdeo_barrios")
