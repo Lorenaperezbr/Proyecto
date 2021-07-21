@@ -6,7 +6,24 @@ library(stringr)
 
 base <- readRDS("data/processed/base_app.rds")
 municipios <- st_read("data/geo/mdeo_barrios")
-st_crs(x = municipios) <-  5382
+st_crs(x = municipios) <- 5382
+municipios <- st_transform(municipios, "+init=epsg:4326")
+
+resumenes <- base %>% 
+              group_by(CCZ) %>% 
+                summarise(res_volume = sum(volume),
+                          res_velocidad_promedio = max(velocidad_promedio))
+
+st_crs(resumenes) <- st_crs(municipios)
+municipios <- st_join(municipios, resumenes, left = T)
+
+
+vars <- data.frame("Variable x" = c("cat_hora", "cat_hora",
+                                    "cat_fecha", "cat_fecha",
+                                    "dia_semana", "dia_semana"),
+                   "Variable y" = c("cat_fecha", "dia_semana",
+                                    "cat_hora", "dia_semana",
+                                    "cat_hora", "cat_fecha"))
 
 
 ui <- fluidPage(
@@ -50,10 +67,22 @@ ui <- fluidPage(
     mainPanel(
       tabsetPanel(
         
+        tabPanel("Resumen",
+                 h2("Algun titulo interesante", align = "center"),
+                 fluidRow(
+                   column(6,plotOutput("bar_1")),
+                   column(6,plotOutput("bar_2"))),
+                 dataTableOutput("tab")
+        ),
+        
         tabPanel("Mapa",
-          h2("Algun titulo interesante", align = "center"),
-          plotOutput("map")
-          ),
+                 h2("Algun titulo interesante", align = "center"),
+                 plotOutput("map"),
+                 selectInput("var_map",
+                             "Selecciona una variable:",
+                             c("Cantidad de vehículos" = "res_volume",
+                               "Velocidad promedio" = "res_velocidad_promedio"))
+        ),
         
         tabPanel("Gráfico de Mosaico",
                  h2("Algun titulo interesante", align = "center"),
@@ -62,61 +91,91 @@ ui <- fluidPage(
                    column(6,
                           selectInput("x_tile",
                                       "Graficar:",
-                                      c("cat_hora",
-                                        "cat_fecha",
-                                        "dia_semana") 
-                          # Ver de arreglar estas categorías
+                                      c("Rango horario" = "cat_hora",
+                                        "Momento del mes" = "cat_fecha",
+                                        "Día de la semana" = "dia_semana")
                           )
                    ),
                    column(6,
                           conditionalPanel(
                             condition = "input.x_tile == 'cat_hora'",
-                            selectInput("y_tile",
+                            selectInput("y_tile1",
                                         "Contra:",
-                                        c("cat_fecha",
-                                          "dia_semana"))
-                            # Ver de arreglar estas categorías
-                            ),
-                          
+                                        c("Momento del mes" = "cat_fecha",
+                                          "Día de la semana" = "dia_semana"))
+                          ),
+
                           conditionalPanel(
                             condition = "input.x_tile == 'cat_fecha'",
-                            selectInput("y_tile",
+                            selectInput("y_tile2",
                                         "Contra:",
-                                        c("cat_hora",
-                                          "dia_semana"))
-                            # Ver de arreglar estas categorías
-                            ),
-                          
+                                        c("Rango horario" = "cat_hora",
+                                          "Día de la semana" = "dia_semana"))
+                          ),
+
                           conditionalPanel(
                             condition = "input.x_tile == 'dia_semana'",
-                            selectInput("y_tile",
+                            selectInput("y_tile3",
                                         "Contra:",
-                                        c("cat_hora",
-                                          "cat_fecha")))
-                          # Ver de arreglar estas categorías
-                          )
-                   
-                   # Cambios pendientes:
-                   # - En el input condicional ver cómo hacer para que los nombres de las variables aparezcan con etiquetas.
-                   # - Alternativamente, ver cómo hacer para que el gráfico funcione pasándole etiquetas en vez del nombre de la variable desde el input.
+                                        c("Rango horario" = "cat_hora",
+                                          "Momento del mes" = "cat_fecha")))
                  ),
                  
                  fluidRow(
                    column(6,plotOutput("tile_1")),
                    column(6,plotOutput("tile_2"))
-                 )),
-        
-        tabPanel("Resumen",
-                 h2("Algun titulo interesante", align = "center"),
-                 fluidRow(
-                   column(6,plotOutput("bar_1")),
-                   column(6,plotOutput("bar_2"))),
-                 dataTableOutput("tab")
-        )
-))
-))
+                 ))
+        )))))
 
-server <- function(input, output){
+
+
+
+# conditionalPanel(
+#   condition = "input.x_tile == 'cat_hora'",
+#   selectInput("y_tile1",
+#               "Contra:",
+#               c("Momento del mes" = "cat_fecha",
+#                 "Día de la semana" = "dia_semana"))
+# ),
+# 
+# conditionalPanel(
+#   condition = "input.x_tile == 'cat_fecha'",
+#   selectInput("y_tile2",
+#               "Contra:",
+#               c("Rango horario" = "cat_hora",
+#                 "Día de la semana" = "dia_semana"))
+# ),
+# 
+# conditionalPanel(
+#   condition = "input.x_tile == 'dia_semana'",
+#   selectInput("y_tile3",
+#               "Contra:",
+#               c("Rango horario" = "cat_hora",
+#                 "Momento del mes" = "cat_fecha")))
+
+
+
+
+server <- function(input, output, session){
+  
+  
+  # output$y_tile <- renderUI({
+  #   
+  #   mydata <- get(input$x_tile)
+  #   selectInput("prueba",
+  #               "Contra:",
+  #               names(mydata)
+  #               )
+  # })
+  
+  
+  # observe({
+  #   print(input$x_tile)
+  #   x <- vars %>% filter(Variable.x == input$x_tile) %>% select(Variable.y)
+  #   updateSelectInput(session, "y_tile", "Contra:", x)
+  # })
+
+  
   
   datos <- reactive({
     
@@ -136,12 +195,18 @@ server <- function(input, output){
   # Opciones: 
   # Pintar municipios en escala de color según conteo o velocidad.
   # Tamaño de los puntos en relación a conteo o velocidad registrada.
+  
+  
 
   mapa <- reactive({
     ggplot() +
-      geom_sf(data = municipios) +  
-      geom_sf(data = base, aes(color = volume)) +
-      theme_minimal()
+      geom_sf(data = municipios, aes(fill = .data[[input$var_map]])) +  
+      geom_sf(data = base) +
+      theme_minimal() +
+      scale_fill_gradient(low="#f0a678",
+                          high = "#d92d02",
+                          labels = scales::comma) +
+      labs(fill = "Cantidad de vehículos")
   })
     
   # OUTPUT
@@ -155,34 +220,57 @@ server <- function(input, output){
   
 ############# Pestaña GRÁFICO DE MOSAICO:
   
-  # var_x <- reactive(
-  #   if (input$x_tile == "Día de la semana") {
-  #     var_x <- "dia_semana" 
-  #   } else if (input$x_tile == "Momento del mes") {
-  #     var_x <- "cat_fecha"
-  #   } else {
-  #     var_x <- "cat_hora"
-  #   }
-  # )
-  # 
-  # var_y <- reactive(
-  #   if (input$y_tile == "Día de la semana") {
-  #     var_y <- "dia_semana" 
-  #   } else if (input$y_tile == "Momento del mes") {
-  #     var_y <- "cat_fecha"
-  #   } else {
-  #     var_y <- "cat_hora"
-  #   }
-  # )
+  lab_x <- reactive(
+    if (input$x_tile == "cat_hora") {
+      lab_x <- "Rango horario"
+    } else if (input$x_tile == "cat_fecha") {
+      lab_x <- "Momento del mes"
+    } else {
+      lab_x <- "Día de la semana"
+    }
+  )
+
+  lab_y <- reactive(
+    if (input$x_tile == "cat_hora") {
+      ifelse(input$y_tile1 == "cat_fecha",
+             lab_y <- "Momento del mes",
+             lab_y <- "Día de la semana")
+    } else if (input$x_tile == "cat_fecha") {
+      ifelse(input$y_tile2 == "cat_hora",
+             lab_y <- "Rango horario",
+             lab_y <- "Día de la semana")
+    } else {
+      ifelse(input$y_tile3 == "cat_hora",
+             lab_y <- "Rango horario",
+             lab_y <- "Momento del mes")
+    }
+  )
+  
+  var_y <- reactive({
+    
+    if (input$x_tile == "cat_hora") {
+      var_y <- get(input$y_tile1)
+      
+    } else if (input$x_tile == "cat_fecha") {
+      var_y <- get(input$y_tile2)
+      
+    } else {
+      var_y <- get(input$y_tile3)
+    }
+  })
+  
   
   grafico <- reactive({
     
     ggplot(datos(),
            aes(x = .data[[input$x_tile]],
-               y = .data[[input$y_tile]],
+               y = as.character(var_y()),
                fill = velocidad_promedio)) +
     geom_tile() +
-    labs(fill = "Velocidad Promedio") +
+    labs(
+    #      x = lab_x(),
+    #      y = lab_y(),
+         fill = "Velocidad Promedio") +
     theme(legend.position = "bottom",
           aspect.ratio = 1,
           legend.title = element_text(face = "bold",
