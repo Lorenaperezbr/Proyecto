@@ -22,6 +22,7 @@ library(maptools)
 library(sf)
 library(GGally)
 library(data.table)
+library(gridExtra)
 ```
 
 ```{r data_source, echo = FALSE, include = FALSE}
@@ -409,14 +410,21 @@ base %>%
 En línea al estudio localizando las observaciones según CCZ, la Figura \@ref(fig:boxplot) muestra la distribución de la velocidad promedio y el conteo vehicular distinguiendo según CCZ a partir de un diagrama de caja ordenado según la mediana de los datos según CCZ. Vale recordar que la caja representa al rango intercuartílico (RI) de la distribución, los bigotes superiores e inferiores representan 1.5 veces el RI y los puntos por fuera, datos considerados atípicos. 
 
 ```{r boxplot, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="Distribución del volumen y la velocidad promedio de los vehículos discriminando por Centro Comunal Zonal (CCZ)"}
+p1 <- base %>%
+        ggplot(aes(x = reorder(factor(CCZ), -velocidad_promedio, median),
+                   y = velocidad_promedio)) +
+        geom_boxplot() +
+        labs(x = "Centro comunal zonal",
+             y = "Velocidad Promedio")
 
-library(gridExtra)
-p1<-base %>% ggplot(aes(x=reorder(factor(CCZ),-velocidad_promedio,median), y=velocidad_promedio)) +  geom_boxplot()  +
- labs(x="Centro comunal zonal", y="Velocidad Promedio") 
-p2<-base %>% ggplot(aes(x=reorder(factor(CCZ),-volume,median), y=volume)) +  geom_boxplot()  +
- labs(x="Centro comunal zonal", y="Conteo de Vehiculos") 
+p2 <- base %>%
+        ggplot(aes(x = reorder(factor(CCZ), -volume,median),
+                   y = volume)) +
+        geom_boxplot() +
+        labs(x = "Centro comunal zonal",
+             y = "Conteo de Vehiculos") 
 
-grid.arrange(p1, p2, nrow=1, ncol=2)
+grid.arrange(p1, p2, nrow = 1, ncol = 2)
 
 ```
 
