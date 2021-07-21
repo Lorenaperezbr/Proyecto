@@ -351,8 +351,8 @@ ggpairs(base, c("volume", "velocidad_promedio"),
         diag = list(continuous = wrap("densityDiag")),
         lower = list(continuous = wrap("points",
                                        alpha = 0.9)),
-        labels=as_labeller(c("volume"="Cantidad de vehículos", "velocidad_promedio"="Velocidad Promedio"))
-        
+        labeller = as_labeller(c("volume" = "Cantidad de vehículos",
+                                 "velocidad_promedio" = "Velocidad Promedio"))
         )
         
 
@@ -362,7 +362,8 @@ ggpairs(base, c("volume", "velocidad_promedio"),
         diag = list(continuous = wrap("densityDiag")),
         lower = list(continuous = wrap("points",
                                        alpha = 0.9)),
-        labels=as_labeller(c("volume"="Cantidad de vehículos", "velocidad_promedio"="Velocidad Promedio"))
+        labeller = as_labeller(c("volume" = "Cantidad de vehículos",
+                                 "velocidad_promedio" = "Velocidad Promedio"))
         )
 
 ggpairs(base, c("volume", "velocidad_promedio"),
@@ -371,7 +372,8 @@ ggpairs(base, c("volume", "velocidad_promedio"),
         diag = list(continuous = wrap("densityDiag")),
         lower = list(continuous = wrap("points",
                                        alpha = 0.9)),
-        labels=as_labeller(c("volume"="Cantidad de vehículos", "velocidad_promedio"="Velocidad Promedio"))
+        labeller = as_labeller(c("volume" = "Cantidad de vehículos",
+                                 "velocidad_promedio" = "Velocidad Promedio"))
         )
 ```
 Un segundo aspecto a explorar viene dado por lo que se observa en la diagonal principal de los trés gráficos de la figura anterior. Se observa la densidad de los datos, las cuales muestran la frecuencia de observaciones que se observan en cada nivel de las variables en cuestión. Esto permite ver valores más frecuentes (modo), asimestrías, valores medios, entre otros. En cuanto a las velocidades promedio, se observa que hay mayores observaciones en velocidades promedio muy bajas (esto puede deberse a que las cámaras capturan vehículos estacionados o reduciéndo sus velocidades debido a que están en semáforos o esquinas. Se puede asociar a vehículos parados, o frenando o acelerando), o en valores debajo del máximo permitido en la capital (45 km/h). Sin embargo, existe cierta asimetría asociada a observaciones con registros con altas velocidades. Observando por momento del día, como parece intuitivo, la noche y la madrugada son los momentos con mayores registros a velocidades más altas, mientras que las distribuciones a la tarde tienen mayores frecuencias a velocidades comparativamente inferiores. En cuanto a velocidades, cuando se observa por día de la semana o por categoría del mes no se observan diferencias en cuanto a la distribución de los datos. En cuanto al conteo, se observan mayores registros durante el día (en particular media tarde, sobre los días jueves).
