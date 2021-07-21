@@ -2,7 +2,7 @@
 title: 'Estudio de circulación vehicular en Montevideo: febrero-marzo 2021'
 author: ''
 date: ''
-output: bookdown::pdf_document2 #le cambie esto para que lea las referencias a las figuras
+output: bookdown::pdf_document2 
   df_print: paged
 header-includes: \usepackage{float} \floatplacement{figure}{H}
 lang: "sp"
@@ -282,7 +282,6 @@ base %>%
 En segundo plano, este mismo diagrama de dispersión permite categorizarse por días de la semana. Previo a la observación de los datos, se esperaría que no existan sustanciales diferencias cuando se consideran los días de la semana, debido a que el flujo de vehículos entre semana sería similar (más aún en Montevideo), pudiéndose esperar una relación más clara durante los días del fin de semana.
 
 ```{r dispersion2, echo=FALSE, warning=FALSE, message=FALSE,fig.cap="Nube de puntos de la cantidad de vehículos y la velocidad promedio capturadas por las cámaras de CGM, según día de la semana."}
-# Dispersion: velocidad x conteo faceteado por hora, momento del mes, ...
 
 
 base %>%
@@ -315,7 +314,6 @@ En este sentido, la Figura \@ref(fig:dispersion2) efectivamente se alinea a lo h
 Análogamente a lo anterior, la Figura \@ref(fig:dispersion3) muestra que en términos del momento del mes la relación de asociación encontrada es positiva y no varía de forma sustancial a traves de las franjas diarias durante los meses. 
 
 ```{r dispersion3, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="Nube de puntos de la cantidad de vehículos y la velocidad promedio capturadas por las cámaras de CGM, según momento del mes"}
-# Dispersion: velocidad x conteo faceteado por hora, momento del mes, ...
 
 
 base %>%
@@ -347,7 +345,6 @@ base %>%
 A partir de lo anterior, parece clara la existencia de relaciones de asociación positiva entre velocidad y conteo. Sin embargo, la magnitud de la correlación observada y su nivel de significación no se puede observar a partir de las figuras anteriores. La Figura \@ref(fig:correlaciones) muestra las correlaciones cruzadas entre la velocidad promedio y la cantidad de vehículos categorizando en función de lo presentado anteriormente y obteniendo el coeficiente de correlación lineal entre ambos indicadores para todos los datos así como para cada categoría. Algo en común es que, las correlaciones en todos los casos es significativa estadísticamente y con signo positivo asociado a que incrementos en la cantidad de vehículos se vincula con mayores velocidades promedio. Se observa que la correlación es mayor durante la noche, los días sábado y domingo y durante el principio de mes. Sin embargo, no se observan importantes discrepancias cuando se considera la correlación para todos los datos.
 
 ```{r correlaciones, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="Correlaciones y densidades del volumen y la velocidad promedio de vehículos según categoría horaria, día de la semana y momento del mes"}
-#Graficos de correlaciones. Se puede extender a municipios.
 ggpairs(base, c("volume", "velocidad_promedio"),
         mapping = ggplot2::aes(color = cat_hora,
                                alpha = 0.5),
@@ -364,14 +361,18 @@ ggpairs(base, c("volume", "velocidad_promedio"),
                                alpha = 0.5),
         diag = list(continuous = wrap("densityDiag")),
         lower = list(continuous = wrap("points",
-                                       alpha = 0.9)))
+                                       alpha = 0.9)),
+        labels=as_labeller(c("volume"="Cantidad de vehículos", "velocidad_promedio"="Velocidad Promedio"))
+        )
 
 ggpairs(base, c("volume", "velocidad_promedio"),
         mapping = ggplot2::aes(color = cat_fecha,
                                alpha = 0.5),
         diag = list(continuous = wrap("densityDiag")),
         lower = list(continuous = wrap("points",
-                                       alpha = 0.9)))
+                                       alpha = 0.9)),
+        labels=as_labeller(c("volume"="Cantidad de vehículos", "velocidad_promedio"="Velocidad Promedio"))
+        )
 ```
 Un segundo aspecto a explorar viene dado por lo que se observa en la diagonal principal de los trés gráficos de la figura anterior. Se observa la densidad de los datos, las cuales muestran la frecuencia de observaciones que se observan en cada nivel de las variables en cuestión. Esto permite ver valores más frecuentes (modo), asimestrías, valores medios, entre otros. En cuanto a las velocidades promedio, se observa que hay mayores observaciones en velocidades promedio muy bajas (esto puede deberse a que las cámaras capturan vehículos estacionados o reduciéndo sus velocidades debido a que están en semáforos o esquinas. Se puede asociar a vehículos parados, o frenando o acelerando), o en valores debajo del máximo permitido en la capital (45 km/h). Sin embargo, existe cierta asimetría asociada a observaciones con registros con altas velocidades. Observando por momento del día, como parece intuitivo, la noche y la madrugada son los momentos con mayores registros a velocidades más altas, mientras que las distribuciones a la tarde tienen mayores frecuencias a velocidades comparativamente inferiores. En cuanto a velocidades, cuando se observa por día de la semana o por categoría del mes no se observan diferencias en cuanto a la distribución de los datos. En cuanto al conteo, se observan mayores registros durante el día (en particular media tarde, sobre los días jueves).
 
@@ -423,7 +424,6 @@ Considerando la observación antes realizada en cuanto a los resultados obtenido
 
 
 ```{r barplot_conteo, echo=FALSE, warning=FALSE,message=FALSE, fig.cap="Conteo vehicular según Centro Comunal Zonal discriminando por momento del mes."}
-# Barras: dias de la semana (cada barra por municipio)
 base %>% 
   mutate(CCZ = fct_reorder(CCZ, -volume, .fun = "sum")) %>%
     ggplot(aes(x = CCZ,
@@ -436,7 +436,6 @@ base %>%
 Sin embargo, así como no se observan sustanciales diferencias en cuanto al conteo vehicular a lo largo del mes, cuando se observa a traves de los días de la semana, como es de esperar, la Figura \ref{fig:barplot_conteo1} muestra que durante los fines de semana, la movilidad se reduce a lo largo de todos los CCZ. Esta observación es más clara en las zonas céntricas de mayor movilidad asociado a que son centros laborales que tienen picos de movilidad durante la semana y valles sobre Sábados y Domingos.
 
 ```{r barplot_conteo1, echo=FALSE, warning=FALSE,message=FALSE, fig.cap="Conteo vehicular según Centro Comunal Zonal discriminando por día de la semana."}
-# Barras: dias de la semana (cada barra por municipio)
 
 base %>% 
   mutate(CCZ = fct_reorder(CCZ, -volume, .fun = "sum")) %>%
@@ -451,7 +450,6 @@ base %>%
 Las Figuras \@ref(fig:barplot_velocidad) y \@ref(fig:barplit_velocidad1) muestran de forma análoga el ejercicio anterior, pero considerando el promedio de la velocidad media registrada por las cámaras de CGM. Cuando se observa a lo largo del mes, como parecería intuitivo a priori no se verifican diferencias a lo largo del mes en términos de la velocidad promedio. Sin embargo, cuando se distingue según día de la semana, los fines de semana, probablemente asociado a la menor circulación observada, los registros de velocidad son algo superiores respecto de los restantes días. El CCZ 10 ubicado en las intermediaciones de Jardines del Hipódromo es donde se registran mayores velocidades en comparación al resto de los CCZ.
 
 ```{r barplot_velocidad, message=FALSE, echo=FALSE, warning=FALSE, fig.cap="Promedio de la velocidad media registrada por cámaras de CGM, según Centro Comunal Zonal discriminando por momento del mes."}
-# Barras: dias de la semana (cada barra por municipio)
 
 base %>% 
   group_by(cat_fecha, CCZ) %>% 
@@ -468,7 +466,6 @@ base %>%
 ```
 
 ```{r barplot_velocidad1, eval=FALSE, message=FALSE, echo=FALSE, warning=FALSE, fig.cap="Promedio de la velocidad media registrada por cámaras de CGM, según Centro Comunal Zonal discriminando por momento del mes."}
-# Barras: dias de la semana (cada barra por municipio)
 
 base %>% 
   group_by(dia_semana, CCZ) %>% 
@@ -480,130 +477,6 @@ base %>%
     geom_bar(stat = "identity")+
     scale_y_continuous(labels = scales::comma)
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-```{r, eval=FALSE}
-
-ggplot(base, aes(x = cat_fecha, y = cat_hora, fill = velocidad_promedio)) + geom_tile() 
-
-ggplot(base, aes(x = cat_hora, y = dia_semana, fill = velocidad_promedio)) + geom_tile()
-
-ggplot(base, aes(x = cat_fecha, y = dia_semana, fill = velocidad_promedio)) + geom_tile()
-
-ggplot(base, aes(x = cat_fecha, y = cat_hora, fill = volume)) + geom_tile()
-
-ggplot(base, aes(x = cat_hora, y = dia_semana, fill = volume)) + geom_tile()
-
-ggplot(base, aes(x = cat_fecha, y = dia_semana, fill = volume)) + geom_tile()
-
-
-
-
-base %>% 
-  ggplot(aes(x = reorder(CCZ, -as.numeric(volume)),
-              y = volume)) +
-  geom_bar(stat = "identity")
-
-#-- NO LOGRAMOS ORDENAR LAS BARRAS EN EL EJE X-->
-```
-
-
-
-
-
-```{r barplot_valocidad3, eval=FALSE}
-base %>%
-  filter(velocidad_promedio > 0) %>%
-    group_by(dia_semana, CCZ) %>% 
-      summarise(Mínimo = min(velocidad_promedio),
-                Máximo = max(velocidad_promedio)) %>%
-        pivot_longer(cols = c(CCZ, Mínimo, Máximo),
-                     names_to = "Valores") %>%
-          ggplot(aes(x = dia_semana,
-                     y = value,
-                     fill = Valores)) +
-          geom_col(position = "dodge", 
-                   stat = "identity") + 
-          labs(y ="Velocidad promedio en los últimos 5 minutos (km/h)", 
-               title = "Mínima y máxima velocidad promedio registrada por día de la semana") +
-          geom_text(aes(label = paste(value, "km/h")),
-                    colour = "white",
-                    size = 2,
-                    vjust = 1.5, 
-                    position = position_dodge(.9)) +
-          theme(
-            axis.title.x = element_blank(),
-            legend.title = element_blank(),
-            panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(),
-            panel.background = element_blank(),
-            axis.title.y = element_text(size = 10,
-                                        hjust = 0.5),
-            legend.text = element_text(size = 6),
-            axis.text = element_text(size = 6)
-          ) + 
-          scale_fill_manual(values = c("#d9421c", "#54e84f")) +
-          facet_wrap(~factor(CCZ))# Separar por municipio 
-
-# Acá me imaginé que en cada día haya dos barras, una de min y una de max, pero creo que no se puede graficar dos variables distintas en el eje y. ¿Ideas?
-
-```
-
-```{r barplot_valocidad4, eval=FALSE}
-base %>%
-  filter(velocidad_promedio > 0) %>%
-    group_by(dia_semana, cat_hora) %>%
-      summarise(Mínimo = min(velocidad_promedio),
-                Máximo = max(velocidad_promedio)) %>%
-        pivot_longer(cols = c(Mínimo, Máximo),
-                     values_to = "Valores") %>%
-          ggplot(aes(x = dia_semana,
-                     y = value,
-                     fill = Valores)) +
-          geom_col(position = "dodge",
-                   stat = "identity") +
-          labs(y = "Velocidad promedio en los últimos 5 minutos (km/h)",
-               title = "Mínima y máxima velocidad promedio registrada por día de la semana") +
-          geom_text(
-            aes(label = paste(value, "km/h")),
-            colour = "white",
-            size = 2,
-            vjust = 1.5,
-            position = position_dodge(.9)
-          ) +
-          theme(
-            axis.title.x = element_blank(),
-            legend.title = element_blank(),
-            panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(),
-            panel.background = element_blank(),
-            axis.title.y = element_text(size = 10,
-                                        hjust = 0.5),
-            legend.text = element_text(size = 6),
-            axis.text = element_text(size = 6)
-          ) +
-          scale_fill_manual(values = c("#d9421c", "#54e84f")) +
-          facet_grid(. ~ cat_hora)
-
-#Se me ocurrio hacerlo tambien general, por momento del dia, si no les parece lo borramos. Igual lo que no me esta quedando es el pivot_long, me dice que no lo puede hacer por no ser multiplos. Pero la variable cat_hora no la quiero tocar
-
-```
-
-
 
 
 
