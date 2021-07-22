@@ -20,6 +20,12 @@ Se cuentan  con datos con frecuencia mensual referentes a la velocidad de circul
 
 Véase: https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo
 
+### Reproducibilidad
+
+Para poder reproducir el proyecto en tu computadora debes seguir los siguientes pasos:
+1. Ejecutar preprocessing.R de la carpeta scripts.
+2. Compilar ProyectoNT.Rmd 
+
 ## Shiny App 
 
 Puedes interactuar con los datos desde la Shiny App desarrollada por el equipo https://martinoliverab.shinyapps.io/proyecto/
