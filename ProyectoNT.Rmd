@@ -560,7 +560,7 @@ Una segunda pestaña contiene dos gráficos de mosaicos: uno para la velocidad p
 
 Por último, una tercer herramienta de visualización disponible en la aplicación Shiny permite visualizar algunas descriptivas generales en cuanto a velocidad y volumen. Se proponen herramientas de visualización de conteo distinguiendo por momento del mes, velocidades promedio asociados a los CCZ y otras descriptivas insertas en formato cuadro visualizando según días de la semana descriptivas de los indicadores principales en este trabajo.
 
-Se puede acceder a la aplicación a partir del sigueinte link: https://martinoliverab.shinyapps.io/proyecto/
+Se puede  acceder a la aplicación a partir del sigueinte link: https://martinoliverab.shinyapps.io/proyecto/
 
 
 # Consideraciones Finales

@@ -16,7 +16,7 @@ Estos elementos en su conjunto pueden contribuir a la detección de potenciales 
 
 Para realizar este estudio se consideran datos brindados por el CGM del Departamento de Movilidad de la Intendencia de Montevideo (IM). 
 
-Se cuentan con datos con frecuencia mensual referentes a la velocidad de circulación y el volumen de circulación de vehículos en la ciudad de Montevideo donde se detallan los registros de las cámaras de CGM con día y horario de lo acontecido.
+Se cuentan  con datos con frecuencia mensual referentes a la velocidad de circulación y el volumen de circulación de vehículos en la ciudad de Montevideo donde se detallan los registros de las cámaras de CGM con día y horario de lo acontecido.
 
 Véase: https://catalogodatos.gub.uy/dataset/intendencia-montevideo-velocidad-promedio-vehicular-en-las-principales-avenidas-de-montevideo
 
