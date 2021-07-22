@@ -1,0 +1,99 @@
+---
+title: "Estudio de circulación vehicular en Montevideo: febrero-marzo 2021"
+author: "Federico Golffeld - Martín Olivera - Lorena Pérez - Ángela Vieyto"
+date: "22/7/2021"
+output: ioslides_presentation
+---
+
+```{r setup, echo = FALSE, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+# Librerías utilizadas
+library(dplyr)
+library(date)
+library(lubridate)
+library(ggplot2)
+library(tidyverse)
+library(kableExtra)
+library(rgdal)
+library(maptools)
+library(sf)
+library(GGally)
+library(data.table)
+library(gridExtra)
+library(DT)
+library(ggpmisc)
+```
+
+## Introducción
+
+- El objetivo general de este trabajo se basa en un estudio de las velocidades de los vehículos que circulan en Montevideo en conjunto con la cantidad de vehículos que se logran capturar a partir del Centro de Gestión de Movilidad (CGM).
+
+- En particular surge el interés de estudiar geográficamente los volúmenes de circulación y su asociación con las velocidades registradas.
+
+- Estudiar aquellos puntos con mayores registros de velocidad y aquellos con menores registros a fin de capturar la potencial necesidad de regulación en ciertos puntos de la capital.
+
+## Estructura de los datos
+
+- Datos brindados por el CGM de la IM. 
+
+- Base de datos referente a  velocidad y volumen de circulación de vehículos registrados por las cámaras de CGM con día y hora de lo acontecido.
+
+- 7.623.354 observaciones para los meses de Febrero y Marzo
+
+- Los datos vinculados a la velocidad de circulación cuentan con 10 variables mientras que los datos de conteo vehicular cuentan con 11 observaciones.
+
+- Variables numéricas, caracteres, fecha y hora.
+
+- Se crean tres variables categóricas. 
+
+
+## Correlaciones y densidades 
+
+```{r correlaciones, echo=FALSE, warning=FALSE, message=FALSE}
+base<-readRDS("data/processed/base_app.rds")
+ggpairs(base, c("volume", "velocidad_promedio"),
+        mapping = ggplot2::aes(color = cat_hora,
+                               alpha = 0.5),
+        diag = list(continuous = wrap("densityDiag")),
+        lower = list(continuous = wrap("points",
+                                       alpha = 0.9)),
+        labeller = as_labeller(c("volume" = "Cantidad de vehículos",
+                                 "velocidad_promedio" = "Velocidad Promedio"))
+        )
+        
+```
+
+
+## Distribución del volumen y la velocidad promedio de los vehículos discriminando por CCZ
+
+```{r boxplot, echo=FALSE, warning=FALSE, message=FALSE}
+p1 <- base %>%
+        ggplot(aes(x = reorder(factor(CCZ), -velocidad_promedio, median),
+                   y = velocidad_promedio)) +
+        geom_boxplot() +
+        labs(x = "Centro comunal zonal",
+             y = "Velocidad Promedio")
+
+p2 <- base %>%
+        ggplot(aes(x = reorder(factor(CCZ), -volume,median),
+                   y = volume)) +
+        geom_boxplot() +
+        labs(x = "Centro comunal zonal",
+             y = "Conteo de Vehiculos") 
+
+grid.arrange(p1, p2, nrow = 1, ncol = 2)
+
+```
+
+
+## Conclusiones y shiny App
+
+- Relaciones de asociación o correlaciones positivas entre las velocidades promedios y los volúmenes vehiculares registrados por las cámaras de CGM.
+
+- Según el CCZ, se observa mayor cantidad de vehículos así como mayor velocidad promedio de circulación en la zona de Punta Carretas.
+
+- No se observan sustanciales diferencias cuando se consideran momentos del mes, y se observan mínimas diferencias cuando se consideran los indicadores según día de la semana.
+
+- https://martinoliverab.shinyapps.io/proyecto/
+
